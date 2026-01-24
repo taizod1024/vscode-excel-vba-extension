@@ -94,11 +94,6 @@
     "type": "git",
     "url": "https://github.com/taizod1024/vscode-excel-vba-extension.git"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "dependencies": {
     "child_process": "^1.0.2"
   }
