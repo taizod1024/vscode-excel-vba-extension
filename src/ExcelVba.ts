@@ -80,11 +80,12 @@ class ExcelVba {
 
     // output result
     this.channel.appendLine(`exitCode=${result.exitCode}`);
-    if (result.text) this.channel.appendLine(`output=${result.text}`);
+    if (result.stdout) this.channel.appendLine(`output=${result.stdout}`);
+    if (result.stderr) this.channel.appendLine(`error=${result.stderr}`);
     if (result.exitCode === 0) {
       vscode.window.showInformationMessage(`${commandName}: done`);
     } else {
-      vscode.window.showErrorMessage(`${commandName}: failure`);
+      vscode.window.showErrorMessage(`${commandName}: ${result.stderr}`);
       this.channel.show();
     }
   }
@@ -102,30 +103,37 @@ class ExcelVba {
 
     // output result
     this.channel.appendLine(`exitCode=${result.exitCode}`);
-    if (result.text) this.channel.appendLine(`output=${result.text}`);
+    if (result.stdout) this.channel.appendLine(`output=${result.stdout}`);
+    if (result.stderr) this.channel.appendLine(`error=${result.stderr}`);
     if (result.exitCode === 0) {
       vscode.window.showInformationMessage(`${commandName}: done`);
     } else {
-      vscode.window.showErrorMessage(`${commandName}: failure`);
+      vscode.window.showErrorMessage(`${commandName}: ${result.stderr}`);
       this.channel.show();
     }
   }
 
   /** execute powershell script */
-  public execPowerShell(scriptPath: string, args: string[], trim = true): { text: string; exitCode: number } {
+  public execPowerShell(scriptPath: string, args: string[], trim = true): { stdout: string; stderr: string; exitCode: number } {
     try {
       const result = child_process.spawnSync("powershell.exe", ["-ExecutionPolicy", "RemoteSigned", "-File", scriptPath, ...args], {
         cwd: this.projectPath,
         encoding: "utf8",
       });
-      let text = result.stdout || "";
+      let stdout = result.stdout || "";
+      let stderr = result.stderr || "";
       if (result.error) {
-        return { text: result.error.message, exitCode: 1 };
+        return { stdout: "", stderr: result.error.message, exitCode: 1 };
       }
-      return { text: trim ? text.trim() : text, exitCode: result.status || 0 };
+      return {
+        stdout: trim ? stdout.trim() : stdout,
+        stderr: trim ? stderr.trim() : stderr,
+        exitCode: result.status || 0,
+      };
     } catch (ex: any) {
       return {
-        text: trim ? (ex.message || "").trim() : ex.message || "",
+        stdout: "",
+        stderr: trim ? (ex.message || "").trim() : ex.message || "",
         exitCode: 1,
       };
     }

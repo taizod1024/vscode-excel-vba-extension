@@ -48,7 +48,7 @@ try {
     exit 0
 }
 catch {
-    Write-Host -ForegroundColor Red "ERROR: $($_)"
+    Write-Error "ERROR: $($_)"
     exit 1
 }
 finally {

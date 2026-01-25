@@ -20,6 +20,7 @@ function Remove-PathToLongDirectory {
 }
 
 try {
+    
     # Display script name
     Write-Host -ForegroundColor Yellow "Export-VBA.ps1"
     Write-Host -ForegroundColor Green "- bookPath: $bookPath"
@@ -125,7 +126,7 @@ No VB components found. Enable VBA Project Object Model access:
     exit 0
 }
 catch {
-    Write-Host -ForegroundColor Red "ERROR: $($_)"
+    Write-Error "ERROR: $($_)"
     exit 1
 }
 finally {
