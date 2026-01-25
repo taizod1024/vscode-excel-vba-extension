@@ -227,6 +227,7 @@ class ExcelVba {
     const common = files1.filter(f => files2.includes(f));
 
     let modifiedCount = 0;
+    let firstModifiedFile: { file1Path: string; file2Path: string; name: string } | null = null;
 
     if (added.length > 0) {
       this.channel.appendLine(`- added files:`);
@@ -255,6 +256,10 @@ class ExcelVba {
           const relativePath = f.replace(/\\/g, "/");
           this.channel.appendLine(`  ~ ${relativePath} (modified)`);
           modifiedCount++;
+          // Store the first modified file
+          if (!firstModifiedFile) {
+            firstModifiedFile = { file1Path, file2Path, name: relativePath };
+          }
         }
       });
     }
@@ -265,6 +270,18 @@ class ExcelVba {
     } else {
       this.channel.appendLine(`- result: no differences`);
     }
+
+    // Show diff for the first modified file
+    if (firstModifiedFile) {
+      this.showDiffAsync(firstModifiedFile.file1Path, firstModifiedFile.file2Path, firstModifiedFile.name);
+    }
+  }
+
+  /** show diff between two files */
+  private async showDiffAsync(file1Path: string, file2Path: string, title: string) {
+    const file1Uri = vscode.Uri.file(file1Path);
+    const file2Uri = vscode.Uri.file(file2Path);
+    await vscode.commands.executeCommand("vscode.diff", file1Uri, file2Uri, `Compare: ${title}`);
   }
 
   /** get all VBA files in directory recursively */
