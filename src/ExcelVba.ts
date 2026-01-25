@@ -75,8 +75,7 @@ class ExcelVba {
 
     // exec command
     const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
-    this.channel.appendLine(`command=powershell -ExecutionPolicy RemoteSigned -File "${scriptPath}" "${this.tmpPath}"`);
-    const result = this.execPowerShell(scriptPath, [this.tmpPath]);
+    const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
     this.channel.appendLine(`exitCode=${result.exitCode}`);
     if (result.text) this.channel.appendLine(`output=${result.text}`);
   }
@@ -89,8 +88,7 @@ class ExcelVba {
 
     // exec command
     const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
-    this.channel.appendLine(`command=powershell -ExecutionPolicy RemoteSigned -File "${scriptPath}" "${this.tmpPath}"`);
-    const result = this.execPowerShell(scriptPath, [this.tmpPath]);
+    const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
     this.channel.appendLine(`exitCode=${result.exitCode}`);
     if (result.text) this.channel.appendLine(`output=${result.text}`);
   }

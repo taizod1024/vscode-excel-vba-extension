@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
+    [Parameter(Mandatory = $true)] [string] $bookPath,
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
@@ -28,6 +29,7 @@ try {
     # output basic information
     $app_name = $myInvocation.MyCommand.name
     Write-Host -ForegroundColor Yellow "$($app_name)"
+    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
     Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
 
     # clear temporary path
@@ -41,21 +43,8 @@ try {
     # change current directory
     Push-Location $tmpPath
 
-    try {
-        Write-Host -ForegroundColor Green "- creating file in tmpPath"
-        New-Item -ItemType File -Path (Join-Path $tmpPath "temp.txt") | Out-Null
-
-    }
-    finally {
-    
-        # back to directory
-        Pop-Location
-
-    }
-
     # done
     Write-Host -ForegroundColor Green "- done"
-    timeout 2
     exit 0
 }
 catch {
