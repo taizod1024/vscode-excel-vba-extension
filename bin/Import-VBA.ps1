@@ -26,26 +26,62 @@ function Remove-PathToLongDirectory {
 
 try {
 
-    # output basic information
-    $app_name = $myInvocation.MyCommand.name
-    Write-Host -ForegroundColor Yellow "$($app_name)"
+    # Display script name
+    $scriptName = $MyInvocation.MyCommand.Name
+    Write-Host -ForegroundColor Yellow "$($scriptName):"
     Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
     Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
 
-    # clear temporary path
+    # clean temporary path
     Write-Host -ForegroundColor Green "- remove tmpPath"
     if (Test-Path $tmpPath) { 
         Remove-PathToLongDirectory $tmpPath
     }
+    
     Write-Host -ForegroundColor Green "- create tmpPath"
     New-Item $tmpPath -itemtype Directory | Out-Null
-
-    # change current directory
     Push-Location $tmpPath
 
-    # done
-    Write-Host -ForegroundColor Green "- done"
-    exit 0
+    # check if Excel is running
+    Write-Host -ForegroundColor Green "- checking Excel running"
+    $excel = $null
+    try {
+        $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    }
+    catch {
+        throw "FIRST, START EXCEL"
+    }
+    $book = $null
+
+    try {
+        # Check if the workbook is already open in Excel
+        Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+        $resolvedPath = (Resolve-Path $bookPath).Path
+        $book = $null
+        
+        foreach ($wb in $excel.Workbooks) {
+            if ($wb.FullName -eq $resolvedPath) {
+                $book = $wb
+                break
+            }
+        }
+        
+        if ($null -eq $book) {
+            throw "Workbook is not open in Excel: $bookPath`nPlease open the workbook in Excel first."
+        }
+
+        # done
+        Write-Host -ForegroundColor Green "- done"
+        exit 0
+    }
+    catch {
+        throw
+    }
+    finally {
+        # Do not close workbook or Excel since they are already open
+        # Just cleanup current location
+        Pop-Location
+    }
 }
 catch {
     [Console]::Error.WriteLine("$($_)")

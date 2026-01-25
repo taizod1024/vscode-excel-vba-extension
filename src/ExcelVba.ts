@@ -80,8 +80,7 @@ class ExcelVba {
     const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
 
     // output result
-    this.channel.appendLine(`- exitCode: ${result.exitCode}`);
-    if (result.stdout) this.channel.appendLine(`- output: ${result.stdout}`);
+    if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
     if (result.exitCode === 0) {
       vscode.window.showInformationMessage(`${commandName}: done`);
     } else {
@@ -102,8 +101,7 @@ class ExcelVba {
     const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
 
     // output result
-    this.channel.appendLine(`- exitCode: ${result.exitCode}`);
-    if (result.stdout) this.channel.appendLine(`- output: ${result.stdout}`);
+    if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
     if (result.exitCode === 0) {
       vscode.window.showInformationMessage(`${commandName}: done`);
     } else {
@@ -117,6 +115,7 @@ class ExcelVba {
       const result = child_process.spawnSync("powershell.exe", ["-ExecutionPolicy", "RemoteSigned", "-File", scriptPath, ...args], {
         cwd: this.projectPath,
         encoding: "utf8",
+        stdio: ["pipe", "pipe", "pipe"],
       });
       let stdout = result.stdout || "";
       let stderr = result.stderr || "";

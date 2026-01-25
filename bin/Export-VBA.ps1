@@ -22,7 +22,8 @@ function Remove-PathToLongDirectory {
 try {
     
     # Display script name
-    Write-Host -ForegroundColor Yellow "Export-VBA.ps1"
+    $scriptName = $MyInvocation.MyCommand.Name
+    Write-Host -ForegroundColor Yellow "$($scriptName):"
     Write-Host -ForegroundColor Green "- bookPath: $bookPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
@@ -37,33 +38,43 @@ try {
     Push-Location $tmpPath
 
     # Check if Excel is already running
-    Write-Host -ForegroundColor Green "- checking excel running"
+    Write-Host -ForegroundColor Green "- checking Excel running"
     $excel = $null
     try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "FIRST, START EXCEL"
+        throw "NO EXCEL FOUND, START EXCEL"
     }
     $book = $null
 
     try {
-        # Open workbook
-        Write-Host -ForegroundColor Green "- opening workbook"
-        $book = $excel.Workbooks.Open((Resolve-Path $bookPath).Path)
+        # Check if the workbook is already open in Excel
+        Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+        $resolvedPath = (Resolve-Path $bookPath).Path
+        $book = $null
+        
+        foreach ($wb in $excel.Workbooks) {
+            if ($wb.FullName -eq $resolvedPath) {
+                $book = $wb
+                break
+            }
+        }
+        
+        if ($null -eq $book) {
+            throw "NO OPENED WORKBOOK FOUND, OPEN WORKBOOK"
+        }
         
         # Access VB Project
         Write-Host -ForegroundColor Green "- accessing VB Project"
         $vbProject = $book.VBProject
         Write-Host -ForegroundColor Green "- project name: $($vbProject.Name)"
-
-        # Get component count
         $componentCount = $vbProject.VBComponents.Count
         Write-Host -ForegroundColor Green "- found $componentCount component(s)"
         
         if ($componentCount -eq 0) {
             throw @"
-No VB components found. Enable VBA Project Object Model access:
+NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
 1. Open Excel
 2. File > Options > Trust Center > Trust Center Settings
 3. Macro Settings > Check 'Trust access to the VBA project object model'
@@ -94,35 +105,30 @@ No VB components found. Enable VBA Project Object Model access:
             }
             
             $filePath = Join-Path $tmpPath "$componentName$fileExt"
-            
             try {
                 [void]$component.Export($filePath)
                 Write-Host -ForegroundColor Cyan "  exported to $filePath"
+                
+                # Remove .frx file if it exists (binary form resource file)
+                if ($fileExt -eq ".frm") {
+                    $frxPath = [System.IO.Path]::ChangeExtension($filePath, ".frx")
+                    if (Test-Path $frxPath) {
+                        Remove-Item $frxPath -Force
+                        Write-Host -ForegroundColor Cyan "  removed $frxPath"
+                    }
+                }
             }
             catch {
-                Write-Host -ForegroundColor Red "  ERROR: Failed to export"
-                Write-Host -ForegroundColor Red "  Reason: $_"
                 throw $_
             }
         }
     }
     catch {
-        Write-Host -ForegroundColor Red "ERROR: $($_)"
         throw
     }
     finally {
-        # Cleanup Excel resources
-        if ($null -ne $book) {
-            Write-Host -ForegroundColor Green "- closing workbook"
-            try { $book.Close($false) } catch { }
-        }
-        if ($null -ne $excel) {
-            Write-Host -ForegroundColor Green "- closing Excel"
-            try { $excel.Quit() } catch { }
-            [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
-            [System.GC]::Collect()
-            [System.GC]::WaitForPendingFinalizers()
-        }
+        # Do not close workbook or Excel since they are already open
+        # Just cleanup temporary directory and current location
         Pop-Location
     }
     
