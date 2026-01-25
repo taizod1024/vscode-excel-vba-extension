@@ -30,17 +30,13 @@ try {
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
     Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
+    Write-Host -ForegroundColor Green "- importSourcePath: $($tmpPath)"
 
-    # clean temporary path
-    Write-Host -ForegroundColor Green "- remove tmpPath"
-    if (Test-Path $tmpPath) { 
-        Remove-PathToLongDirectory $tmpPath
+    # check if import source path exists
+    Write-Host -ForegroundColor Green "- checking import source folder"
+    if (-not (Test-Path $tmpPath)) {
+        throw "IMPORT SOURCE FOLDER NOT FOUND: $($tmpPath)"
     }
-    
-    Write-Host -ForegroundColor Green "- create tmpPath"
-    New-Item $tmpPath -itemtype Directory | Out-Null
-    Push-Location $tmpPath
 
     # check if Excel is running
     Write-Host -ForegroundColor Green "- checking Excel running"
@@ -69,9 +65,66 @@ try {
         throw "NO OPENED WORKBOOK FOUND, OPEN WORKBOOK"
     }
     
-    # TODO: Import VBA components from files
+    # Import VBA components from files
     Write-Host -ForegroundColor Green "- importing VBA components"
-    # Add import logic here
+    
+    # Get list of VBA files to import
+    $vbaFiles = @()
+    if (Test-Path $tmpPath) {
+        $vbaFiles = Get-ChildItem -Path $tmpPath -Recurse -Include *.bas, *.cls, *.frm | ForEach-Object { $_.FullName }
+    }
+    
+    Write-Host -ForegroundColor Green "- found VBA files to import: $($vbaFiles.Count)"
+    
+    # Get list of imported file names (without extension)
+    $importedFileNames = @()
+    foreach ($file in $vbaFiles) {
+        $importedFileNames += [System.IO.Path]::GetFileNameWithoutExtension($file)
+    }
+    
+    # Remove components that are no longer in the import folder
+    Write-Host -ForegroundColor Green "- removing deleted components"
+    foreach ($component in $book.VBProject.VBComponents) {
+        # Skip Document modules (they can't be removed)
+        if ($component.Type -eq 100) { # 100 = Document module
+            continue
+        }
+        
+        if (-not ($importedFileNames -contains $component.Name)) {
+            try {
+                Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
+                $book.VBProject.VBComponents.Remove($component)
+            }
+            catch {
+                Write-Host -ForegroundColor Yellow "  - warning: failed to remove component '$($component.Name)': $_"
+            }
+        }
+    }
+    
+    # Import VBA files
+    Write-Host -ForegroundColor Green "- importing new/updated components"
+    foreach ($file in $vbaFiles) {
+        try {
+            $fileName = [System.IO.Path]::GetFileName($file)
+            Write-Host -ForegroundColor Green "  - importing: $fileName"
+            $book.VBProject.VBComponents.Import($file) | Out-Null
+        }
+        catch {
+            # Check for .log file and include its content in error message
+            $logFile = [System.IO.Path]::ChangeExtension($file, ".log")
+            $logContent = ""
+            if (Test-Path $logFile) {
+                $logContent = Get-Content $logFile -Raw
+                Remove-Item $logFile -Force
+            }
+            
+            if ($logContent) {
+                throw "FAILED TO IMPORT FILE: $($file) - $logContent"
+            } else {
+                throw "FAILED TO IMPORT FILE: $($file) - $_"
+            }
+        }
+    }
     
     Write-Host -ForegroundColor Green "- done"
     exit 0

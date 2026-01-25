@@ -111,14 +111,20 @@ class ExcelVba {
     const bookFileName = path.parse(bookPath).name;
     const bookExtension = path.parse(bookPath).ext.replace(".", "");
     const bookDir = path.dirname(bookPath);
-    const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+    const importSourcePath = path.join(bookDir, `${bookFileName}_${bookExtension}`);
     const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
     this.channel.appendLine(`--------`);
     this.channel.appendLine(`${commandName}:`);
     this.channel.appendLine(`- bookPath: ${bookPath}`);
+    this.channel.appendLine(`- importing from: ${importSourcePath}`);
+
+    // Check if import source folder exists
+    if (!fs.existsSync(importSourcePath)) {
+      throw `FOLDER NOT FOUND: ${importSourcePath}. PLEASE EXPORT VBA FIRST.`;
+    }
 
     // exec command
-    const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+    const result = this.execPowerShell(scriptPath, [bookPath, importSourcePath]);
 
     // output result
     if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
