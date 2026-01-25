@@ -115,6 +115,22 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         }
     }
     
+    # Move tmpPath to a folder named with book filename and extension
+    Write-Host -ForegroundColor Green "- organizing exported files"
+    Pop-Location
+    
+    $bookFileName = [System.IO.Path]::GetFileNameWithoutExtension($bookPath)
+    $bookExtension = [System.IO.Path]::GetExtension($bookPath) -replace '\.', ''
+    $newFolderName = "${bookFileName}_${bookExtension}"
+    $parentPath = [System.IO.Path]::GetDirectoryName($bookPath)
+    $newPath = Join-Path $parentPath $newFolderName
+    
+    if (Test-Path $newPath) {
+        Remove-PathToLongDirectory $newPath
+    }
+    Move-Item $tmpPath $newPath
+    Write-Host -ForegroundColor Cyan "  moved to $newPath"
+    
     Write-Host -ForegroundColor Green "- done"
     exit 0
 }
@@ -123,7 +139,4 @@ catch {
     exit 1
 }
 finally {
-    # Do not close workbook or Excel since they are already open
-    # Just cleanup current location
-    Pop-Location
 }

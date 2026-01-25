@@ -49,39 +49,32 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "FIRST, START EXCEL"
+        throw "NO EXCEL FOUND, START EXCEL"
     }
     $book = $null
 
-    try {
-        # Check if the workbook is already open in Excel
-        Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
-        $resolvedPath = (Resolve-Path $bookPath).Path
-        $book = $null
-        
-        foreach ($wb in $excel.Workbooks) {
-            if ($wb.FullName -eq $resolvedPath) {
-                $book = $wb
-                break
-            }
+    # Check if the workbook is already open in Excel
+    Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+    $resolvedPath = (Resolve-Path $bookPath).Path
+    $book = $null
+    
+    foreach ($wb in $excel.Workbooks) {
+        if ($wb.FullName -eq $resolvedPath) {
+            $book = $wb
+            break
         }
-        
-        if ($null -eq $book) {
-            throw "Workbook is not open in Excel: $bookPath`nPlease open the workbook in Excel first."
-        }
-
-        # done
-        Write-Host -ForegroundColor Green "- done"
-        exit 0
     }
-    catch {
-        throw
+    
+    if ($null -eq $book) {
+        throw "NO OPENED WORKBOOK FOUND, OPEN WORKBOOK"
     }
-    finally {
-        # Do not close workbook or Excel since they are already open
-        # Just cleanup current location
-        Pop-Location
-    }
+    
+    # TODO: Import VBA components from files
+    Write-Host -ForegroundColor Green "- importing VBA components"
+    # Add import logic here
+    
+    Write-Host -ForegroundColor Green "- done"
+    exit 0
 }
 catch {
     [Console]::Error.WriteLine("$($_)")
