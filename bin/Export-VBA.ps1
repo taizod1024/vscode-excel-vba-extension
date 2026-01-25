@@ -4,87 +4,83 @@ param(
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
-# set error action
+# Configuration
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# https://stackoverflow.com/a/39587889
+# Function to safely remove a directory
 function Remove-PathToLongDirectory {
-    Param(
-        [string]$directory
-    )
-
-    # create a temporary (empty) directory
+    Param([string]$directory)
+    # Use robocopy to recursively delete long paths
     $parent = [System.IO.Path]::GetTempPath()
-    [string] $name = [System.Guid]::NewGuid()
-    $tempDirectory = New-Item -ItemType Directory -Path (Join-Path $parent $name)
-
-    robocopy /MIR $tempDirectory.FullName $directory | out-null
-    Remove-Item $directory -Force | out-null
-    Remove-Item $tempDirectory -Force | out-null
+    $tempDirectory = New-Item -ItemType Directory -Path (Join-Path $parent ([System.Guid]::NewGuid()))
+    robocopy /MIR $tempDirectory.FullName $directory | Out-Null
+    Remove-Item $directory -Force | Out-Null
+    Remove-Item $tempDirectory -Force | Out-Null
 }
 
 try {
+    # Display script name
+    Write-Host -ForegroundColor Yellow "Export-VBA.ps1"
+    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
+    Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
-    # output basic information
-    $app_name = $myInvocation.MyCommand.name
-    Write-Host -ForegroundColor Yellow "$($app_name)"
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
-
-    # clear temporary path
-    Write-Host -ForegroundColor Green "- remove tmpPath"
+    # Clean temporary directory
+    Write-Host -ForegroundColor Green "- cleaning tmpPath"
     if (Test-Path $tmpPath) { 
         Remove-PathToLongDirectory $tmpPath
     }
-    Write-Host -ForegroundColor Green "- create tmpPath"
-    New-Item $tmpPath -itemtype Directory | Out-Null
-
-    # change current directory
+    
+    Write-Host -ForegroundColor Green "- creating tmpPath"
+    New-Item $tmpPath -ItemType Directory | Out-Null
     Push-Location $tmpPath
 
-    # excel object
-    Write-Host -ForegroundColor Green "- open excel"
+    # Initialize Excel COM object
+    Write-Host -ForegroundColor Green "- opening Excel"
     $excel = New-Object -ComObject Excel.Application
     $excel.Visible = $false
     $excel.DisplayAlerts = $false
+    $book = $null
 
     try {
-
-        # book object
-        Write-Host -ForegroundColor Green "- open book"
+        # Open workbook
+        Write-Host -ForegroundColor Green "- opening workbook"
         $book = $excel.Workbooks.Open((Resolve-Path $bookPath).Path)
         
-        # vbproject object
-        try {
-            $vbProject = $book.VBProject
-            Write-Host -ForegroundColor Green "- vbProject: $($vbProject.Name)"
-        }
-        catch {
-            throw "VBProject is not accessible. The workbook may be protected or this is an xlsx file."
-        }
+        # Access VB Project
+        Write-Host -ForegroundColor Green "- accessing VB Project"
+        $vbProject = $book.VBProject
+        Write-Host -ForegroundColor Green "- project name: $($vbProject.Name)"
 
-        # components
+        # Get component count
         $componentCount = $vbProject.VBComponents.Count
-        Write-Host -ForegroundColor Green "- components count: $componentCount"
+        Write-Host -ForegroundColor Green "- found $componentCount component(s)"
+        
         if ($componentCount -eq 0) {
-            $book.Close($false)
-            throw "No VB components found. The VBA Project Object Model needs to be enabled. Please follow these steps: 1. Open Excel, 2. File > Options > Trust Center > Trust Center Settings, 3. Macro Settings > Check 'Trust access to the VBA project object model', 4. Close Excel completely and re-open the workbook"
+            throw @"
+No VB components found. Enable VBA Project Object Model access:
+1. Open Excel
+2. File > Options > Trust Center > Trust Center Settings
+3. Macro Settings > Check 'Trust access to the VBA project object model'
+4. Close Excel and re-open the workbook
+"@
         }
         
-        # VB IDE Object Model uses 1-based indexing
+        # Export each component
         for ($i = 1; $i -le $componentCount; $i++) {
             $component = $vbProject.VBComponents.Item($i)
             $componentName = $component.Name
             $componentType = $component.Type
-            Write-Host -ForegroundColor Green "- [$i] Name=$componentName, Type=$componentType"
             
-            # Skip Document Modules as they cannot be exported
+            Write-Host -ForegroundColor Green "- exporting component [$i/$componentCount] $componentName"
+            
+            # Skip Document Modules (cannot be exported)
             if ($componentType -eq 100) {
-                Write-Host -ForegroundColor Yellow "  - skipped (Document Module)"
+                Write-Host -ForegroundColor Yellow "  (skipped - Document Module)"
                 continue
             }
             
+            # Determine file extension based on component type
             $fileExt = switch ($componentType) {
                 1 { ".bas" }      # Standard Module
                 2 { ".cls" }      # Class Module
@@ -93,40 +89,38 @@ try {
             }
             
             $filePath = Join-Path $tmpPath "$componentName$fileExt"
-            Write-Host -ForegroundColor Green "  - filePath: $filePath"
+            
             try {
-                # Use explicit method call with [void] to suppress output
                 [void]$component.Export($filePath)
-                Write-Host -ForegroundColor Cyan "  - exported: $componentName$fileExt"
+                Write-Host -ForegroundColor Cyan "  exported to $filePath"
             }
             catch {
-                Write-Host -ForegroundColor Red "  - export failed: $_"
-                Write-Host -ForegroundColor Red "  - component type: $($component.GetType().FullName)"
-                Write-Host -ForegroundColor Red "  - available methods:"
-                $component | Get-Member -MemberType Method | ForEach-Object { Write-Host -ForegroundColor Gray "    - $($_.Name)" }
+                Write-Host -ForegroundColor Red "  ERROR: Failed to export"
+                Write-Host -ForegroundColor Red "  Reason: $_"
+                throw $_
             }
         }
-        $book.Close($false)
-        $book = $null
     }
     catch {
         Write-Host -ForegroundColor Red "ERROR: $($_)"
         throw
     }
     finally {
+        # Cleanup Excel resources
         if ($null -ne $book) {
-            Write-Host -ForegroundColor Green "- close book"
+            Write-Host -ForegroundColor Green "- closing workbook"
             try { $book.Close($false) } catch { }
         }
         if ($null -ne $excel) {
-            Write-Host -ForegroundColor Green "- close excel"
+            Write-Host -ForegroundColor Green "- closing Excel"
             try { $excel.Quit() } catch { }
             [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
             [System.GC]::Collect()
             [System.GC]::WaitForPendingFinalizers()
         }
+        Pop-Location
     }
-    # done
+    
     Write-Host -ForegroundColor Green "- done"
     exit 0
 }
