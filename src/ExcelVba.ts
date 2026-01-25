@@ -68,29 +68,47 @@ class ExcelVba {
   }
 
   /** export vba */
-  public async exportVbaAsync(bookPath: string) {
-    // show channel
+  public exportVbaAsync(bookPath: string) {
+    // setup command
+    const commandName = "Export VBA from book";
+    const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
     this.channel.appendLine(`--------`);
-    this.channel.appendLine(`exportVbaAsync: bookPath=${bookPath}`);
+    this.channel.appendLine(`${commandName}: bookPath=${bookPath}`);
 
     // exec command
-    const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
     const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
+
+    // output result
     this.channel.appendLine(`exitCode=${result.exitCode}`);
     if (result.text) this.channel.appendLine(`output=${result.text}`);
+    if (result.exitCode === 0) {
+      vscode.window.showInformationMessage(`${commandName}: done`);
+    } else {
+      vscode.window.showErrorMessage(`${commandName}: failure`);
+      this.channel.show();
+    }
   }
 
   /** import vba */
-  public async importVbaAsync(bookPath: string) {
-    // show channel
+  public importVbaAsync(bookPath: string) {
+    // setup command
+    const commandName = "Import VBA to book";
+    const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
     this.channel.appendLine(`--------`);
-    this.channel.appendLine(`importVbaAsync: bookPath=${bookPath}`);
+    this.channel.appendLine(`${commandName}: bookPath=${bookPath}`);
 
     // exec command
-    const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
     const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
+
+    // output result
     this.channel.appendLine(`exitCode=${result.exitCode}`);
     if (result.text) this.channel.appendLine(`output=${result.text}`);
+    if (result.exitCode === 0) {
+      vscode.window.showInformationMessage(`${commandName}: done`);
+    } else {
+      vscode.window.showErrorMessage(`${commandName}: failure`);
+      this.channel.show();
+    }
   }
 
   /** execute powershell script */

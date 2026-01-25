@@ -45,10 +45,12 @@ try {
 
     # done
     Write-Host -ForegroundColor Green "- done"
+    ping localhost -n 5
+    throw "what happen ???"
     exit 0
 }
 catch {
-    Write-Host -ForegroundColor Red $_
+    Write-Host -ForegroundColor Red "ERROR: $($_)"
     exit 1
 }
 finally {
