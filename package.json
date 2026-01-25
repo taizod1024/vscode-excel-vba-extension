@@ -20,11 +20,15 @@
     "commands": [
       {
         "command": "excel-vba.exportVba",
-        "title": "Export VBA from Excel"
+        "title": "Export VBA from Book"
       },
       {
         "command": "excel-vba.importVba",
-        "title": "Import VBA to Excel"
+        "title": "Import VBA to Book"
+      },
+      {
+        "command": "excel-vba.compareVba",
+        "title": "Compare VBA with Book"
       }
     ],
     "menus": {
@@ -36,6 +40,10 @@
         {
           "command": "excel-vba.importVba",
           "when": "false"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "when": "false"
         }
       ],
       "explorer/context": [
@@ -46,6 +54,11 @@
         },
         {
           "command": "excel-vba.importVba",
+          "group": "navigation",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
+        },
+        {
+          "command": "excel-vba.compareVba",
           "group": "navigation",
           "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
         }
