@@ -45,8 +45,6 @@ try {
 
     # done
     Write-Host -ForegroundColor Green "- done"
-    ping localhost -n 5
-    throw "what happen ???"
     exit 0
 }
 catch {
