@@ -86,7 +86,8 @@ try {
     Write-Host -ForegroundColor Green "- removing deleted components"
     foreach ($component in $book.VBProject.VBComponents) {
         # Skip Document modules (they can't be removed)
-        if ($component.Type -eq 100) { # 100 = Document module
+        if ($component.Type -eq 100) {
+            # 100 = Document module
             continue
         }
         
@@ -106,8 +107,23 @@ try {
     foreach ($file in $vbaFiles) {
         try {
             $fileName = [System.IO.Path]::GetFileName($file)
-            Write-Host -ForegroundColor Green "  - importing: $fileName"
-            $book.VBProject.VBComponents.Import($file) | Out-Null
+            $componentName = [System.IO.Path]::GetFileNameWithoutExtension($file)
+            $fileExtension = [System.IO.Path]::GetExtension($file).ToLower()
+            
+            # For standard modules (.bas), class modules (.cls), and forms (.frm), 
+            # remove existing component with same name before importing
+            if ($fileExtension -eq ".frm" -or $fileExtension -eq ".bas" -or $fileExtension -eq ".cls") {
+                foreach ($component in $book.VBProject.VBComponents) {
+                    if ($component.Name -eq $componentName) {
+                        Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
+                        $book.VBProject.VBComponents.Remove($component)
+                        break
+                    }
+                }
+                
+                Write-Host -ForegroundColor Green "  - importing: $fileName"
+                $book.VBProject.VBComponents.Import($file) | Out-Null
+            }
         }
         catch {
             # Check for .log file and include its content in error message
@@ -120,7 +136,8 @@ try {
             
             if ($logContent) {
                 throw "FAILED TO IMPORT FILE: $($file) - $logContent"
-            } else {
+            }
+            else {
                 throw "FAILED TO IMPORT FILE: $($file) - $_"
             }
         }

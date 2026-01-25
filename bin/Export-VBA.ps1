@@ -27,14 +27,6 @@ try {
     Write-Host -ForegroundColor Green "- bookPath: $bookPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
-    # Clean temporary directory
-    Write-Host -ForegroundColor Green "- cleaning tmpPath"
-    if (Test-Path $tmpPath) { 
-        Remove-PathToLongDirectory $tmpPath
-    }
-    Write-Host -ForegroundColor Green "- creating tmpPath"
-    New-Item $tmpPath -ItemType Directory | Out-Null
-
     # Check if Excel is already running
     Write-Host -ForegroundColor Green "- checking Excel running"
     $excel = $null
@@ -78,6 +70,18 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
 "@
     }
     
+    # Clean temporary directory
+    Write-Host -ForegroundColor Green "- cleaning tmpPath"
+    if (Test-Path $tmpPath) { 
+        Remove-PathToLongDirectory $tmpPath
+    }
+    Write-Host -ForegroundColor Green "- creating tmpPath"
+    New-Item $tmpPath -ItemType Directory | Out-Null
+    
+    # Track first difference for diff view
+    $firstDiffFile = $null
+    $firstDiffOldPath = $null
+
     # Export each component
     for ($i = 1; $i -le $componentCount; $i++) {
         $component = $vbProject.VBComponents.Item($i)

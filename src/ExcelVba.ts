@@ -194,6 +194,7 @@ class ExcelVba {
     this.channel.appendLine(`${commandName}:`);
     this.channel.appendLine(`- bookPath: ${bookPath}`);
     this.channel.appendLine(`- comparing folder: ${currentPath}`);
+    this.channel.appendLine(`- temporary folder: ${tmpPath}`);
 
     if (!fs.existsSync(currentPath)) {
       throw `FOLDER NOT FOUND: ${currentPath}. Please export VBA first.`;
@@ -209,8 +210,6 @@ class ExcelVba {
 
     // Compare files
     this.compareDirectories(tmpPath, currentPath);
-
-    this.channel.appendLine(`- temporary folder saved: ${tmpPath}`);
 
     vscode.window.showInformationMessage(`${commandName}: done`);
   }
