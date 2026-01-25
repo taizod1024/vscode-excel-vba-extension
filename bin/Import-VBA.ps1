@@ -48,7 +48,7 @@ try {
     exit 0
 }
 catch {
-    Write-Error "ERROR: $($_)"
+    [Console]::Error.WriteLine("$($_)")
     exit 1
 }
 finally {

@@ -36,11 +36,15 @@ try {
     New-Item $tmpPath -ItemType Directory | Out-Null
     Push-Location $tmpPath
 
-    # Initialize Excel COM object
-    Write-Host -ForegroundColor Green "- opening Excel"
-    $excel = New-Object -ComObject Excel.Application
-    $excel.Visible = $false
-    $excel.DisplayAlerts = $false
+    # Check if Excel is already running
+    Write-Host -ForegroundColor Green "- checking excel running"
+    $excel = $null
+    try {
+        $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    }
+    catch {
+        throw "FIRST, START EXCEL"
+    }
     $book = $null
 
     try {
@@ -126,7 +130,7 @@ No VB components found. Enable VBA Project Object Model access:
     exit 0
 }
 catch {
-    Write-Error "ERROR: $($_)"
+    [Console]::Error.WriteLine("$($_)")
     exit 1
 }
 finally {

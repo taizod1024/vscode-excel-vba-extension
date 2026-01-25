@@ -48,8 +48,8 @@ class ExcelVba {
         try {
           await this.exportVbaAsync(uri.fsPath);
         } catch (reason) {
-          this.channel.show();
-          excelvba.channel.appendLine("**** " + reason + " ****");
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
         }
       }),
     );
@@ -60,8 +60,8 @@ class ExcelVba {
         try {
           await this.importVbaAsync(uri.fsPath);
         } catch (reason) {
-          this.channel.show();
-          excelvba.channel.appendLine("**** " + reason + " ****");
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
         }
       }),
     );
@@ -73,20 +73,19 @@ class ExcelVba {
     const commandName = "Export VBA from book";
     const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
     this.channel.appendLine(`--------`);
-    this.channel.appendLine(`${commandName}: bookPath=${bookPath}`);
+    this.channel.appendLine(`${commandName}:`);
+    this.channel.appendLine(`- bookPath: ${bookPath}`);
 
     // exec command
     const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
 
     // output result
-    this.channel.appendLine(`exitCode=${result.exitCode}`);
-    if (result.stdout) this.channel.appendLine(`output=${result.stdout}`);
-    if (result.stderr) this.channel.appendLine(`error=${result.stderr}`);
+    this.channel.appendLine(`- exitCode: ${result.exitCode}`);
+    if (result.stdout) this.channel.appendLine(`- output: ${result.stdout}`);
     if (result.exitCode === 0) {
       vscode.window.showInformationMessage(`${commandName}: done`);
     } else {
-      vscode.window.showErrorMessage(`${commandName}: ${result.stderr}`);
-      this.channel.show();
+      throw `${result.stderr}`;
     }
   }
 
@@ -96,20 +95,19 @@ class ExcelVba {
     const commandName = "Import VBA to book";
     const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
     this.channel.appendLine(`--------`);
-    this.channel.appendLine(`${commandName}: bookPath=${bookPath}`);
+    this.channel.appendLine(`${commandName}:`);
+    this.channel.appendLine(`- bookPath: ${bookPath}`);
 
     // exec command
     const result = this.execPowerShell(scriptPath, [bookPath, this.tmpPath]);
 
     // output result
-    this.channel.appendLine(`exitCode=${result.exitCode}`);
-    if (result.stdout) this.channel.appendLine(`output=${result.stdout}`);
-    if (result.stderr) this.channel.appendLine(`error=${result.stderr}`);
+    this.channel.appendLine(`- exitCode: ${result.exitCode}`);
+    if (result.stdout) this.channel.appendLine(`- output: ${result.stdout}`);
     if (result.exitCode === 0) {
       vscode.window.showInformationMessage(`${commandName}: done`);
     } else {
-      vscode.window.showErrorMessage(`${commandName}: ${result.stderr}`);
-      this.channel.show();
+      throw `${result.stderr}`;
     }
   }
 
