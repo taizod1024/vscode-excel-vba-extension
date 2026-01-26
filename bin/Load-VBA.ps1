@@ -103,15 +103,6 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         $filePath = Join-Path $tmpPath "$componentName$fileExt"
         [void]$component.Export($filePath)
         Write-Host -ForegroundColor Cyan "  loaded to $filePath"
-        
-        # If this is a Form, remove the associated .frx file
-        if ($componentType -eq 3) {
-            $frxPath = Join-Path $tmpPath "$componentName.frx"
-            if (Test-Path $frxPath) {
-                Remove-Item $frxPath -Force
-                Write-Host -ForegroundColor Cyan "  removed associated $componentName.frx"
-            }
-        }
     }
     
     Write-Host -ForegroundColor Green "- done"
