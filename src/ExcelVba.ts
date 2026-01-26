@@ -78,61 +78,76 @@ class ExcelVba {
   }
 
   /** export vba */
-  public exportVbaAsync(bookPath: string) {
-    // setup command
+  public async exportVbaAsync(bookPath: string) {
     const commandName = "Export VBA from book";
-    const bookFileName = path.parse(bookPath).name;
-    const bookExtension = path.parse(bookPath).ext.replace(".", "");
-    const bookDir = path.dirname(bookPath);
-    const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
-    const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
-    this.channel.appendLine(`--------`);
-    this.channel.appendLine(`${commandName}:`);
-    this.channel.appendLine(`- bookPath: ${bookPath}`);
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        // setup command
+        const bookFileName = path.parse(bookPath).name;
+        const bookExtension = path.parse(bookPath).ext.replace(".", "");
+        const bookDir = path.dirname(bookPath);
+        const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+        const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
+        this.channel.appendLine(`--------`);
+        this.channel.appendLine(`${commandName}:`);
+        this.channel.appendLine(`- bookPath: ${bookPath}`);
 
-    // exec command
-    const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+        // exec command
+        const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
 
-    // output result
-    if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
-    if (result.exitCode !== 0) {
-      throw `${result.stderr}`;
-    }
+        // output result
+        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
 
-    // Organize exported files
-    this.organizeExportedFiles(bookPath, tmpPath);
-    vscode.window.showInformationMessage(`${commandName}: done`);
+        // Organize exported files
+        this.organizeExportedFiles(bookPath, tmpPath);
+      },
+    );
   }
 
   /** import vba */
-  public importVbaAsync(bookPath: string) {
-    // setup command
+  public async importVbaAsync(bookPath: string) {
     const commandName = "Import VBA to book";
-    const bookFileName = path.parse(bookPath).name;
-    const bookExtension = path.parse(bookPath).ext.replace(".", "");
-    const bookDir = path.dirname(bookPath);
-    const importSourcePath = path.join(bookDir, `${bookFileName}_${bookExtension}`);
-    const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
-    this.channel.appendLine(`--------`);
-    this.channel.appendLine(`${commandName}:`);
-    this.channel.appendLine(`- bookPath: ${bookPath}`);
-    this.channel.appendLine(`- importing from: ${importSourcePath}`);
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        // setup command
+        const bookFileName = path.parse(bookPath).name;
+        const bookExtension = path.parse(bookPath).ext.replace(".", "");
+        const bookDir = path.dirname(bookPath);
+        const importSourcePath = path.join(bookDir, `${bookFileName}_${bookExtension}`);
+        const scriptPath = `${this.extensionPath}\\bin\\Import-VBA.ps1`;
+        this.channel.appendLine(`--------`);
+        this.channel.appendLine(`${commandName}:`);
+        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- importing from: ${importSourcePath}`);
 
-    // Check if import source folder exists
-    if (!fs.existsSync(importSourcePath)) {
-      throw `FOLDER NOT FOUND: ${importSourcePath}. PLEASE EXPORT VBA FIRST.`;
-    }
+        // Check if import source folder exists
+        if (!fs.existsSync(importSourcePath)) {
+          throw `FOLDER NOT FOUND: ${importSourcePath}. PLEASE EXPORT VBA FIRST.`;
+        }
 
-    // exec command
-    const result = this.execPowerShell(scriptPath, [bookPath, importSourcePath]);
+        // exec command
+        const result = this.execPowerShell(scriptPath, [bookPath, importSourcePath]);
 
-    // output result
-    if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
-    if (result.exitCode !== 0) {
-      throw `${result.stderr}`;
-    }
-
-    vscode.window.showInformationMessage(`${commandName}: done`);
+        // output result
+        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+      },
+    );
   }
 
   /** execute powershell script */
@@ -181,37 +196,47 @@ class ExcelVba {
   }
 
   /** compare VBA with existing folder */
-  public compareVbaAsync(bookPath: string) {
+  public async compareVbaAsync(bookPath: string) {
     const commandName = "Compare VBA with Book";
-    const bookFileName = path.parse(bookPath).name;
-    const bookExtension = path.parse(bookPath).ext.replace(".", "");
-    const currentFolderName = `${bookFileName}_${bookExtension}`;
-    const bookDir = path.dirname(bookPath);
-    const currentPath = path.join(bookDir, currentFolderName);
-    const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const bookFileName = path.parse(bookPath).name;
+        const bookExtension = path.parse(bookPath).ext.replace(".", "");
+        const currentFolderName = `${bookFileName}_${bookExtension}`;
+        const bookDir = path.dirname(bookPath);
+        const currentPath = path.join(bookDir, currentFolderName);
+        const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
 
-    this.channel.appendLine(`--------`);
-    this.channel.appendLine(`${commandName}:`);
-    this.channel.appendLine(`- bookPath: ${bookPath}`);
-    this.channel.appendLine(`- comparing folder: ${currentPath}`);
-    this.channel.appendLine(`- temporary folder: ${tmpPath}`);
+        this.channel.appendLine(`--------`);
+        this.channel.appendLine(`${commandName}:`);
+        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- comparing folder: ${currentPath}`);
+        this.channel.appendLine(`- temporary folder: ${tmpPath}`);
 
-    if (!fs.existsSync(currentPath)) {
-      throw `FOLDER NOT FOUND: ${currentPath}. Please export VBA first.`;
-    }
+        if (!fs.existsSync(currentPath)) {
+          throw `FOLDER NOT FOUND: ${currentPath}. Please export VBA first.`;
+        }
 
-    // Export to temporary folder
-    const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
-    const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+        // Export to temporary folder
+        const scriptPath = `${this.extensionPath}\\bin\\Export-VBA.ps1`;
+        const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
 
-    if (result.exitCode !== 0) {
-      throw `${result.stderr}`;
-    }
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
 
-    // Compare files
-    this.compareDirectories(tmpPath, currentPath);
+        // Compare files
+        this.compareDirectories(tmpPath, currentPath);
 
-    vscode.window.showInformationMessage(`${commandName}: done`);
+        // Show the channel
+        this.channel.show();
+      },
+    );
   }
 
   /** compare two directories and output differences */
