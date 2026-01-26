@@ -84,7 +84,8 @@ try {
     
     # Remove components that are no longer in the import folder
     Write-Host -ForegroundColor Green "- removing deleted components"
-    foreach ($component in $book.VBProject.VBComponents) {
+    $vbComponents = @($book.VBProject.VBComponents)
+    foreach ($component in $vbComponents) {
         # Skip Document modules (they can't be removed)
         if ($component.Type -eq 100) {
             # 100 = Document module
@@ -104,6 +105,7 @@ try {
     
     # Import VBA files
     Write-Host -ForegroundColor Green "- importing new/updated components"
+    $vbComponents = @($book.VBProject.VBComponents)
     foreach ($file in $vbaFiles) {
         try {
             $fileName = [System.IO.Path]::GetFileName($file)
@@ -113,7 +115,7 @@ try {
             # For standard modules (.bas), class modules (.cls), and forms (.frm), 
             # remove existing component with same name before importing
             if ($fileExtension -eq ".frm" -or $fileExtension -eq ".bas" -or $fileExtension -eq ".cls") {
-                foreach ($component in $book.VBProject.VBComponents) {
+                foreach ($component in $vbComponents) {
                     if ($component.Name -eq $componentName) {
                         Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
                         $book.VBProject.VBComponents.Remove($component)
