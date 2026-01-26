@@ -103,7 +103,18 @@
         }
       ]
     },
-    "keybindings": []
+    "keybindings": [],
+    "configurationDefaults": {
+      "[bas]": {
+        "files.encoding": "shiftjis"
+      },
+      "[cls]": {
+        "files.encoding": "shiftjis"
+      },
+      "[frm]": {
+        "files.encoding": "shiftjis"
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",

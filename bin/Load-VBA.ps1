@@ -34,7 +34,7 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND. Please start Excel."
+        throw "NO EXCEL FOUND. Please open Excel."
     }
     $book = $null
 
