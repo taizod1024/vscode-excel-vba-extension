@@ -79,7 +79,7 @@ class ExcelVba {
 
   /** load vba */
   public async loadVbaAsync(bookPath: string) {
-    const commandName = "Load VBA from book";
+    const commandName = "Load VBA from Excel Book";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -114,7 +114,7 @@ class ExcelVba {
 
   /** save vba */
   public async saveVbaAsync(bookPath: string) {
-    const commandName = "Save VBA to book";
+    const commandName = "Save VBA to Excel Book";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -197,7 +197,7 @@ class ExcelVba {
 
   /** compare VBA with existing folder */
   public async compareVbaAsync(bookPath: string) {
-    const commandName = "Compare VBA with Book";
+    const commandName = "Compare VBA with Excel Book";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,

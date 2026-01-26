@@ -20,15 +20,18 @@
     "commands": [
       {
         "command": "excel-vba.loadVba",
-        "title": "Excel VBA: Load from Excel Book"
+        "title": "Load VBA from Excel Book",
+        "icon": "$(folder)"
       },
       {
         "command": "excel-vba.saveVba",
-        "title": "Excel VBA: Save to Excel Book"
+        "title": "Save VBA to Excel Book",
+        "icon": "$(save)"
       },
       {
         "command": "excel-vba.compareVba",
-        "title": "Excel VBA: Compare with Excel Book"
+        "title": "Compare VBA with Excel Book",
+        "icon": "$(compare-changes)"
       }
     ],
     "menus": {
@@ -49,18 +52,35 @@
       "explorer/context": [
         {
           "command": "excel-vba.loadVba",
-          "group": "navigation",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
+          "group": "navigation@1",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.saveVba",
-          "group": "navigation",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
+          "group": "navigation@2",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.compareVba",
-          "group": "navigation",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
+          "group": "navigation@3",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "excel-vba.loadVba",
+          "group": "navigation@1",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.saveVba",
+          "group": "navigation@2",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "group": "navigation@3",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         }
       ]
     },
