@@ -78,15 +78,15 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
     Write-Host -ForegroundColor Green "- creating tmpPath"
     New-Item $tmpPath -ItemType Directory | Out-Null
     
-    # Export each component
+    # Load each component
     for ($i = 1; $i -le $componentCount; $i++) {
         $component = $vbProject.VBComponents.Item($i)
         $componentName = $component.Name
         $componentType = $component.Type
         
-        Write-Host -ForegroundColor Green "- exporting component [$i/$componentCount] $componentName"
+        Write-Host -ForegroundColor Green "- loading component [$i/$componentCount] $componentName"
         
-        # Skip Document Modules (cannot be exported)
+        # Skip Document Modules (cannot be loaded)
         if ($componentType -eq 100) {
             Write-Host -ForegroundColor Yellow "  (skipped - Document Module)"
             continue
@@ -102,7 +102,7 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         
         $filePath = Join-Path $tmpPath "$componentName$fileExt"
         [void]$component.Export($filePath)
-        Write-Host -ForegroundColor Cyan "  exported to $filePath"
+        Write-Host -ForegroundColor Cyan "  loaded to $filePath"
         
         # If this is a Form, remove the associated .frx file
         if ($componentType -eq 3) {

@@ -30,10 +30,10 @@ try {
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
     Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- importSourcePath: $($tmpPath)"
+    Write-Host -ForegroundColor Green "- saveSourcePath: $($tmpPath)"
 
-    # check if import source path exists
-    Write-Host -ForegroundColor Green "- checking import source folder"
+    # check if save source path exists
+    Write-Host -ForegroundColor Green "- checking save source folder"
     if (-not (Test-Path $tmpPath)) {
         throw "IMPORT SOURCE FOLDER NOT FOUND: $($tmpPath)"
     }
@@ -65,24 +65,24 @@ try {
         throw "NO OPENED WORKBOOK FOUND, OPEN WORKBOOK"
     }
     
-    # Import VBA components from files
-    Write-Host -ForegroundColor Green "- importing VBA components"
+    # Save VBA components from files
+    Write-Host -ForegroundColor Green "- saveing VBA components"
     
-    # Get list of VBA files to import
+    # Get list of VBA files to save
     $vbaFiles = @()
     if (Test-Path $tmpPath) {
         $vbaFiles = Get-ChildItem -Path $tmpPath -Recurse -Include *.bas, *.cls, *.frm | ForEach-Object { $_.FullName }
     }
     
-    Write-Host -ForegroundColor Green "- found VBA files to import: $($vbaFiles.Count)"
+    Write-Host -ForegroundColor Green "- found VBA files to save: $($vbaFiles.Count)"
     
-    # Get list of imported file names (without extension)
-    $importedFileNames = @()
+    # Get list of saveed file names (without extension)
+    $saveedFileNames = @()
     foreach ($file in $vbaFiles) {
-        $importedFileNames += [System.IO.Path]::GetFileNameWithoutExtension($file)
+        $saveedFileNames += [System.IO.Path]::GetFileNameWithoutExtension($file)
     }
     
-    # Remove components that are no longer in the import folder
+    # Remove components that are no longer in the save folder
     Write-Host -ForegroundColor Green "- removing deleted components"
     $vbComponents = @($book.VBProject.VBComponents)
     foreach ($component in $vbComponents) {
@@ -92,7 +92,7 @@ try {
             continue
         }
         
-        if (-not ($importedFileNames -contains $component.Name)) {
+        if (-not ($saveedFileNames -contains $component.Name)) {
             try {
                 Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
                 $book.VBProject.VBComponents.Remove($component)
@@ -103,8 +103,8 @@ try {
         }
     }
     
-    # Import VBA files
-    Write-Host -ForegroundColor Green "- importing new/updated components"
+    # Save VBA files
+    Write-Host -ForegroundColor Green "- saveing new/updated components"
     $vbComponents = @($book.VBProject.VBComponents)
     foreach ($file in $vbaFiles) {
         try {
@@ -113,7 +113,7 @@ try {
             $fileExtension = [System.IO.Path]::GetExtension($file).ToLower()
             
             # For standard modules (.bas), class modules (.cls), and forms (.frm), 
-            # remove existing component with same name before importing
+            # remove existing component with same name before saveing
             if ($fileExtension -eq ".frm" -or $fileExtension -eq ".bas" -or $fileExtension -eq ".cls") {
                 foreach ($component in $vbComponents) {
                     if ($component.Name -eq $componentName) {
@@ -123,7 +123,7 @@ try {
                     }
                 }
                 
-                Write-Host -ForegroundColor Green "  - importing: $fileName"
+                Write-Host -ForegroundColor Green "  - saveing: $fileName"
                 $book.VBProject.VBComponents.Import($file) | Out-Null
             }
         }

@@ -1,8 +1,8 @@
 {
   "version": "0.0.1",
   "name": "excel-vba",
-  "displayName": "Excel VBA module import/export",
-  "description": "Excel VBA module import/export extension for windows",
+  "displayName": "Excel VBA module save/load",
+  "description": "Excel VBA module save/load extension for windows",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -19,26 +19,26 @@
   "contributes": {
     "commands": [
       {
-        "command": "excel-vba.exportVba",
-        "title": "Export VBA from Book"
+        "command": "excel-vba.loadVba",
+        "title": "Excel VBA: Load from Excel Book"
       },
       {
-        "command": "excel-vba.importVba",
-        "title": "Import VBA to Book"
+        "command": "excel-vba.saveVba",
+        "title": "Excel VBA: Save to Excel Book"
       },
       {
         "command": "excel-vba.compareVba",
-        "title": "Compare VBA with Book"
+        "title": "Excel VBA: Compare with Excel Book"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "excel-vba.exportVba",
+          "command": "excel-vba.loadVba",
           "when": "false"
         },
         {
-          "command": "excel-vba.importVba",
+          "command": "excel-vba.saveVba",
           "when": "false"
         },
         {
@@ -48,12 +48,12 @@
       ],
       "explorer/context": [
         {
-          "command": "excel-vba.exportVba",
+          "command": "excel-vba.loadVba",
           "group": "navigation",
           "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
         },
         {
-          "command": "excel-vba.importVba",
+          "command": "excel-vba.saveVba",
           "group": "navigation",
           "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
         },
