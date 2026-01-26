@@ -20,22 +20,22 @@
     "commands": [
       {
         "command": "excel-vba.openExcel",
-        "title": "Open Excel Book",
+        "title": "Open Excel Macro",
         "icon": "$(empty-window)"
       },
       {
         "command": "excel-vba.loadVba",
-        "title": "Load VBA from Excel Book",
+        "title": "Load VBA from Excel Macro",
         "icon": "$(export)"
       },
       {
         "command": "excel-vba.saveVba",
-        "title": "Save VBA to Excel Book",
+        "title": "Save VBA to Excel Macro",
         "icon": "$(save)"
       },
       {
         "command": "excel-vba.compareVba",
-        "title": "Compare VBA with Excel Book",
+        "title": "Compare VBA with Excel Macro",
         "icon": "$(compare-changes)"
       },
       {

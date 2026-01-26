@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $bookPath,
+    [Parameter(Mandatory = $true)] [string] $macroPath,
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
@@ -24,7 +24,7 @@ try {
     # Display script name
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
-    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
+    Write-Host -ForegroundColor Green "- macroPath: $macroPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
     # Check if Excel is already running
@@ -34,28 +34,28 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND. Please open Excel."
+        throw "NO EXCEL FOUND. Please Open Excel."
     }
-    $book = $null
+    $macro = $null
 
     # Check if the workbook is already open in Excel
     Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
-    $resolvedPath = (Resolve-Path $bookPath).Path
-    $book = $null
-    foreach ($wb in $excel.Workbooks) {
+    $resolvedPath = (Resolve-Path $macroPath).Path
+    $macro = $null
+    foreach ($wb in $excel.workbooks) {
         if ($wb.FullName -eq $resolvedPath) {
-            $book = $wb
+            $macro = $wb
             break
         }
     }
     
-    if ($null -eq $book) {
-        throw "NO OPENED WORKBOOK FOUND. Please Open workbook."
+    if ($null -eq $macro) {
+        throw "NO OPENED WORKBOOK FOUND. Please Open Workbook."
     }
     
     # Access VB Project
     Write-Host -ForegroundColor Green "- accessing VB Project"
-    $vbProject = $book.VBProject
+    $vbProject = $macro.VBProject
     Write-Host -ForegroundColor Green "- project name: $($vbProject.Name)"
     $componentCount = $vbProject.VBComponents.Count
     Write-Host -ForegroundColor Green "- found $componentCount component(s)"

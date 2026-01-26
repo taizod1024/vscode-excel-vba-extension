@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $bookPath,
+    [Parameter(Mandatory = $true)] [string] $macroPath,
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
@@ -29,7 +29,7 @@ try {
     # Display script name
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
+    Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
     Write-Host -ForegroundColor Green "- saveSourcePath: $($tmpPath)"
 
     # check if save source path exists
@@ -45,24 +45,24 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND. Please open Excel."
+        throw "NO EXCEL FOUND. Please Open Excel."
     }
-    $book = $null
+    $macro = $null
 
     # Check if the workbook is already open in Excel
     Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
-    $resolvedPath = (Resolve-Path $bookPath).Path
-    $book = $null
+    $resolvedPath = (Resolve-Path $macroPath).Path
+    $macro = $null
     
-    foreach ($wb in $excel.Workbooks) {
+    foreach ($wb in $excel.workbooks) {
         if ($wb.FullName -eq $resolvedPath) {
-            $book = $wb
+            $macro = $wb
             break
         }
     }
     
-    if ($null -eq $book) {
-        throw "NO OPENED WORKBOOK FOUND. Please open workbook."
+    if ($null -eq $macro) {
+        throw "NO OPENED WORKBOOK FOUND. Please Open Workbook."
     }
     
     # Save VBA components from files
@@ -84,7 +84,7 @@ try {
     
     # Remove components that are no longer in the save folder
     Write-Host -ForegroundColor Green "- removing deleted components"
-    $vbComponents = @($book.VBProject.VBComponents)
+    $vbComponents = @($macro.VBProject.VBComponents)
     foreach ($component in $vbComponents) {
         # Skip Document modules (they can't be removed)
         if ($component.Type -eq 100) {
@@ -95,7 +95,7 @@ try {
         if (-not ($saveedFileNames -contains $component.Name)) {
             try {
                 Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
-                $book.VBProject.VBComponents.Remove($component)
+                $macro.VBProject.VBComponents.Remove($component)
             }
             catch {
                 Write-Host -ForegroundColor Yellow "  - warning: failed to remove component '$($component.Name)': $_"
@@ -105,7 +105,7 @@ try {
     
     # Save VBA files
     Write-Host -ForegroundColor Green "- saving new/updated components"
-    $vbComponents = @($book.VBProject.VBComponents)
+    $vbComponents = @($macro.VBProject.VBComponents)
     foreach ($file in $vbaFiles) {
         try {
             $fileName = [System.IO.Path]::GetFileName($file)
@@ -118,13 +118,13 @@ try {
                 foreach ($component in $vbComponents) {
                     if ($component.Name -eq $componentName) {
                         Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
-                        $book.VBProject.VBComponents.Remove($component)
+                        $macro.VBProject.VBComponents.Remove($component)
                         break
                     }
                 }
                 
                 Write-Host -ForegroundColor Green "  - saving: $fileName"
-                $book.VBProject.VBComponents.Import($file) | Out-Null
+                $macro.VBProject.VBComponents.Import($file) | Out-Null
             }
         }
         catch {
@@ -147,7 +147,7 @@ try {
     
     # Save the workbook
     Write-Host -ForegroundColor Green "- saving workbook"
-    $book.Save()
+    $macro.Save()
     
     Write-Host -ForegroundColor Green "- done"
     exit 0

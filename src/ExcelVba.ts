@@ -42,10 +42,10 @@ class ExcelVba {
       // Check if parent folder is _xlsm or _xlam
       const match = parentName.match(/^(.+)_(?:xlsm|xlam)$/i);
       if (match) {
-        const bookName = match[1];
+        const macroName = match[1];
         const extType = parentName.endsWith("_xlsm") ? "xlsm" : "xlam";
-        const bookPath = path.join(path.dirname(parentDir), `${bookName}.${extType}`);
-        return bookPath;
+        const macroPath = path.join(path.dirname(parentDir), `${macroName}.${extType}`);
+        return macroPath;
       }
     }
 
@@ -67,8 +67,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.loadVbaAsync(bookPath);
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.loadVbaAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -80,8 +80,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.saveVbaAsync(bookPath);
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.saveVbaAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -93,8 +93,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.compareVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.compareVbaAsync(bookPath);
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.compareVbaAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -106,8 +106,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.openExcelAsync(bookPath);
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.openExcelAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -119,8 +119,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCustomUI`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.loadCustomUIAsync(bookPath);
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.loadCustomUIAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -132,8 +132,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCustomUI`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.saveCustomUIAsync(bookPath);
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.saveCustomUIAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -143,8 +143,8 @@ class ExcelVba {
   }
 
   /** load vba */
-  public async loadVbaAsync(bookPath: string) {
-    const commandName = "Load VBA from Excel Book";
+  public async loadVbaAsync(macroPath: string) {
+    const commandName = "Load VBA from Excel Macro";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -153,17 +153,17 @@ class ExcelVba {
       },
       async _progress => {
         // setup command
-        const bookFileName = path.parse(bookPath).name;
-        const bookExtension = path.parse(bookPath).ext.replace(".", "");
-        const bookDir = path.dirname(bookPath);
-        const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+        const macroFileName = path.parse(macroPath).name;
+        const macroExtension = path.parse(macroPath).ext.replace(".", "");
+        const macroDir = path.dirname(macroPath);
+        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-VBA.ps1`;
         this.channel.appendLine(`--------`);
         this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- macroPath: ${macroPath}`);
 
         // exec command
-        const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+        const result = this.execPowerShell(scriptPath, [macroPath, tmpPath]);
 
         // output result
         if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
@@ -172,8 +172,8 @@ class ExcelVba {
         }
 
         // Organize loaded files
-        const newFolderName = `${bookFileName}_${bookExtension}`;
-        const newPath = path.join(bookDir, newFolderName);
+        const newFolderName = `${macroFileName}_${macroExtension}`;
+        const newPath = path.join(macroDir, newFolderName);
 
         // Remove existing folder if it exists
         if (fs.existsSync(newPath)) {
@@ -191,8 +191,8 @@ class ExcelVba {
   }
 
   /** save vba */
-  public async saveVbaAsync(bookPath: string) {
-    const commandName = "Save VBA to Excel Book";
+  public async saveVbaAsync(macroPath: string) {
+    const commandName = "Save VBA to Excel Macro";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -201,14 +201,14 @@ class ExcelVba {
       },
       async _progress => {
         // setup command
-        const bookFileName = path.parse(bookPath).name;
-        const bookExtension = path.parse(bookPath).ext.replace(".", "");
-        const bookDir = path.dirname(bookPath);
-        const saveSourcePath = path.join(bookDir, `${bookFileName}_${bookExtension}`);
+        const macroFileName = path.parse(macroPath).name;
+        const macroExtension = path.parse(macroPath).ext.replace(".", "");
+        const macroDir = path.dirname(macroPath);
+        const saveSourcePath = path.join(macroDir, `${macroFileName}_${macroExtension}`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-VBA.ps1`;
         this.channel.appendLine(`--------`);
         this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- macroPath: ${macroPath}`);
         this.channel.appendLine(`- saving from: ${saveSourcePath}`);
 
         // Check if save source folder exists
@@ -217,7 +217,7 @@ class ExcelVba {
         }
 
         // exec command
-        const result = this.execPowerShell(scriptPath, [bookPath, saveSourcePath]);
+        const result = this.execPowerShell(scriptPath, [macroPath, saveSourcePath]);
 
         // output result
         if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
@@ -226,7 +226,7 @@ class ExcelVba {
         }
 
         // Remove temporary folder if it exists
-        const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
         if (fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
           this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
@@ -264,20 +264,19 @@ class ExcelVba {
     }
   }
 
-  /** open Excel book */
-  public async openExcelAsync(bookPath: string) {
-    const commandName = "Open Excel Book";
+  /** open Excel macro */
+  public async openExcelAsync(macroPath: string) {
+    const commandName = "Open Excel Macro";
     this.channel.appendLine(`--------`);
     this.channel.appendLine(`${commandName}:`);
-    this.channel.appendLine(`- bookPath: ${bookPath}`);
-
-    child_process.spawn("cmd.exe", ["/c", "start", bookPath], { detached: true });
+    this.channel.appendLine(`- macroPath: ${macroPath}`);
+    child_process.spawn("cmd.exe", ["/c", "start", macroPath], { detached: true });
     this.channel.appendLine(`- opened in Excel`);
   }
 
   /** compare VBA with existing folder */
-  public async compareVbaAsync(bookPath: string) {
-    const commandName = "Compare VBA with Excel Book";
+  public async compareVbaAsync(macroPath: string) {
+    const commandName = "Compare VBA with Excel Macro";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -285,26 +284,26 @@ class ExcelVba {
         cancellable: false,
       },
       async _progress => {
-        const bookFileName = path.parse(bookPath).name;
-        const bookExtension = path.parse(bookPath).ext.replace(".", "");
-        const currentFolderName = `${bookFileName}_${bookExtension}`;
-        const bookDir = path.dirname(bookPath);
-        const currentPath = path.join(bookDir, currentFolderName);
-        const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+        const macroFileName = path.parse(macroPath).name;
+        const macroExtension = path.parse(macroPath).ext.replace(".", "");
+        const currentFolderName = `${macroFileName}_${macroExtension}`;
+        const macroDir = path.dirname(macroPath);
+        const currentPath = path.join(macroDir, currentFolderName);
+        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
 
         this.channel.appendLine(`--------`);
         this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- macroPath: ${macroPath}`);
         this.channel.appendLine(`- comparing folder: ${currentPath}`);
         this.channel.appendLine(`- temporary folder: ${tmpPath}`);
 
         if (!fs.existsSync(currentPath)) {
-          throw `FOLDER NOT FOUND: ${currentPath}. Please open book first.`;
+          throw `FOLDER NOT FOUND: ${currentPath}. Please Open Macro first.`;
         }
 
         // Load to temporary folder
         const scriptPath = `${this.extensionPath}\\bin\\Load-VBA.ps1`;
-        const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+        const result = this.execPowerShell(scriptPath, [macroPath, tmpPath]);
 
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
@@ -432,12 +431,12 @@ class ExcelVba {
   }
 
   /** load customUI */
-  public async loadCustomUIAsync(bookPath: string) {
-    const ext = path.extname(bookPath).toLowerCase();
+  public async loadCustomUIAsync(macroPath: string) {
+    const ext = path.extname(macroPath).toLowerCase();
 
     // CustomUI is only supported for .xlam (add-ins)
     if (ext !== ".xlam") {
-      throw `CustomUI is only supported for .xlam files. Selected file: ${bookPath}`;
+      throw `CustomUI is only supported for .xlam files. Selected file: ${macroPath}`;
     }
 
     const commandName = "Load CustomUI from Excel Add-in";
@@ -449,16 +448,16 @@ class ExcelVba {
       },
       async _progress => {
         // setup command
-        const bookFileName = path.parse(bookPath).name;
-        const bookDir = path.dirname(bookPath);
-        const tmpPath = path.join(bookDir, `${bookFileName}_customUI~`);
+        const macroFileName = path.parse(macroPath).name;
+        const macroDir = path.dirname(macroPath);
+        const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-CustomUI.ps1`;
         this.channel.appendLine(`--------`);
         this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- macroPath: ${macroPath}`);
 
         // exec command
-        const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+        const result = this.execPowerShell(scriptPath, [macroPath, tmpPath]);
 
         // output result
         if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
@@ -467,8 +466,8 @@ class ExcelVba {
         }
 
         // Organize loaded files
-        const newFolderName = `${bookFileName}_customUI`;
-        const newPath = path.join(bookDir, newFolderName);
+        const newFolderName = `${macroFileName}_customUI`;
+        const newPath = path.join(macroDir, newFolderName);
 
         // Remove existing folder if it exists
         if (fs.existsSync(newPath)) {
@@ -493,12 +492,12 @@ class ExcelVba {
   }
 
   /** save customUI */
-  public async saveCustomUIAsync(bookPath: string) {
-    const ext = path.extname(bookPath).toLowerCase();
+  public async saveCustomUIAsync(macroPath: string) {
+    const ext = path.extname(macroPath).toLowerCase();
 
     // CustomUI is only supported for .xlam (add-ins)
     if (ext !== ".xlam") {
-      throw `CustomUI is only supported for .xlam files. Selected file: ${bookPath}`;
+      throw `CustomUI is only supported for .xlam files. Selected file: ${macroPath}`;
     }
 
     const commandName = "Save CustomUI to Excel Add-in";
@@ -510,22 +509,22 @@ class ExcelVba {
       },
       async _progress => {
         // setup command
-        const bookFileName = path.parse(bookPath).name;
-        const bookDir = path.dirname(bookPath);
-        const saveSourcePath = path.join(bookDir, `${bookFileName}_customUI`);
+        const macroFileName = path.parse(macroPath).name;
+        const macroDir = path.dirname(macroPath);
+        const saveSourcePath = path.join(macroDir, `${macroFileName}_customUI`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-CustomUI.ps1`;
         this.channel.appendLine(`--------`);
         this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- macroPath: ${macroPath}`);
         this.channel.appendLine(`- saving from: ${saveSourcePath}`);
 
         // Check if save source folder exists
         if (!fs.existsSync(saveSourcePath)) {
-          throw `FOLDER NOT FOUND: ${saveSourcePath}. Please load CustomUI first.`;
+          throw `FOLDER NOT FOUND: ${saveSourcePath}. Please Load CustomUI first.`;
         }
 
         // exec command
-        const result = this.execPowerShell(scriptPath, [bookPath, saveSourcePath]);
+        const result = this.execPowerShell(scriptPath, [macroPath, saveSourcePath]);
 
         // output result
         if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
@@ -534,7 +533,7 @@ class ExcelVba {
         }
 
         // Remove temporary folder if it exists
-        const tmpPath = path.join(bookDir, `${bookFileName}_customUI~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
         if (fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
           this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);

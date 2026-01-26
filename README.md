@@ -6,7 +6,7 @@ VS Code で Excel VBA を開発するための拡張機能です。Excel を開�
 
 ```mermaid
 graph TD
-    A["💻Excel Book<br/>.xlsm"]
+    A["💻Excel Macro<br/>.xlsm"]
     B["📁.bas, .cls, .frm<br/>VBA Modules"]
     P["👤<br/>Developer"]
     E["☁️GitHub Copilot<br/>AI Assistant"]
@@ -28,14 +28,14 @@ graph TD
 
 ## 機能
 
-| 機能                            | 説明                                                            |
-| ------------------------------- | --------------------------------------------------------------- |
-| **Open Excel Book**             | ファイルエクスプローラーから Excel ファイルを開きます。         |
-| **Load VBA from Excel Book**    | ブックファイルから VBA ファイル（.bas, .cls, .frm）を取り出す。 |
-| **Save VBA to Excel Book**      | VS Code で編集した VBA ファイルをブックファイルに保存します。   |
-| **Compare VBA with Excel Book** | VS Code で編集したコードとブックファイルの状態を比較する。      |
+| 機能                                | 説明                                                                                   |
+| ----------------------------------- | -------------------------------------------------------------------------------------- |
+| **Open Excel Macro**                | ファイルエクスプローラーから Excel ファイルを開きます。                                |
+| **Load VBA from Excel Macro**       | マクロファイルから VBA ファイル（.bas, .cls, .frm）を取り出す。                        |
+| **Save VBA to Excel Macro**         | VS Code で編集した VBA ファイルをマクロファイルに保存します。                          |
+| **Compare VBA with Excel Macro**    | VS Code で編集したコードとマクロファイルの状態を比較する。                             |
 | **Load CustomUI from Excel Add-in** | アドインファイル（.xlam）から CustomUI（customUI.xml, customUI14.xml）をエクスポート。 |
-| **Save CustomUI to Excel Add-in**   | VS Code で編集した CustomUI をアドインファイル（.xlam）に保存。 |
+| **Save CustomUI to Excel Add-in**   | VS Code で編集した CustomUI をアドインファイル（.xlam）に保存。                        |
 
 ## 準備
 
@@ -52,21 +52,21 @@ graph TD
 
 ## 使い方
 
-ファイルエクスプローラーでブックファイルを右クリック、またはエディタタイトルのアイコンをクリックして実行します。
+ファイルエクスプローラーでマクロファイルを右クリック、またはエディタタイトルのアイコンをクリックして実行します。
 
 ### Excel ファイルを開く
 
-1. ファイルエクスプローラーでブックファイルを右クリック
-2. 「Open Excel Book」を選択
+1. ファイルエクスプローラーでマクロファイルを右クリック
+2. 「Open Excel Macro」を選択
 3. Excel でファイルが開く
 
 ### VBA をロードする
 
-1. Excel で編集対象のブックファイルを開く
-2. VS Code のファイルエクスプローラーでブックファイルを右クリック
-3. 「Load VBA from Excel Book」を選択
-4. ブックファイルと同じ名前のフォルダが作成される
-   - 例：`MyBook.xlsm` → `MyBook_xlsm` フォルダ
+1. Excel で編集対象のマクロファイルを開く
+2. VS Code のファイルエクスプローラーでマクロファイルを右クリック
+3. 「Load VBA from Excel Macro」を選択
+4. マクロファイルと同じ名前のフォルダが作成される
+   - 例：`MyMacro.xlsm` → `MyMacro_xlsm` フォルダ
 
 ### VBA を編集する
 
@@ -74,15 +74,15 @@ graph TD
 
 ### 差異を確認する
 
-1. ファイルエクスプローラーでブックファイルを右クリック
-2. 「Compare VBA with Excel Book」を選択
-3. ブックファイルとの差異が表示される
+1. ファイルエクスプローラーでマクロファイルを右クリック
+2. 「Compare VBA with Excel Macro」を選択
+3. マクロファイルとの差異が表示される
 
 ### VBA を保存する
 
-1. ファイルエクスプローラーでブックファイルを右クリック
-2. 「Save VBA to Excel Book」を選択
-3. 編集内容がブックファイルに保存される
+1. ファイルエクスプローラーでマクロファイルを右クリック
+2. 「Save VBA to Excel Macro」を選択
+3. 編集内容がマクロファイルに保存される
 
 ### CustomUI をロードする（.xlam のみ）
 
@@ -106,7 +106,7 @@ graph TD
 
 ### Git との連携
 
-Excel ブックが壊れた場合に備えて Git と連携してください。
+Excel マクロが壊れた場合に備えて Git と連携してください。
 
 ### ファイルエンコード
 

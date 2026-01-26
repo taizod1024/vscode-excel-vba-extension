@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $bookPath,
+    [Parameter(Mandatory = $true)] [string] $macroPath,
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
@@ -16,13 +16,13 @@ try {
     # Display script name
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
-    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
+    Write-Host -ForegroundColor Green "- macroPath: $macroPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
-    # Check if the book file exists
-    Write-Host -ForegroundColor Green "- checking if book file exists"
-    if (-not (Test-Path $bookPath)) {
-        throw "BOOK FILE NOT FOUND: $bookPath"
+    # Check if the macro file exists
+    Write-Host -ForegroundColor Green "- checking if macro file exists"
+    if (-not (Test-Path $macroPath)) {
+        throw "macro FILE NOT FOUND: $macroPath"
     }
 
     # Clean temporary directory
@@ -38,7 +38,7 @@ try {
     
     # Copy the .xlam file to a temporary location for extraction
     $tempZipPath = Join-Path $env:TEMP "excel_customui_temp_$(Get-Random).zip"
-    Copy-Item $bookPath $tempZipPath
+    Copy-Item $macroPath $tempZipPath
     
     try {
         # Open the ZIP archive

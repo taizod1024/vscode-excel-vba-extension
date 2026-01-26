@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $bookPath,
+    [Parameter(Mandatory = $true)] [string] $macroPath,
     [Parameter(Mandatory = $true)] [string] $customUISourcePath
 )
 
@@ -16,7 +16,7 @@ try {
     # Display script name
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
+    Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
     Write-Host -ForegroundColor Green "- customUISourcePath: $($customUISourcePath)"
 
     # check if source path exists
@@ -49,15 +49,15 @@ try {
     New-Item $tempDir -ItemType Directory | Out-Null
     
     try {
-        # Copy the original book to temp location
-        $tempBookPath = Join-Path $tempDir "book.xlam"
-        Copy-Item $bookPath $tempBookPath
+        # Copy the original macro to temp location
+        $tempMacroPath = Join-Path $tempDir "macro.xlam"
+        Copy-Item $macroPath $tempMacroPath
         
         Write-Host -ForegroundColor Green "- opening Excel Add-in for modification"
         
         # Open the ZIP archive for reading
         # ZipArchiveMode: 0=Read, 1=Create, 2=Update
-        $zipArchive = [System.IO.Compression.ZipFile]::Open($tempBookPath, 2)
+        $zipArchive = [System.IO.Compression.ZipFile]::Open($tempMacroPath, 2)
         
         try {
             # Remove existing customUI entries from the archive
@@ -111,10 +111,10 @@ try {
             $zipArchive.Dispose()
         }
         
-        # Replace the original book with the modified version
+        # Replace the original macro with the modified version
         Write-Host -ForegroundColor Green "- saving changes to Excel Add-in"
-        Remove-Item $bookPath -Force
-        Move-Item $tempBookPath $bookPath
+        Remove-Item $macroPath -Force
+        Move-Item $tempMacroPath $macroPath
     }
     finally {
         # Clean up temporary directory
