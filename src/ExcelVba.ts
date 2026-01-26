@@ -3,28 +3,19 @@ import * as fs from "fs";
 const path = require("path");
 import child_process from "child_process";
 
-/** excel-vba-extesnion class */
+/** Excel VBA extension class */
 class ExcelVba {
-  /** application id for vscode */
+  /** application id */
   public appId = "excel-vba";
 
   /** application name */
   public appName = "Excel VBA";
 
-  /** channel on vscode */
+  /** output channel */
   public channel: vscode.OutputChannel;
-
-  /** project path */
-  public projectPath: string;
-
-  /** app path */
-  public appPath: string;
 
   /** extension path */
   public extensionPath: string;
-
-  /** tmp path */
-  public tmpPath: string;
 
   /** constructor */
   constructor() {}
@@ -221,11 +212,10 @@ class ExcelVba {
     );
   }
 
-  /** execute powershell script */
+  /** execute PowerShell script */
   public execPowerShell(scriptPath: string, args: string[], trim = true): { stdout: string; stderr: string; exitCode: number } {
     try {
       const result = child_process.spawnSync("powershell.exe", ["-ExecutionPolicy", "RemoteSigned", "-File", scriptPath, ...args], {
-        cwd: this.projectPath,
         encoding: "utf8",
         stdio: ["pipe", "pipe", "pipe"],
       });
@@ -248,19 +238,15 @@ class ExcelVba {
     }
   }
 
-  /** open excel book */
+  /** open Excel book */
   public async openExcelBookAsync(bookPath: string) {
     const commandName = "Open Excel Book";
-    try {
-      this.channel.appendLine(`--------`);
-      this.channel.appendLine(`${commandName}:`);
-      this.channel.appendLine(`- bookPath: ${bookPath}`);
+    this.channel.appendLine(`--------`);
+    this.channel.appendLine(`${commandName}:`);
+    this.channel.appendLine(`- bookPath: ${bookPath}`);
 
-      child_process.spawn("cmd.exe", ["/c", "start", bookPath], { detached: true });
-      this.channel.appendLine(`- opened in Excel`);
-    } catch (reason) {
-      throw reason;
-    }
+    child_process.spawn("cmd.exe", ["/c", "start", bookPath], { detached: true });
+    this.channel.appendLine(`- opened in Excel`);
   }
 
   /** compare VBA with existing folder */
@@ -355,7 +341,6 @@ class ExcelVba {
           const relativePath = f.replace(/\\/g, "/");
           this.channel.appendLine(`  ~ ${relativePath} (modified)`);
           modifiedCount++;
-          // Store the first modified file
           if (!firstModifiedFile) {
             firstModifiedFile = { file1Path, file2Path, name: relativePath };
           }
@@ -371,7 +356,7 @@ class ExcelVba {
       this.channel.appendLine(`- result: no differences`);
     }
 
-    // Show diff for the first modified file
+    // Display first modified file in diff view
     if (firstModifiedFile) {
       this.showDiffAsync(firstModifiedFile.file1Path, firstModifiedFile.file2Path, firstModifiedFile.name);
     }
