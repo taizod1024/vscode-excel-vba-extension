@@ -40,13 +40,13 @@
       },
       {
         "command": "excel-vba.loadCustomUI",
-        "title": "Load CustomUI from Excel Add-in (No Excel required)",
-        "icon": "$(repo-pull)"
+        "title": "Load CustomUI from Excel Add-in (Excel not required)",
+        "icon": "$(arrow-circle-down)"
       },
       {
         "command": "excel-vba.saveCustomUI",
         "title": "Save CustomUI to Excel Add-in (Close Excel first)",
-        "icon": "$(repo-push)"
+        "icon": "$(arrow-circle-up)"
       }
     ],
     "menus": {
