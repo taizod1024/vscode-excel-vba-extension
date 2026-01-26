@@ -34,7 +34,7 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND, START EXCEL"
+        throw "NO EXCEL FOUND. Please start Excel."
     }
     $book = $null
 
@@ -50,7 +50,7 @@ try {
     }
     
     if ($null -eq $book) {
-        throw "NO OPENED WORKBOOK FOUND, OPEN WORKBOOK"
+        throw "NO OPENED WORKBOOK FOUND. Please Open workbook."
     }
     
     # Access VB Project

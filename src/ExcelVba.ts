@@ -29,6 +29,38 @@ class ExcelVba {
   /** constructor */
   constructor() {}
 
+  /** resolve VBA path from selected file */
+  public resolveVbaPath(selectedPath: string): string {
+    const ext = path.extname(selectedPath).toLowerCase();
+
+    // If .xlsm or .xlam is selected, return as is
+    if (ext === ".xlsm" || ext === ".xlam") {
+      return selectedPath;
+    }
+
+    // If .bas, .cls, .frm is selected, find the parent _xlsm or _xlam folder
+    if ([".bas", ".cls", ".frm"].includes(ext)) {
+      const parentDir = path.dirname(selectedPath);
+      let parentName = path.basename(parentDir);
+
+      // Remove trailing ~ from parent folder name
+      if (parentName.endsWith("~")) {
+        parentName = parentName.slice(0, -1);
+      }
+
+      // Check if parent folder is _xlsm or _xlam
+      const match = parentName.match(/^(.+)_(?:xlsm|xlam)$/i);
+      if (match) {
+        const bookName = match[1];
+        const extType = parentName.endsWith("_xlsm") ? "xlsm" : "xlam";
+        const bookPath = path.join(path.dirname(parentDir), `${bookName}.${extType}`);
+        return bookPath;
+      }
+    }
+
+    return selectedPath;
+  }
+
   /** activate extension */
   public activate(context: vscode.ExtensionContext) {
     // init context
@@ -44,7 +76,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          await this.loadVbaAsync(uri.fsPath);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await this.loadVbaAsync(bookPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -56,7 +89,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          await this.saveVbaAsync(uri.fsPath);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await this.saveVbaAsync(bookPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -68,7 +102,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.compareVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          await this.compareVbaAsync(uri.fsPath);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await this.compareVbaAsync(bookPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -107,7 +142,20 @@ class ExcelVba {
         }
 
         // Organize loaded files
-        this.organizeLoadedFiles(bookPath, tmpPath);
+        const newFolderName = `${bookFileName}_${bookExtension}`;
+        const newPath = path.join(bookDir, newFolderName);
+
+        // Remove existing folder if it exists
+        if (fs.existsSync(newPath)) {
+          fs.rmSync(newPath, { recursive: true, force: true });
+        }
+
+        // Move tmpPath to new location
+        fs.renameSync(tmpPath, newPath);
+        this.channel.appendLine(`- organizing loaded files: moved to ${newPath}`);
+
+        // Close all diff editors
+        await this.closeAllDiffEditors();
       },
     );
   }
@@ -135,7 +183,7 @@ class ExcelVba {
 
         // Check if save source folder exists
         if (!fs.existsSync(saveSourcePath)) {
-          throw `FOLDER NOT FOUND: ${saveSourcePath}. PLEASE EXPORT VBA FIRST.`;
+          throw `FOLDER NOT FOUND: ${saveSourcePath}. Plase export VBA first.`;
         }
 
         // exec command
@@ -146,6 +194,16 @@ class ExcelVba {
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
         }
+
+        // Remove temporary folder if it exists
+        const tmpPath = path.join(bookDir, `${bookFileName}_${bookExtension}~`);
+        if (fs.existsSync(tmpPath)) {
+          fs.rmSync(tmpPath, { recursive: true, force: true });
+          this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
+        }
+
+        // Close all diff editors
+        await this.closeAllDiffEditors();
       },
     );
   }
@@ -175,24 +233,6 @@ class ExcelVba {
         exitCode: 1,
       };
     }
-  }
-
-  /** organize loaded files */
-  private organizeLoadedFiles(bookPath: string, tmpPath: string) {
-    const bookFileName = path.parse(bookPath).name;
-    const bookExtension = path.parse(bookPath).ext.replace(".", "");
-    const newFolderName = `${bookFileName}_${bookExtension}`;
-    const bookDir = path.dirname(bookPath);
-    const newPath = path.join(bookDir, newFolderName);
-
-    // Remove existing folder if it exists
-    if (fs.existsSync(newPath)) {
-      fs.rmSync(newPath, { recursive: true, force: true });
-    }
-
-    // Move tmpPath to new location
-    fs.renameSync(tmpPath, newPath);
-    this.channel.appendLine(`- organizing loaded files: moved to ${newPath}`);
   }
 
   /** compare VBA with existing folder */
@@ -231,7 +271,13 @@ class ExcelVba {
         }
 
         // Compare files
-        this.compareDirectories(tmpPath, currentPath);
+        const hasDifferences = this.compareDirectories(tmpPath, currentPath);
+
+        // Remove temporary folder only if no differences
+        if (!hasDifferences && fs.existsSync(tmpPath)) {
+          fs.rmSync(tmpPath, { recursive: true, force: true });
+          this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
+        }
 
         // Show the channel
         this.channel.show();
@@ -240,7 +286,7 @@ class ExcelVba {
   }
 
   /** compare two directories and output differences */
-  private compareDirectories(dir1: string, dir2: string) {
+  private compareDirectories(dir1: string, dir2: string): boolean {
     const files1 = this.getVbaFiles(dir1);
     const files2 = this.getVbaFiles(dir2);
 
@@ -289,8 +335,9 @@ class ExcelVba {
       });
     }
 
-    // Summary
-    if (added.length > 0 || removed.length > 0 || modifiedCount > 0) {
+    // Summary and return whether differences exist
+    const hasDifferences = added.length > 0 || removed.length > 0 || modifiedCount > 0;
+    if (hasDifferences) {
       this.channel.appendLine(`- result: ${added.length} added, ${removed.length} removed, ${modifiedCount} modified (differences found)`);
     } else {
       this.channel.appendLine(`- result: no differences`);
@@ -300,6 +347,8 @@ class ExcelVba {
     if (firstModifiedFile) {
       this.showDiffAsync(firstModifiedFile.file1Path, firstModifiedFile.file2Path, firstModifiedFile.name);
     }
+
+    return hasDifferences;
   }
 
   /** show diff between two files */
@@ -307,6 +356,17 @@ class ExcelVba {
     const file1Uri = vscode.Uri.file(file1Path);
     const file2Uri = vscode.Uri.file(file2Path);
     await vscode.commands.executeCommand("vscode.diff", file1Uri, file2Uri, `Compare: ${title}`);
+  }
+
+  /** close all diff editors */
+  private async closeAllDiffEditors() {
+    for (const group of vscode.window.tabGroups.all) {
+      for (const tab of group.tabs) {
+        if (tab.input instanceof vscode.TabInputTextDiff) {
+          await vscode.window.tabGroups.close(tab);
+        }
+      }
+    }
   }
 
   /** get all VBA files in directory recursively */

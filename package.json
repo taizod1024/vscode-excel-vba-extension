@@ -21,7 +21,7 @@
       {
         "command": "excel-vba.loadVba",
         "title": "Load VBA from Excel Book",
-        "icon": "$(folder)"
+        "icon": "$(export)"
       },
       {
         "command": "excel-vba.saveVba",

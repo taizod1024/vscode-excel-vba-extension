@@ -45,7 +45,7 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND, START EXCEL"
+        throw "NO EXCEL FOUND. Please start Excel."
     }
     $book = $null
 
@@ -62,7 +62,7 @@ try {
     }
     
     if ($null -eq $book) {
-        throw "NO OPENED WORKBOOK FOUND, OPEN WORKBOOK"
+        throw "NO OPENED WORKBOOK FOUND. Please open workbook."
     }
     
     # Save VBA components from files
@@ -144,6 +144,10 @@ try {
             }
         }
     }
+    
+    # Save the workbook
+    Write-Host -ForegroundColor Green "- saving workbook"
+    $book.Save()
     
     Write-Host -ForegroundColor Green "- done"
     exit 0
