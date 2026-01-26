@@ -179,7 +179,7 @@ class ExcelVba {
         this.channel.appendLine(`--------`);
         this.channel.appendLine(`${commandName}:`);
         this.channel.appendLine(`- bookPath: ${bookPath}`);
-        this.channel.appendLine(`- saveing from: ${saveSourcePath}`);
+        this.channel.appendLine(`- saving from: ${saveSourcePath}`);
 
         // Check if save source folder exists
         if (!fs.existsSync(saveSourcePath)) {

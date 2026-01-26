@@ -66,7 +66,7 @@ try {
     }
     
     # Save VBA components from files
-    Write-Host -ForegroundColor Green "- saveing VBA components"
+    Write-Host -ForegroundColor Green "- saving VBA components"
     
     # Get list of VBA files to save
     $vbaFiles = @()
@@ -104,7 +104,7 @@ try {
     }
     
     # Save VBA files
-    Write-Host -ForegroundColor Green "- saveing new/updated components"
+    Write-Host -ForegroundColor Green "- saving new/updated components"
     $vbComponents = @($book.VBProject.VBComponents)
     foreach ($file in $vbaFiles) {
         try {
@@ -113,7 +113,7 @@ try {
             $fileExtension = [System.IO.Path]::GetExtension($file).ToLower()
             
             # For standard modules (.bas), class modules (.cls), and forms (.frm), 
-            # remove existing component with same name before saveing
+            # remove existing component with same name before saving
             if ($fileExtension -eq ".frm" -or $fileExtension -eq ".bas" -or $fileExtension -eq ".cls") {
                 foreach ($component in $vbComponents) {
                     if ($component.Name -eq $componentName) {
@@ -123,7 +123,7 @@ try {
                     }
                 }
                 
-                Write-Host -ForegroundColor Green "  - saveing: $fileName"
+                Write-Host -ForegroundColor Green "  - saving: $fileName"
                 $book.VBProject.VBComponents.Import($file) | Out-Null
             }
         }
