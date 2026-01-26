@@ -32,6 +32,11 @@
         "command": "excel-vba.compareVba",
         "title": "Compare VBA with Excel Book",
         "icon": "$(compare-changes)"
+      },
+      {
+        "command": "excel-vba.openExcelBook",
+        "title": "Open Excel Book",
+        "icon": "$(empty-window)"
       }
     ],
     "menus": {
@@ -46,6 +51,10 @@
         },
         {
           "command": "excel-vba.compareVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.openExcelBook",
           "when": "false"
         }
       ],
@@ -64,6 +73,11 @@
           "command": "excel-vba.compareVba",
           "group": "navigation@3",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.openExcelBook",
+          "group": "navigation@4",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
         }
       ],
       "editor/title": [
@@ -81,6 +95,11 @@
           "command": "excel-vba.compareVba",
           "group": "navigation@3",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.openExcelBook",
+          "group": "navigation@4",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
         }
       ]
     },

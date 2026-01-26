@@ -110,6 +110,19 @@ class ExcelVba {
         }
       }),
     );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.openExcelBook`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await this.openExcelBookAsync(bookPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
   }
 
   /** load vba */
@@ -232,6 +245,21 @@ class ExcelVba {
         stderr: trim ? (ex.message || "").trim() : ex.message || "",
         exitCode: 1,
       };
+    }
+  }
+
+  /** open excel book */
+  public async openExcelBookAsync(bookPath: string) {
+    const commandName = "Open Excel Book";
+    try {
+      this.channel.appendLine(`--------`);
+      this.channel.appendLine(`${commandName}:`);
+      this.channel.appendLine(`- bookPath: ${bookPath}`);
+
+      child_process.spawn("cmd.exe", ["/c", "start", bookPath], { detached: true });
+      this.channel.appendLine(`- opened in Excel`);
+    } catch (reason) {
+      throw reason;
     }
   }
 
