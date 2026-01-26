@@ -17,23 +17,6 @@
   "publisher": "taizod1024",
   "main": "./build/main.js",
   "contributes": {
-    "languages": [
-      {
-        "id": "bas",
-        "extensions": [".bas"],
-        "aliases": ["VBA Basic Module"]
-      },
-      {
-        "id": "cls",
-        "extensions": [".cls"],
-        "aliases": ["VBA Class Module"]
-      },
-      {
-        "id": "frm",
-        "extensions": [".frm"],
-        "aliases": ["VBA Form Module"]
-      }
-    ],
     "commands": [
       {
         "command": "excel-vba.openExcel",
