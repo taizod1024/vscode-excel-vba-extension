@@ -102,6 +102,12 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         
         $filePath = Join-Path $tmpPath "$componentName$fileExt"
         [void]$component.Export($filePath)
+        
+        # Remove trailing whitespace from the file
+        $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
+        $content = $content -replace '\s+$', ''
+        [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
+        
         Write-Host -ForegroundColor Cyan "  loaded to $filePath"
     }
     

@@ -124,6 +124,12 @@ try {
                 }
                 
                 Write-Host -ForegroundColor Green "  - saving: $fileName"
+                
+                # Remove trailing whitespace before import
+                $content = [System.IO.File]::ReadAllText($file, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                $content = $content -replace '\s+$', ''
+                [System.IO.File]::WriteAllText($file, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                
                 $macro.VBProject.VBComponents.Import($file) | Out-Null
             }
         }
