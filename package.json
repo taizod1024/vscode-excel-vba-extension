@@ -26,12 +26,12 @@
       {
         "command": "excel-vba.loadVba",
         "title": "Load VBA from Excel Macro",
-        "icon": "$(export)"
+        "icon": "$(repo-pull)"
       },
       {
         "command": "excel-vba.saveVba",
         "title": "Save VBA to Excel Macro",
-        "icon": "$(save)"
+        "icon": "$(repo-push)"
       },
       {
         "command": "excel-vba.compareVba",
@@ -41,12 +41,12 @@
       {
         "command": "excel-vba.loadCustomUI",
         "title": "Load CustomUI from Excel Add-in (No Excel required)",
-        "icon": "$(export)"
+        "icon": "$(repo-pull)"
       },
       {
         "command": "excel-vba.saveCustomUI",
         "title": "Save CustomUI to Excel Add-in (Close Excel first)",
-        "icon": "$(save)"
+        "icon": "$(repo-push)"
       }
     ],
     "menus": {
@@ -143,14 +143,13 @@
     },
     "keybindings": [],
     "configurationDefaults": {
-      "[bas]": {
+      "[vb]": {
         "files.encoding": "shiftjis"
       },
-      "[cls]": {
-        "files.encoding": "shiftjis"
-      },
-      "[frm]": {
-        "files.encoding": "shiftjis"
+      "files.associations": {
+        "*.bas": "vb",
+        "*.cls": "vb",
+        "*.frm": "vb"
       }
     }
   },
