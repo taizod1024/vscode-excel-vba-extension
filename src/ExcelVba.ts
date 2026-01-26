@@ -103,11 +103,37 @@ class ExcelVba {
     );
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.openExcelBook`, async (uri: vscode.Uri) => {
+      vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
           const bookPath = this.resolveVbaPath(uri.fsPath);
-          await this.openExcelBookAsync(bookPath);
+          await this.openExcelAsync(bookPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.loadCustomUI`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await this.loadCustomUIAsync(bookPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.saveCustomUI`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await this.saveCustomUIAsync(bookPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -239,7 +265,7 @@ class ExcelVba {
   }
 
   /** open Excel book */
-  public async openExcelBookAsync(bookPath: string) {
+  public async openExcelAsync(bookPath: string) {
     const commandName = "Open Excel Book";
     this.channel.appendLine(`--------`);
     this.channel.appendLine(`${commandName}:`);
@@ -273,7 +299,7 @@ class ExcelVba {
         this.channel.appendLine(`- temporary folder: ${tmpPath}`);
 
         if (!fs.existsSync(currentPath)) {
-          throw `FOLDER NOT FOUND: ${currentPath}. Please load VBA first.`;
+          throw `FOLDER NOT FOUND: ${currentPath}. Please open book first.`;
         }
 
         // Load to temporary folder
@@ -403,6 +429,121 @@ class ExcelVba {
     });
 
     return files;
+  }
+
+  /** load customUI */
+  public async loadCustomUIAsync(bookPath: string) {
+    const ext = path.extname(bookPath).toLowerCase();
+
+    // CustomUI is only supported for .xlam (add-ins)
+    if (ext !== ".xlam") {
+      throw `CustomUI is only supported for .xlam files. Selected file: ${bookPath}`;
+    }
+
+    const commandName = "Load CustomUI from Excel Add-in";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        // setup command
+        const bookFileName = path.parse(bookPath).name;
+        const bookDir = path.dirname(bookPath);
+        const tmpPath = path.join(bookDir, `${bookFileName}_customUI~`);
+        const scriptPath = `${this.extensionPath}\\bin\\Load-CustomUI.ps1`;
+        this.channel.appendLine(`--------`);
+        this.channel.appendLine(`${commandName}:`);
+        this.channel.appendLine(`- bookPath: ${bookPath}`);
+
+        // exec command
+        const result = this.execPowerShell(scriptPath, [bookPath, tmpPath]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        // Organize loaded files
+        const newFolderName = `${bookFileName}_customUI`;
+        const newPath = path.join(bookDir, newFolderName);
+
+        // Remove existing folder if it exists
+        if (fs.existsSync(newPath)) {
+          fs.rmSync(newPath, { recursive: true, force: true });
+        }
+
+        // Move tmpPath to new location
+        fs.renameSync(tmpPath, newPath);
+        this.channel.appendLine(`- organizing loaded files: moved to ${newPath}`);
+
+        // Verify files exist in new location
+        if (fs.existsSync(newPath)) {
+          const files = fs.readdirSync(newPath);
+          this.channel.appendLine(`- verified: ${files.length} file(s) in ${newPath}`);
+          files.forEach(f => this.channel.appendLine(`  - ${f}`));
+        }
+
+        // Close all diff editors
+        await this.closeAllDiffEditors();
+      },
+    );
+  }
+
+  /** save customUI */
+  public async saveCustomUIAsync(bookPath: string) {
+    const ext = path.extname(bookPath).toLowerCase();
+
+    // CustomUI is only supported for .xlam (add-ins)
+    if (ext !== ".xlam") {
+      throw `CustomUI is only supported for .xlam files. Selected file: ${bookPath}`;
+    }
+
+    const commandName = "Save CustomUI to Excel Add-in";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        // setup command
+        const bookFileName = path.parse(bookPath).name;
+        const bookDir = path.dirname(bookPath);
+        const saveSourcePath = path.join(bookDir, `${bookFileName}_customUI`);
+        const scriptPath = `${this.extensionPath}\\bin\\Save-CustomUI.ps1`;
+        this.channel.appendLine(`--------`);
+        this.channel.appendLine(`${commandName}:`);
+        this.channel.appendLine(`- bookPath: ${bookPath}`);
+        this.channel.appendLine(`- saving from: ${saveSourcePath}`);
+
+        // Check if save source folder exists
+        if (!fs.existsSync(saveSourcePath)) {
+          throw `FOLDER NOT FOUND: ${saveSourcePath}. Please load CustomUI first.`;
+        }
+
+        // exec command
+        const result = this.execPowerShell(scriptPath, [bookPath, saveSourcePath]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        // Remove temporary folder if it exists
+        const tmpPath = path.join(bookDir, `${bookFileName}_customUI~`);
+        if (fs.existsSync(tmpPath)) {
+          fs.rmSync(tmpPath, { recursive: true, force: true });
+          this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
+        }
+
+        // Close all diff editors
+        await this.closeAllDiffEditors();
+      },
+    );
   }
 }
 export const excelvba = new ExcelVba();

@@ -19,6 +19,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "excel-vba.openExcel",
+        "title": "Open Excel Book",
+        "icon": "$(empty-window)"
+      },
+      {
         "command": "excel-vba.loadVba",
         "title": "Load VBA from Excel Book",
         "icon": "$(export)"
@@ -34,14 +39,23 @@
         "icon": "$(compare-changes)"
       },
       {
-        "command": "excel-vba.openExcelBook",
-        "title": "Open Excel Book",
-        "icon": "$(empty-window)"
+        "command": "excel-vba.loadCustomUI",
+        "title": "Load CustomUI from Excel Add-in (No Excel required)",
+        "icon": "$(export)"
+      },
+      {
+        "command": "excel-vba.saveCustomUI",
+        "title": "Save CustomUI to Excel Add-in (Close Excel first)",
+        "icon": "$(save)"
       }
     ],
     "menus": {
       "commandPalette": [
         {
+          "command": "excel-vba.openExcel",
+          "when": "false"
+        },
+        {
           "command": "excel-vba.loadVba",
           "when": "false"
         },
@@ -54,52 +68,76 @@
           "when": "false"
         },
         {
-          "command": "excel-vba.openExcelBook",
+          "command": "excel-vba.loadCustomUI",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
           "when": "false"
         }
       ],
       "explorer/context": [
         {
-          "command": "excel-vba.loadVba",
+          "command": "excel-vba.openExcel",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.saveVba",
+          "command": "excel-vba.loadVba",
           "group": "navigation@2",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.compareVba",
+          "command": "excel-vba.saveVba",
           "group": "navigation@3",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.openExcelBook",
+          "command": "excel-vba.compareVba",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "group": "navigation@5",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "group": "navigation@6",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
         }
       ],
       "editor/title": [
         {
-          "command": "excel-vba.loadVba",
+          "command": "excel-vba.openExcel",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.saveVba",
+          "command": "excel-vba.loadVba",
           "group": "navigation@2",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.compareVba",
+          "command": "excel-vba.saveVba",
           "group": "navigation@3",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.openExcelBook",
+          "command": "excel-vba.compareVba",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "group": "navigation@5",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "group": "navigation@6",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
         }
       ]
     },

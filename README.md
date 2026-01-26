@@ -34,6 +34,8 @@ graph TD
 | **Load VBA from Excel Book**    | ブックファイルから VBA ファイル（.bas, .cls, .frm）を取り出す。 |
 | **Save VBA to Excel Book**      | VS Code で編集した VBA ファイルをブックファイルに保存します。   |
 | **Compare VBA with Excel Book** | VS Code で編集したコードとブックファイルの状態を比較する。      |
+| **Load CustomUI from Excel Add-in** | アドインファイル（.xlam）から CustomUI（customUI.xml, customUI14.xml）をエクスポート。 |
+| **Save CustomUI to Excel Add-in**   | VS Code で編集した CustomUI をアドインファイル（.xlam）に保存。 |
 
 ## 準備
 
@@ -82,6 +84,24 @@ graph TD
 2. 「Save VBA to Excel Book」を選択
 3. 編集内容がブックファイルに保存される
 
+### CustomUI をロードする（.xlam のみ）
+
+1. アドインファイル（.xlam）をファイルエクスプローラーで右クリック
+2. 「Load CustomUI from Excel Add-in」を選択
+3. アドインファイルと同じ名前のフォルダが作成される
+   - 例：`MyAddin.xlam` → `MyAddin_customUI` フォルダ
+   - CustomUI XMLファイル（`customUI.xml`, `customUI14.xml`）が直接フォルダ内に抽出される
+
+### CustomUI を編集する
+
+フォルダ内の CustomUI XMLファイル（customUI.xml, customUI14.xml）を VS Code で編集。
+
+### CustomUI を保存する（.xlam のみ）
+
+1. ファイルエクスプローラーでアドインファイル（.xlam）を右クリック
+2. 「Save CustomUI to Excel Add-in」を選択
+3. 編集内容がアドインファイルの CustomUI に保存される
+
 ## その他
 
 ### Git との連携
@@ -91,6 +111,10 @@ Excel ブックが壊れた場合に備えて Git と連携してください。
 ### ファイルエンコード
 
 VBA ファイル（.bas, .cls, .frm）は Shift_JIS で開く。日本語を含む多言語文字に対応。
+
+### CustomUI について
+
+CustomUI（Ribbon UI）機能は .xlam（アドイン）ファイルのみでサポートされています。.xlsm ファイルでは使用できません。
 
 ### フォーム リソースファイル（.frx）について
 

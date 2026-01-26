@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+param(
+    [Parameter(Mandatory = $true)] [string] $bookPath,
+    [Parameter(Mandatory = $true)] [string] $tmpPath
+)
+
+# Configuration
+$ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# Required assemblies for ZIP extraction
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+try {
+    
+    # Display script name
+    $scriptName = $MyInvocation.MyCommand.Name
+    Write-Host -ForegroundColor Yellow "$($scriptName):"
+    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
+    Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
+
+    # Check if the book file exists
+    Write-Host -ForegroundColor Green "- checking if book file exists"
+    if (-not (Test-Path $bookPath)) {
+        throw "BOOK FILE NOT FOUND: $bookPath"
+    }
+
+    # Clean temporary directory
+    Write-Host -ForegroundColor Green "- cleaning tmpPath"
+    if (Test-Path $tmpPath) { 
+        Remove-Item $tmpPath -Recurse -Force
+    }
+    Write-Host -ForegroundColor Green "- creating tmpPath"
+    New-Item $tmpPath -ItemType Directory | Out-Null
+
+    # Extract customUI files from .xlam (ZIP format)
+    Write-Host -ForegroundColor Green "- extracting customUI from Excel Add-in"
+    
+    # Copy the .xlam file to a temporary location for extraction
+    $tempZipPath = Join-Path $env:TEMP "excel_customui_temp_$(Get-Random).zip"
+    Copy-Item $bookPath $tempZipPath
+    
+    try {
+        # Open the ZIP archive
+        $zipArchive = [System.IO.Compression.ZipFile]::OpenRead($tempZipPath)
+        
+        # Find customUI XML files in the archive
+        $customUIFound = $false
+        
+        foreach ($entry in $zipArchive.Entries) {
+            $entryName = $entry.FullName.ToLower()
+            
+            # Check for customUI/customUI.xml or customUI14.xml
+            if ($entryName -match "customui/customui\.xml$" -or $entryName -match "customui/customui14\.xml$") {
+                $customUIFound = $true
+                
+                # Extract the file directly to tmpPath (not to a subfolder)
+                $fileName = $entry.Name
+                $outputPath = Join-Path $tmpPath $fileName
+                [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $outputPath, $true)
+                Write-Host -ForegroundColor Cyan "  extracted: $($entry.FullName) to $outputPath"
+            }
+        }
+        
+        $zipArchive.Dispose()
+        
+        if (-not $customUIFound) {
+            Write-Host -ForegroundColor Yellow "  no customUI files found in the Add-in"
+        }
+    }
+    finally {
+        # Remove temporary ZIP file
+        if (Test-Path $tempZipPath) {
+            Remove-Item $tempZipPath -Force
+        }
+    }
+
+    Write-Host -ForegroundColor Green "- done"
+    
+    # Verify that files were extracted
+    Write-Host -ForegroundColor Green "- verifying extracted files in $tmpPath"
+    if (Test-Path $tmpPath) {
+        $files = Get-ChildItem -Path $tmpPath -File
+        if ($files.Count -gt 0) {
+            Write-Host -ForegroundColor Green "- found $($files.Count) file(s) in $tmpPath"
+            $files | ForEach-Object { Write-Host -ForegroundColor Cyan "  - $($_.Name)" }
+        }
+        else {
+            Write-Host -ForegroundColor Yellow "- WARNING: no files found in $tmpPath"
+        }
+    }
+    else {
+        Write-Host -ForegroundColor Red "- ERROR: $tmpPath does not exist"
+    }
+    
+    exit 0
+}
+catch {
+    [Console]::Error.WriteLine("$($_)")
+    exit 1
+}
+finally {
+}
