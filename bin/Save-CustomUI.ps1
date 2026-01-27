@@ -66,7 +66,7 @@ try {
             
             foreach ($entry in $zipArchive.Entries) {
                 $entryName = $entry.FullName.ToLower()
-                if ($entryName -match "customui/customui\.xml$" -or $entryName -match "customui/customui14\.xml$") {
+                if ($entryName -match "customui.*\.xml$") {
                     $entriesToRemove += $entry
                     Write-Host -ForegroundColor Cyan "  marked for removal: $($entry.FullName)"
                 }
