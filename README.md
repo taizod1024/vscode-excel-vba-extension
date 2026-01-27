@@ -4,25 +4,11 @@
 
 VS Code で Excel VBA を開発するための拡張機能です。Excel を開いておくだけで動作します。デバッグには対応していません。
 
-```mermaid
-graph TD
-    A["💻Excel Macro<br/>.xlsm"]
-    B["📁.bas, .cls, .frm<br/>VBA Modules"]
-    P["👤<br/>Developer"]
-    E["☁️GitHub Copilot<br/>AI Assistant"]
-
-    A -->|Load| B
-    P -->|Edit| B
-    B -->|Compare| A
-    B -->|Save| A
-    E -.->|Support| B
-```
-
 **主な利点：**
 
-- VS Codeでの編集
-- バージョン管理との統合
-- GitHub Copilot などの生成AI アシスタントと統合
+- VBAファイルのVS Codeでの編集
+- VBAファイルのバージョン管理との統合
+- GitHub Copilot などの生成AI アシスタントの活用
 
 ## 機能
 
@@ -103,8 +89,8 @@ graph TD
 ## 注意事項
 
 - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
-- VBA ファイル（.bas, .cls, .frm）は Shift_JIS です。
-- フォーム（.frm）と対応する .frx ファイル（リソースファイル）は自動生成されます。.frx を削除すると、フォームは保存できません。
-- フォームを保存する際にコードの先頭に空行が追加されます。https://learn.microsoft.com/en-us/answers/questions/4911760/excel-vba-bug-importing-a-form-adds-a-newline-at-t
-- CustomUI（Ribbon UI）機能は .xlam（アドイン）ファイルのみでサポートされています。.xlsm ファイルでは使用できません。
-- Excel マクロが壊れた場合に備えて Git と連携してください。
+- .bas, .cls, .frmの文字エンコーティングは Shift_JIS です。
+- .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
+- .frmを保存する際にコードの先頭に空行が追加されます。 https://learn.microsoft.com/en-us/answers/questions/4911760/excel-vba-bug-importing-a-form-adds-a-newline-at-t
+- CustomUIは .xlamでのみサポートします。
+- Excel マクロが壊れた場合に備えてバージョン管理システムで管理してください。
