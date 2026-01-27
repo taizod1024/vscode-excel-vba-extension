@@ -105,7 +105,9 @@ graph TD
 ## 注意事項
 
 - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
-- Excel マクロが壊れた場合に備えて Git と連携してください。
 - VBA ファイル（.bas, .cls, .frm）は Shift_JIS です。
-- CustomUI（Ribbon UI）機能は .xlam（アドイン）ファイルのみでサポートされています。.xlsm ファイルでは使用できません。
 - フォーム（.frm）と対応する .frx ファイル（リソースファイル）は自動生成されます。.frx を削除すると、フォームは保存できません。
+- フォームを保存する際にコードの先頭に空行が追加されます。https://learn.microsoft.com/en-us/answers/questions/4911760/excel-vba-bug-importing-a-form-adds-a-newline-at-t
+  Option Explicitの前には空行が生成されます。
+- CustomUI（Ribbon UI）機能は .xlam（アドイン）ファイルのみでサポートされています。.xlsm ファイルでは使用できません。
+- Excel マクロが壊れた場合に備えて Git と連携してください。

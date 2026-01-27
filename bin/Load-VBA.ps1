@@ -29,6 +29,7 @@ function Remove-BlankLinesBeforeVBACode {
     Param([string]$content)
     # Remove blank lines before the first code keyword (excluding Attribute, VERSION, Begin, End)
     # Only replace once using regex match
+    # https://learn.microsoft.com/en-us/answers/questions/4911760/excel-vba-bug-importing-a-form-adds-a-newline-at-t
     $match = [regex]::Match($content, "[\r\n]+(?=\s*(Option|Sub|Function|Const|Private|Public|Dim|Type|Enum|Declare|Global|Static|Param|'))")
     if ($match.Success) {
         return $content.Remove($match.Index, $match.Length).Insert($match.Index, "`r`n")
