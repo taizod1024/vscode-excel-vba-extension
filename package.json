@@ -1,7 +1,7 @@
 {
   "version": "0.0.1",
   "name": "excel-vba",
-  "displayName": "Excel VBA module save/load",
+  "displayName": "Excel VBA extension",
   "description": "Excel VBA module save/load extension for windows",
   "engines": {
     "vscode": "^1.90.0"
