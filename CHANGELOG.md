@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.3...v0.0.4) (2026-01-27)
+
+
+### Features
+
+* enhance workbook/add-in detection and saving logic in Load-VBA and Save-VBA scripts ([b1c59e8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b1c59e87e1338ad028489ec6ca029e10b38a5e74))
+* improve detection logic for workbooks and add-ins in Load-VBA and Save-VBA scripts ([80897fc](https://github.com/taizod1024/vscode-excel-vba-extension/commit/80897fc49421bcb8cdad607864ebc5be89c185f6))
+
+
+### Bug Fixes
+
+* handle errors when closing diff editors to prevent crashes ([5e17ab3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5e17ab3c1d5c53428bf053fc658af619dbe257c6))
+
 ### [0.0.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.2...v0.0.3) (2026-01-27)
 
 
