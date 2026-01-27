@@ -109,7 +109,8 @@ try {
             Write-Host -ForegroundColor Red "  5. Re-open the add-in and try again"
             throw $_
         }
-    } else {
+    }
+    else {
         # For workbooks (.xlsm/.xlsx), search through Excel.Workbooks
         Write-Host -ForegroundColor Cyan "  searching Excel.Workbooks (workbook):"
         $workbookCount = $excel.Workbooks.Count
