@@ -179,6 +179,4 @@ catch {
     [Console]::Error.WriteLine("$($_)")
     exit 1
 }
-finally {
-}
 

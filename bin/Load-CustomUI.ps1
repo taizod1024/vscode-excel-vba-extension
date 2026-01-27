@@ -76,23 +76,6 @@ try {
     }
 
     Write-Host -ForegroundColor Green "- done"
-    
-    # Verify that files were extracted
-    Write-Host -ForegroundColor Green "- verifying extracted files in $tmpPath"
-    if (Test-Path $tmpPath) {
-        $files = Get-ChildItem -Path $tmpPath -File
-        if ($files.Count -gt 0) {
-            Write-Host -ForegroundColor Green "- found $($files.Count) file(s) in $tmpPath"
-            $files | ForEach-Object { Write-Host -ForegroundColor Cyan "  - $($_.Name)" }
-        }
-        else {
-            Write-Host -ForegroundColor Yellow "- WARNING: no files found in $tmpPath"
-        }
-    }
-    else {
-        Write-Host -ForegroundColor Red "- ERROR: $tmpPath does not exist"
-    }
-    
     exit 0
 }
 catch {
