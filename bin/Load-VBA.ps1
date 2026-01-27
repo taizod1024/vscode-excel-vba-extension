@@ -63,41 +63,69 @@ try {
     $macro = $null
     $vbProject = $null
     
-    # Search through VBE.VBProjects to find the opened workbook or add-in
-    Write-Host -ForegroundColor Cyan "  searching VBE.VBProjects:"
-    try {
-        $projectCount = 0
-        foreach ($vbProj in $excel.VBE.VBProjects) {
-            $projectCount++
-            $projectFileName = $vbProj.FileName
-            $projectName = $vbProj.Name
-            Write-Host -ForegroundColor Cyan "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+    # Determine if this is an add-in (.xlam) or workbook (.xlsm/.xlsx)
+    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
+    Write-Host -ForegroundColor Cyan "  file extension: $fileExtension"
+    
+    $isAddIn = ($fileExtension -eq ".xlam")
+    
+    if ($isAddIn) {
+        # For add-ins (.xlam), search through VBE.VBProjects
+        Write-Host -ForegroundColor Cyan "  searching VBE.VBProjects (add-in):"
+        try {
+            $vbe = $excel.VBE
+            if ($null -eq $vbe) {
+                throw "Excel.VBE is null - VBA project object model access may not be enabled"
+            }
             
-            if ($projectFileName -eq $resolvedPath) {
+            $vbProjects = $vbe.VBProjects
+            if ($null -eq $vbProjects) {
+                throw "Excel.VBE.VBProjects is null - VBA project object model access may not be enabled"
+            }
+            
+            $projectCount = 0
+            foreach ($vbProj in $vbProjects) {
+                $projectCount++
+                $projectFileName = $vbProj.FileName
+                $projectName = $vbProj.Name
+                Write-Host -ForegroundColor Cyan "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+                
+                if ($projectFileName -eq $resolvedPath) {
+                    Write-Host -ForegroundColor Yellow "    MATCHED!"
+                    $vbProject = $vbProj
+                    break
+                }
+            }
+            Write-Host -ForegroundColor Cyan "  total projects found: $projectCount"
+        }
+        catch {
+            Write-Host -ForegroundColor Red "  error accessing VBE.VBProjects: $_"
+            Write-Host -ForegroundColor Red "  "
+            Write-Host -ForegroundColor Red "  SOLUTION:"
+            Write-Host -ForegroundColor Red "  1. Open Excel and go to: File > Options > Trust Center > Trust Center Settings..."
+            Write-Host -ForegroundColor Red "  2. Click 'Macro Settings'"
+            Write-Host -ForegroundColor Red "  3. Check the checkbox: 'Trust access to the VBA project object model'"
+            Write-Host -ForegroundColor Red "  4. Click OK and close Excel completely"
+            Write-Host -ForegroundColor Red "  5. Re-open the add-in and try again"
+            throw $_
+        }
+    } else {
+        # For workbooks (.xlsm/.xlsx), search through Excel.Workbooks
+        Write-Host -ForegroundColor Cyan "  searching Excel.Workbooks (workbook):"
+        $workbookCount = $excel.Workbooks.Count
+        Write-Host -ForegroundColor Cyan "  total workbooks found: $workbookCount"
+        
+        foreach ($wb in $excel.Workbooks) {
+            $wbFullName = $wb.FullName
+            Write-Host -ForegroundColor Cyan "    Workbook: $($wb.Name), FullName: $wbFullName"
+            
+            if ($wbFullName -eq $resolvedPath) {
                 Write-Host -ForegroundColor Yellow "    MATCHED!"
-                # Found the project, save it directly
-                $vbProject = $vbProj
-                
-                # Try to find corresponding workbook object
-                foreach ($wb in $excel.workbooks) {
-                    if ($wb.Name -eq $projectName) {
-                        $macro = $wb
-                        Write-Host -ForegroundColor Yellow "    Found in Workbooks"
-                        break
-                    }
-                }
-                
-                # If not found in Workbooks, just use the VBProject
-                if ($null -eq $macro) {
-                    Write-Host -ForegroundColor Yellow "    Using VBProject directly (add-in)"
-                }
+                $macro = $wb
+                $vbProject = $wb.VBProject
                 break
             }
         }
-        Write-Host -ForegroundColor Cyan "  total projects found: $projectCount"
-    }
-    catch {
-        Write-Host -ForegroundColor Red "  error accessing VBE.VBProjects: $_"
     }
     
     if ($null -eq $vbProject) {
