@@ -51,7 +51,7 @@ try {
             $entryName = $entry.FullName.ToLower()
             
             # Check for any customUI XML files (more flexible search)
-            if ($entryName -match "customui.*\.xml$") {
+            if ($entryName -match "customui.*\.xml$" -and -not $entry.FullName.EndsWith("/")) {
                 $customUIFound = $true
                 
                 # Extract the file directly to tmpPath (not to a subfolder)
