@@ -24,6 +24,18 @@ function Remove-PathToLongDirectory {
     Remove-Item $tempDirectory -Force | out-null
 }
 
+# Function to remove blank lines before VBA code starts
+function Remove-BlankLinesBeforeVBACode {
+    Param([string]$content)
+    # Remove blank lines before the first code keyword (excluding Attribute, VERSION, Begin, End)
+    # Only replace once using regex match
+    $match = [regex]::Match($content, "[\r\n]+(?=\s*(Option|Sub|Function|Const|Private|Public|Dim|Type|Enum|Declare|Global|Static|Param|'))")
+    if ($match.Success) {
+        return $content.Remove($match.Index, $match.Length).Insert($match.Index, "`r`n")
+    }
+    return $content
+}
+
 try {
 
     # Display script name
@@ -111,7 +123,8 @@ try {
             $fileName = [System.IO.Path]::GetFileName($file)
             $componentName = [System.IO.Path]::GetFileNameWithoutExtension($file)
             $fileExtension = [System.IO.Path]::GetExtension($file).ToLower()
-            
+            $filePath = $file
+
             # For standard modules (.bas), class modules (.cls), and forms (.frm), 
             # remove existing component with same name before saving
             if ($fileExtension -eq ".frm" -or $fileExtension -eq ".bas" -or $fileExtension -eq ".cls") {
@@ -125,12 +138,16 @@ try {
                 
                 Write-Host -ForegroundColor Green "  - saving: $fileName"
                 
-                # Remove trailing whitespace before import
-                $content = [System.IO.File]::ReadAllText($file, [System.Text.Encoding]::GetEncoding('shift_jis'))
-                $content = $content -replace '\s+$', ''
-                [System.IO.File]::WriteAllText($file, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                # Remove trailing whitespace and blank lines before import
+                $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
                 
-                $macro.VBProject.VBComponents.Import($file) | Out-Null
+                # Remove blank lines before VBA code starts
+                $content = Remove-BlankLinesBeforeVBACode $content
+                
+                $content = $content -replace '\s+$', ''
+                [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                
+                $macro.VBProject.VBComponents.Import($filePath) | Out-Null
             }
         }
         catch {

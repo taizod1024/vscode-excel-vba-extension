@@ -4,19 +4,36 @@ param(
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
-# Configuration
+# set error action
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# Function to safely remove a directory
+# https://stackoverflow.com/a/39587889
 function Remove-PathToLongDirectory {
-    Param([string]$directory)
-    # Use robocopy to recursively delete long paths
+    Param(
+        [string]$directory
+    )
+
+    # create a temporary (empty) directory
     $parent = [System.IO.Path]::GetTempPath()
-    $tempDirectory = New-Item -ItemType Directory -Path (Join-Path $parent ([System.Guid]::NewGuid()))
-    robocopy /MIR $tempDirectory.FullName $directory | Out-Null
-    Remove-Item $directory -Force | Out-Null
-    Remove-Item $tempDirectory -Force | Out-Null
+    [string] $name = [System.Guid]::NewGuid()
+    $tempDirectory = New-Item -ItemType Directory -Path (Join-Path $parent $name)
+
+    robocopy /MIR $tempDirectory.FullName $directory | out-null
+    Remove-Item $directory -Force | out-null
+    Remove-Item $tempDirectory -Force | out-null
+}
+
+# Function to remove blank lines before VBA code starts
+function Remove-BlankLinesBeforeVBACode {
+    Param([string]$content)
+    # Remove blank lines before the first code keyword (excluding Attribute, VERSION, Begin, End)
+    # Only replace once using regex match
+    $match = [regex]::Match($content, "[\r\n]+(?=\s*(Option|Sub|Function|Const|Private|Public|Dim|Type|Enum|Declare|Global|Static|Param|'))")
+    if ($match.Success) {
+        return $content.Remove($match.Index, $match.Length).Insert($match.Index, "`r`n")
+    }
+    return $content
 }
 
 try {
@@ -24,10 +41,10 @@ try {
     # Display script name
     $scriptName = $MyInvocation.MyCommand.Name
     Write-Host -ForegroundColor Yellow "$($scriptName):"
-    Write-Host -ForegroundColor Green "- macroPath: $macroPath"
-    Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
+    Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
+    Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
 
-    # Check if Excel is already running
+    # check if Excel is running
     Write-Host -ForegroundColor Green "- checking Excel running"
     $excel = $null
     try {
@@ -102,9 +119,13 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         
         $filePath = Join-Path $tmpPath "$componentName$fileExt"
         [void]$component.Export($filePath)
-        
-        # Remove trailing whitespace from the file
+
+        # Remove trailing whitespace and blank lines before import
         $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
+        
+        # Remove blank lines before VBA code starts
+        $content = Remove-BlankLinesBeforeVBACode $content
+        
         $content = $content -replace '\s+$', ''
         [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
         
