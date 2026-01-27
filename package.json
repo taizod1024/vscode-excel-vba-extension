@@ -1,0 +1,199 @@
+{
+  "version": "0.0.1",
+  "name": "excel-vba",
+  "displayName": "Excel VBA module save/load",
+  "description": "Excel VBA module save/load extension for windows",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "windows",
+    "excel",
+    "vba"
+  ],
+  "publisher": "taizod1024",
+  "main": "./build/main.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "excel-vba.openExcel",
+        "title": "Open Excel Macro",
+        "icon": "$(empty-window)"
+      },
+      {
+        "command": "excel-vba.loadVba",
+        "title": "Load VBA from Excel Macro",
+        "icon": "$(repo-pull)"
+      },
+      {
+        "command": "excel-vba.saveVba",
+        "title": "Save VBA to Excel Macro",
+        "icon": "$(repo-push)"
+      },
+      {
+        "command": "excel-vba.compareVba",
+        "title": "Compare VBA with Excel Macro",
+        "icon": "$(compare-changes)"
+      },
+      {
+        "command": "excel-vba.loadCustomUI",
+        "title": "Load CustomUI from Excel Add-in (Excel not required)",
+        "icon": "$(arrow-circle-down)"
+      },
+      {
+        "command": "excel-vba.saveCustomUI",
+        "title": "Save CustomUI to Excel Add-in (Close Excel first)",
+        "icon": "$(arrow-circle-up)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "excel-vba.openExcel",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.loadVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "when": "false"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "excel-vba.openExcel",
+          "group": "navigation@1",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadVba",
+          "group": "navigation@2",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.saveVba",
+          "group": "navigation@3",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "group": "navigation@4",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "group": "navigation@5",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "group": "navigation@6",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "excel-vba.openExcel",
+          "group": "navigation@1",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadVba",
+          "group": "navigation@2",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.saveVba",
+          "group": "navigation@3",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "group": "navigation@4",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "group": "navigation@5",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "group": "navigation@6",
+          "when": "resourceExtname =~ /\\.(xlam)$/i"
+        }
+      ]
+    },
+    "keybindings": [],
+    "configurationDefaults": {
+      "[vb]": {
+        "files.encoding": "shiftjis"
+      },
+      "files.associations": {
+        "*.bas": "vb",
+        "*.cls": "vb",
+        "*.frm": "vb"
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=build/main.js --format=cjs --platform=node --external:vscode",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "test": "node ./build/test/runTest.js",
+    "release": "npm run release-premerge && npx standard-version && vsce publish && npm run release-postmerge",
+    "release-premerge": "git switch main && git merge --no-ff develop --no-edit",
+    "release-postmerge": "git push --follow-tags origin main && git push origin develop && git switch develop",
+    "package": "vsce package",
+    "clean": "rmdir /q /s .\\build || exit /b 0"
+  },
+  "author": "yamamoto.taizo <taizod1024@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.1",
+    "@types/superagent": "^4.1.13",
+    "@types/superagent-proxy": "^2.0.1",
+    "@types/vscode": "^1.90.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "bufferutil": "^4.0.5",
+    "esbuild": "^0.27.2",
+    "eslint": "^8.0.1",
+    "generator-code": "^1.6.2",
+    "husky": "^9.1.7",
+    "standard-version": "^9.3.2",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4",
+    "utf-8-validate": "^5.0.7",
+    "vscode": "^0.9.9",
+    "vscode-test": "^1.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taizod1024/vscode-excel-vba-extension.git"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2"
+  }
+}
