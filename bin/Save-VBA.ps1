@@ -74,9 +74,26 @@ try {
     
     $isAddIn = ($fileExtension -eq ".xlam")
     
-    if ($isAddIn) {
-        # For add-ins (.xlam), search through VBE.VBProjects
-        Write-Host -ForegroundColor Cyan "  searching VBE.VBProjects (add-in):"
+    # Search through Excel.Workbooks for both workbooks and add-ins
+    Write-Host -ForegroundColor Cyan "  searching Excel.Workbooks:"
+    $workbookCount = $excel.Workbooks.Count
+    Write-Host -ForegroundColor Cyan "  total workbooks found: $workbookCount"
+    
+    foreach ($wb in $excel.Workbooks) {
+        $wbFullName = $wb.FullName
+        Write-Host -ForegroundColor Cyan "    Workbook: $($wb.Name), FullName: $wbFullName"
+        
+        if ($wbFullName -eq $resolvedPath) {
+            Write-Host -ForegroundColor Yellow "    MATCHED!"
+            $macro = $wb
+            $vbProject = $wb.VBProject
+            break
+        }
+    }
+    
+    # If not found in Workbooks and it's an add-in, try VBE.VBProjects
+    if ($null -eq $vbProject -and $isAddIn) {
+        Write-Host -ForegroundColor Cyan "  not found in Workbooks, searching VBE.VBProjects (add-in):"
         try {
             $vbe = $excel.VBE
             if ($null -eq $vbe) {
@@ -113,23 +130,6 @@ try {
             Write-Host -ForegroundColor Red "  4. Click OK and close Excel completely"
             Write-Host -ForegroundColor Red "  5. Re-open the add-in and try again"
             throw $_
-        }
-    } else {
-        # For workbooks (.xlsm/.xlsx), search through Excel.Workbooks
-        Write-Host -ForegroundColor Cyan "  searching Excel.Workbooks (workbook):"
-        $workbookCount = $excel.Workbooks.Count
-        Write-Host -ForegroundColor Cyan "  total workbooks found: $workbookCount"
-        
-        foreach ($wb in $excel.Workbooks) {
-            $wbFullName = $wb.FullName
-            Write-Host -ForegroundColor Cyan "    Workbook: $($wb.Name), FullName: $wbFullName"
-            
-            if ($wbFullName -eq $resolvedPath) {
-                Write-Host -ForegroundColor Yellow "    MATCHED!"
-                $macro = $wb
-                $vbProject = $wb.VBProject
-                break
-            }
         }
     }
     
@@ -231,30 +231,20 @@ try {
     # Save the workbook or add-in
     Write-Host -ForegroundColor Green "- saving workbook/add-in"
     if ($null -ne $macro) {
+        # For workbooks, save through the workbook object
         $macro.Save()
     }
+    elseif ($isAddIn -and $null -ne $vbProject) {
+        # For add-ins, save through VBProject
+        # It may throw an error but saves anyway, so ignore it
+        try {
+            $vbProject.SaveAs($resolvedPath)
+        }
+        catch {
+        }
+    }
     else {
-        # For add-ins, we need to save through the workbook that contains it
-        # Get the parent workbook from VBProject
-        $parentWorkbook = $null
-        foreach ($wb in $excel.workbooks) {
-            try {
-                if ($wb.VBProject.Name -eq $vbProject.Name) {
-                    $parentWorkbook = $wb
-                    break
-                }
-            }
-            catch {
-                # Skip if VBProject not accessible
-            }
-        }
-        
-        if ($null -ne $parentWorkbook) {
-            $parentWorkbook.Save()
-        }
-        else {
-            Write-Host -ForegroundColor Yellow "  WARNING: Could not find workbook to save add-in. Add-in may not be saved."
-        }
+        Write-Host -ForegroundColor Yellow "  WARNING: Could not find way to save. Please save manually."
     }
     
     Write-Host -ForegroundColor Green "- done"

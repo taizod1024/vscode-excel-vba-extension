@@ -50,8 +50,8 @@ try {
         foreach ($entry in $zipArchive.Entries) {
             $entryName = $entry.FullName.ToLower()
             
-            # Check for customUI/customUI.xml or customUI14.xml
-            if ($entryName -match "customui/customui\.xml$" -or $entryName -match "customui/customui14\.xml$") {
+            # Check for any customUI XML files (more flexible search)
+            if ($entryName -match "customui.*\.xml$") {
                 $customUIFound = $true
                 
                 # Extract the file directly to tmpPath (not to a subfolder)
