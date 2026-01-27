@@ -20,11 +20,9 @@ graph TD
 
 **主な利点：**
 
-- VS Code の豊富な拡張機能とシンタックスハイライト
-- バージョン管理（Git）との統合
-- 強力な検索・置換機能
-- カスタマイズ可能なキーバインド
-- GitHub Copilot などの生成AI アシスタントと統合可能
+- VS Codeでの編集
+- バージョン管理との統合
+- GitHub Copilot などの生成AI アシスタントと統合
 
 ## 機能
 
@@ -108,6 +106,5 @@ graph TD
 - VBA ファイル（.bas, .cls, .frm）は Shift_JIS です。
 - フォーム（.frm）と対応する .frx ファイル（リソースファイル）は自動生成されます。.frx を削除すると、フォームは保存できません。
 - フォームを保存する際にコードの先頭に空行が追加されます。https://learn.microsoft.com/en-us/answers/questions/4911760/excel-vba-bug-importing-a-form-adds-a-newline-at-t
-  Option Explicitの前には空行が生成されます。
 - CustomUI（Ribbon UI）機能は .xlam（アドイン）ファイルのみでサポートされています。.xlsm ファイルでは使用できません。
 - Excel マクロが壊れた場合に備えて Git と連携してください。
