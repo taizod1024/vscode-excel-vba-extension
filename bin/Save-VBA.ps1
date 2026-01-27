@@ -61,20 +61,52 @@ try {
     }
     $macro = $null
 
-    # Check if the workbook is already open in Excel
-    Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+    # Check if the workbook or add-in is already open in Excel
+    Write-Host -ForegroundColor Green "- checking if workbook/add-in is open in Excel"
     $resolvedPath = (Resolve-Path $macroPath).Path
+    Write-Host -ForegroundColor Cyan "  resolvedPath: $resolvedPath"
     $macro = $null
+    $vbProject = $null
     
-    foreach ($wb in $excel.workbooks) {
-        if ($wb.FullName -eq $resolvedPath) {
-            $macro = $wb
-            break
+    # Search through VBE.VBProjects to find the opened workbook or add-in
+    Write-Host -ForegroundColor Cyan "  searching VBE.VBProjects:"
+    try {
+        $projectCount = 0
+        foreach ($vbProj in $excel.VBE.VBProjects) {
+            $projectCount++
+            $projectFileName = $vbProj.FileName
+            $projectName = $vbProj.Name
+            Write-Host -ForegroundColor Cyan "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+            
+            if ($projectFileName -eq $resolvedPath) {
+                Write-Host -ForegroundColor Yellow "    MATCHED!"
+                # Found the project, save it directly
+                $vbProject = $vbProj
+                
+                # Try to find corresponding workbook object
+                foreach ($wb in $excel.workbooks) {
+                    if ($wb.Name -eq $projectName) {
+                        $macro = $wb
+                        Write-Host -ForegroundColor Yellow "    Found in Workbooks"
+                        break
+                    }
+                }
+                
+                # If not found in Workbooks, just use the VBProject
+                if ($null -eq $macro) {
+                    Write-Host -ForegroundColor Yellow "    Using VBProject directly (add-in)"
+                }
+                break
+            }
         }
+        Write-Host -ForegroundColor Cyan "  total projects found: $projectCount"
+    }
+    catch {
+        Write-Host -ForegroundColor Red "  error accessing VBE.VBProjects: $_"
     }
     
-    if ($null -eq $macro) {
-        throw "NO OPENED WORKBOOK FOUND. Please Open Workbook."
+    if ($null -eq $vbProject) {
+        throw "NO OPENED WORKBOOK OR ADD-IN FOUND. Please Open Workbook or Add-in."
     }
     
     # Save VBA components from files
@@ -96,7 +128,7 @@ try {
     
     # Remove components that are no longer in the save folder
     Write-Host -ForegroundColor Green "- removing deleted components"
-    $vbComponents = @($macro.VBProject.VBComponents)
+    $vbComponents = @($vbProject.VBComponents)
     foreach ($component in $vbComponents) {
         # Skip Document modules (they can't be removed)
         if ($component.Type -eq 100) {
@@ -107,7 +139,7 @@ try {
         if (-not ($saveedFileNames -contains $component.Name)) {
             try {
                 Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
-                $macro.VBProject.VBComponents.Remove($component)
+                $vbProject.VBComponents.Remove($component)
             }
             catch {
                 Write-Host -ForegroundColor Yellow "  - warning: failed to remove component '$($component.Name)': $_"
@@ -117,7 +149,7 @@ try {
     
     # Save VBA files
     Write-Host -ForegroundColor Green "- saving new/updated components"
-    $vbComponents = @($macro.VBProject.VBComponents)
+    $vbComponents = @($vbProject.VBComponents)
     foreach ($file in $vbaFiles) {
         try {
             $fileName = [System.IO.Path]::GetFileName($file)
@@ -131,7 +163,7 @@ try {
                 foreach ($component in $vbComponents) {
                     if ($component.Name -eq $componentName) {
                         Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
-                        $macro.VBProject.VBComponents.Remove($component)
+                        $vbProject.VBComponents.Remove($component)
                         break
                     }
                 }
@@ -147,7 +179,7 @@ try {
                 $content = $content -replace '\s+$', ''
                 [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
                 
-                $macro.VBProject.VBComponents.Import($filePath) | Out-Null
+                $vbProject.VBComponents.Import($filePath) | Out-Null
             }
         }
         catch {
@@ -168,9 +200,34 @@ try {
         }
     }
     
-    # Save the workbook
-    Write-Host -ForegroundColor Green "- saving workbook"
-    $macro.Save()
+    # Save the workbook or add-in
+    Write-Host -ForegroundColor Green "- saving workbook/add-in"
+    if ($null -ne $macro) {
+        $macro.Save()
+    }
+    else {
+        # For add-ins, we need to save through the workbook that contains it
+        # Get the parent workbook from VBProject
+        $parentWorkbook = $null
+        foreach ($wb in $excel.workbooks) {
+            try {
+                if ($wb.VBProject.Name -eq $vbProject.Name) {
+                    $parentWorkbook = $wb
+                    break
+                }
+            }
+            catch {
+                # Skip if VBProject not accessible
+            }
+        }
+        
+        if ($null -ne $parentWorkbook) {
+            $parentWorkbook.Save()
+        }
+        else {
+            Write-Host -ForegroundColor Yellow "  WARNING: Could not find workbook to save add-in. Add-in may not be saved."
+        }
+    }
     
     Write-Host -ForegroundColor Green "- done"
     exit 0

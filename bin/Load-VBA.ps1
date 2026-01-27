@@ -56,24 +56,56 @@ try {
     }
     $macro = $null
 
-    # Check if the workbook is already open in Excel
-    Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+    # Check if the workbook or add-in is already open in Excel
+    Write-Host -ForegroundColor Green "- checking if workbook/add-in is open in Excel"
     $resolvedPath = (Resolve-Path $macroPath).Path
+    Write-Host -ForegroundColor Cyan "  resolvedPath: $resolvedPath"
     $macro = $null
-    foreach ($wb in $excel.workbooks) {
-        if ($wb.FullName -eq $resolvedPath) {
-            $macro = $wb
-            break
+    $vbProject = $null
+    
+    # Search through VBE.VBProjects to find the opened workbook or add-in
+    Write-Host -ForegroundColor Cyan "  searching VBE.VBProjects:"
+    try {
+        $projectCount = 0
+        foreach ($vbProj in $excel.VBE.VBProjects) {
+            $projectCount++
+            $projectFileName = $vbProj.FileName
+            $projectName = $vbProj.Name
+            Write-Host -ForegroundColor Cyan "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+            
+            if ($projectFileName -eq $resolvedPath) {
+                Write-Host -ForegroundColor Yellow "    MATCHED!"
+                # Found the project, save it directly
+                $vbProject = $vbProj
+                
+                # Try to find corresponding workbook object
+                foreach ($wb in $excel.workbooks) {
+                    if ($wb.Name -eq $projectName) {
+                        $macro = $wb
+                        Write-Host -ForegroundColor Yellow "    Found in Workbooks"
+                        break
+                    }
+                }
+                
+                # If not found in Workbooks, just use the VBProject
+                if ($null -eq $macro) {
+                    Write-Host -ForegroundColor Yellow "    Using VBProject directly (add-in)"
+                }
+                break
+            }
         }
+        Write-Host -ForegroundColor Cyan "  total projects found: $projectCount"
+    }
+    catch {
+        Write-Host -ForegroundColor Red "  error accessing VBE.VBProjects: $_"
     }
     
-    if ($null -eq $macro) {
-        throw "NO OPENED WORKBOOK FOUND. Please Open Workbook."
+    if ($null -eq $vbProject) {
+        throw "NO OPENED WORKBOOK OR ADD-IN FOUND. Please Open Workbook or Add-in."
     }
     
     # Access VB Project
     Write-Host -ForegroundColor Green "- accessing VB Project"
-    $vbProject = $macro.VBProject
     Write-Host -ForegroundColor Green "- project name: $($vbProject.Name)"
     $componentCount = $vbProject.VBComponents.Count
     Write-Host -ForegroundColor Green "- found $componentCount component(s)"
