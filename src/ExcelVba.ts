@@ -60,7 +60,7 @@ class ExcelVba {
       this.channel.appendLine(`[ERROR] Failed to activate: Windows directory not found`);
       return;
     }
-    this.channel.appendLine(`[INFO] ${this.appName} extension activated`);
+    this.channel.appendLine(`${this.appName} extension activated`);
 
     // init vscode
     context.subscriptions.push(
@@ -159,7 +159,7 @@ class ExcelVba {
         const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-VBA.ps1`;
         this.channel.appendLine("");
-        this.channel.appendLine(`[INFO] ${commandName}`);
+        this.channel.appendLine(`${commandName}`);
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
 
         // exec command
@@ -207,7 +207,7 @@ class ExcelVba {
         const saveSourcePath = path.join(macroDir, `${macroFileName}_${macroExtension}`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-VBA.ps1`;
         this.channel.appendLine("");
-        this.channel.appendLine(`[INFO] ${commandName}`);
+        this.channel.appendLine(`${commandName}`);
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
         this.channel.appendLine(`- Source: ${path.basename(saveSourcePath)}`);
 
@@ -269,7 +269,7 @@ class ExcelVba {
   public async openExcelAsync(macroPath: string) {
     const commandName = "Open Excel Macro";
     this.channel.appendLine("");
-    this.channel.appendLine(`[INFO] ${commandName}`);
+    this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
     child_process.spawn("cmd.exe", ["/c", "start", `"excel"`, `${macroPath}`], { detached: true });
     this.channel.appendLine(`[SUCCESS] Opened in Excel`);
@@ -293,7 +293,7 @@ class ExcelVba {
         const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
 
         this.channel.appendLine("");
-        this.channel.appendLine(`[INFO] ${commandName}`);
+        this.channel.appendLine(`${commandName}`);
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
         this.channel.appendLine(`- Current: ${path.basename(currentPath)}`);
         this.channel.appendLine(`- Loading from Excel...`);
@@ -330,7 +330,7 @@ class ExcelVba {
     const files1 = this.getVbaFiles(dir1);
     const files2 = this.getVbaFiles(dir2);
 
-    this.channel.appendLine(`[INFO] Comparison Results:`);
+    this.channel.appendLine(`Comparison Results:`);
     this.channel.appendLine(`- Files in Excel: ${files1.length}`);
     this.channel.appendLine(`- Files on disk: ${files2.length}`);
 
@@ -459,7 +459,7 @@ class ExcelVba {
         const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-CustomUI.ps1`;
         this.channel.appendLine("");
-        this.channel.appendLine(`[INFO] ${commandName}`);
+        this.channel.appendLine(`${commandName}`);
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
 
         // exec command
@@ -519,7 +519,7 @@ class ExcelVba {
         const saveSourcePath = path.join(macroDir, `${macroFileName}_customUI`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-CustomUI.ps1`;
         this.channel.appendLine("");
-        this.channel.appendLine(`[INFO] ${commandName}`);
+        this.channel.appendLine(`${commandName}`);
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
         this.channel.appendLine(`- Source: ${path.basename(saveSourcePath)}`);
 
