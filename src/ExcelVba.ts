@@ -399,9 +399,13 @@ class ExcelVba {
   /** close all diff editors */
   private async closeAllDiffEditors() {
     for (const group of vscode.window.tabGroups.all) {
-      for (const tab of group.tabs) {
-        if (tab.input instanceof vscode.TabInputTextDiff) {
+      const tabsToClose = group.tabs.filter(tab => tab.input instanceof vscode.TabInputTextDiff);
+      for (const tab of tabsToClose) {
+        try {
           await vscode.window.tabGroups.close(tab);
+        } catch (error) {
+          // Ignore errors if tab is already closed
+          this.channel.appendLine(`- note: tab already closed or not found`);
         }
       }
     }

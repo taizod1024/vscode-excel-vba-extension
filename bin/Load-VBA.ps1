@@ -56,24 +56,85 @@ try {
     }
     $macro = $null
 
-    # Check if the workbook is already open in Excel
-    Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+    # Check if the workbook or add-in is already open in Excel
+    Write-Host -ForegroundColor Green "- checking if workbook/add-in is open in Excel"
     $resolvedPath = (Resolve-Path $macroPath).Path
+    Write-Host -ForegroundColor Cyan "  resolvedPath: $resolvedPath"
     $macro = $null
-    foreach ($wb in $excel.workbooks) {
-        if ($wb.FullName -eq $resolvedPath) {
-            $macro = $wb
-            break
+    $vbProject = $null
+    
+    # Determine if this is an add-in (.xlam) or workbook (.xlsm/.xlsx)
+    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
+    Write-Host -ForegroundColor Cyan "  file extension: $fileExtension"
+    
+    $isAddIn = ($fileExtension -eq ".xlam")
+    
+    if ($isAddIn) {
+        # For add-ins (.xlam), search through VBE.VBProjects
+        Write-Host -ForegroundColor Cyan "  searching VBE.VBProjects (add-in):"
+        try {
+            $vbe = $excel.VBE
+            if ($null -eq $vbe) {
+                throw "Excel.VBE is null - VBA project object model access may not be enabled"
+            }
+            
+            $vbProjects = $vbe.VBProjects
+            if ($null -eq $vbProjects) {
+                throw "Excel.VBE.VBProjects is null - VBA project object model access may not be enabled"
+            }
+            
+            $projectCount = 0
+            foreach ($vbProj in $vbProjects) {
+                $projectCount++
+                $projectFileName = $vbProj.FileName
+                $projectName = $vbProj.Name
+                Write-Host -ForegroundColor Cyan "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+                
+                if ($projectFileName -eq $resolvedPath) {
+                    Write-Host -ForegroundColor Yellow "    MATCHED!"
+                    $vbProject = $vbProj
+                    break
+                }
+            }
+            Write-Host -ForegroundColor Cyan "  total projects found: $projectCount"
+        }
+        catch {
+            Write-Host -ForegroundColor Red "  error accessing VBE.VBProjects: $_"
+            Write-Host -ForegroundColor Red "  "
+            Write-Host -ForegroundColor Red "  SOLUTION:"
+            Write-Host -ForegroundColor Red "  1. Open Excel and go to: File > Options > Trust Center > Trust Center Settings..."
+            Write-Host -ForegroundColor Red "  2. Click 'Macro Settings'"
+            Write-Host -ForegroundColor Red "  3. Check the checkbox: 'Trust access to the VBA project object model'"
+            Write-Host -ForegroundColor Red "  4. Click OK and close Excel completely"
+            Write-Host -ForegroundColor Red "  5. Re-open the add-in and try again"
+            throw $_
+        }
+    }
+    else {
+        # For workbooks (.xlsm/.xlsx), search through Excel.Workbooks
+        Write-Host -ForegroundColor Cyan "  searching Excel.Workbooks (workbook):"
+        $workbookCount = $excel.Workbooks.Count
+        Write-Host -ForegroundColor Cyan "  total workbooks found: $workbookCount"
+        
+        foreach ($wb in $excel.Workbooks) {
+            $wbFullName = $wb.FullName
+            Write-Host -ForegroundColor Cyan "    Workbook: $($wb.Name), FullName: $wbFullName"
+            
+            if ($wbFullName -eq $resolvedPath) {
+                Write-Host -ForegroundColor Yellow "    MATCHED!"
+                $macro = $wb
+                $vbProject = $wb.VBProject
+                break
+            }
         }
     }
     
-    if ($null -eq $macro) {
-        throw "NO OPENED WORKBOOK FOUND. Please Open Workbook."
+    if ($null -eq $vbProject) {
+        throw "NO OPENED WORKBOOK OR ADD-IN FOUND. Please Open Workbook or Add-in."
     }
     
     # Access VB Project
     Write-Host -ForegroundColor Green "- accessing VB Project"
-    $vbProject = $macro.VBProject
     Write-Host -ForegroundColor Green "- project name: $($vbProject.Name)"
     $componentCount = $vbProject.VBComponents.Count
     Write-Host -ForegroundColor Green "- found $componentCount component(s)"
