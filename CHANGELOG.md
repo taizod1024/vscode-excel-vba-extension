@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.4...v0.0.5) (2026-01-27)
+
+
+### Bug Fixes
+
+* refine customUI XML file detection to exclude directories ([70501bf](https://github.com/taizod1024/vscode-excel-vba-extension/commit/70501bfda36a4007aad4e992a7565f8f101af623))
+
 ### [0.0.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.3...v0.0.4) (2026-01-27)
 
 
