@@ -57,10 +57,10 @@ class ExcelVba {
     // init context
     this.channel = vscode.window.createOutputChannel(this.appName, { log: true });
     if (!process.env.WINDIR) {
-      this.channel.appendLine(`${this.appId} failed, no windir`);
+      this.channel.appendLine(`[ERROR] Failed to activate: Windows directory not found`);
       return;
     }
-    this.channel.appendLine(`${this.appId} activated`);
+    this.channel.appendLine(`${this.appName} extension activated`);
 
     // init vscode
     context.subscriptions.push(
@@ -158,15 +158,15 @@ class ExcelVba {
         const macroDir = path.dirname(macroPath);
         const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-VBA.ps1`;
-        this.channel.appendLine(`--------`);
-        this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- macroPath: ${macroPath}`);
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
 
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, tmpPath]);
 
         // output result
-        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
         }
@@ -182,7 +182,7 @@ class ExcelVba {
 
         // Move tmpPath to new location
         fs.renameSync(tmpPath, newPath);
-        this.channel.appendLine(`- organizing loaded files: moved to ${newPath}`);
+        this.channel.appendLine(`[SUCCESS] Loaded files organized`);
 
         // Close all diff editors
         await this.closeAllDiffEditors();
@@ -206,21 +206,21 @@ class ExcelVba {
         const macroDir = path.dirname(macroPath);
         const saveSourcePath = path.join(macroDir, `${macroFileName}_${macroExtension}`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-VBA.ps1`;
-        this.channel.appendLine(`--------`);
-        this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- macroPath: ${macroPath}`);
-        this.channel.appendLine(`- saving from: ${saveSourcePath}`);
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Source: ${path.basename(saveSourcePath)}`);
 
         // Check if save source folder exists
         if (!fs.existsSync(saveSourcePath)) {
-          throw `FOLDER NOT FOUND: ${saveSourcePath}. Plase export VBA first.`;
+          throw `Folder not found: ${path.basename(saveSourcePath)}. Please load VBA first.`;
         }
 
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, saveSourcePath]);
 
         // output result
-        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
         }
@@ -229,8 +229,9 @@ class ExcelVba {
         const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
         if (fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
-          this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
+          this.channel.appendLine(`- Cleaned: Temporary folder removed`);
         }
+        this.channel.appendLine(`[SUCCESS] VBA saved`);
 
         // Close all diff editors
         await this.closeAllDiffEditors();
@@ -267,11 +268,11 @@ class ExcelVba {
   /** open Excel macro */
   public async openExcelAsync(macroPath: string) {
     const commandName = "Open Excel Macro";
-    this.channel.appendLine(`--------`);
-    this.channel.appendLine(`${commandName}:`);
-    this.channel.appendLine(`- macroPath: ${macroPath}`);
+    this.channel.appendLine("");
+    this.channel.appendLine(`${commandName}`);
+    this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
     child_process.spawn("cmd.exe", ["/c", "start", `"excel"`, `${macroPath}`], { detached: true });
-    this.channel.appendLine(`- opened in Excel`);
+    this.channel.appendLine(`[SUCCESS] Opened in Excel`);
   }
 
   /** compare VBA with existing folder */
@@ -291,14 +292,14 @@ class ExcelVba {
         const currentPath = path.join(macroDir, currentFolderName);
         const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
 
-        this.channel.appendLine(`--------`);
-        this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- macroPath: ${macroPath}`);
-        this.channel.appendLine(`- comparing folder: ${currentPath}`);
-        this.channel.appendLine(`- temporary folder: ${tmpPath}`);
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Current: ${path.basename(currentPath)}`);
+        this.channel.appendLine(`- Loading from Excel...`);
 
         if (!fs.existsSync(currentPath)) {
-          throw `FOLDER NOT FOUND: ${currentPath}. Please Open Macro first.`;
+          throw `Folder not found: ${path.basename(currentPath)}. Please load VBA first.`;
         }
 
         // Load to temporary folder
@@ -315,7 +316,7 @@ class ExcelVba {
         // Remove temporary folder only if no differences
         if (!hasDifferences && fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
-          this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
+          this.channel.appendLine(`- Cleaned: Temporary folder removed`);
         }
 
         // Show the channel
@@ -329,8 +330,9 @@ class ExcelVba {
     const files1 = this.getVbaFiles(dir1);
     const files2 = this.getVbaFiles(dir2);
 
-    this.channel.appendLine(`- files in current load: ${files1.length}`);
-    this.channel.appendLine(`- files in stored folder: ${files2.length}`);
+    this.channel.appendLine(`Comparison Results:`);
+    this.channel.appendLine(`- Files in Excel: ${files1.length}`);
+    this.channel.appendLine(`- Files on disk: ${files2.length}`);
 
     const added = files1.filter(f => !files2.includes(f));
     const removed = files2.filter(f => !files1.includes(f));
@@ -340,23 +342,23 @@ class ExcelVba {
     let firstModifiedFile: { file1Path: string; file2Path: string; name: string } | null = null;
 
     if (added.length > 0) {
-      this.channel.appendLine(`- added files:`);
+      this.channel.appendLine(`- [+] Added (${added.length}):`);
       added.forEach(f => {
         const relativePath = f.replace(/\\/g, "/");
-        this.channel.appendLine(`  + ${relativePath}`);
+        this.channel.appendLine(`    ${relativePath}`);
       });
     }
 
     if (removed.length > 0) {
-      this.channel.appendLine(`- removed files:`);
+      this.channel.appendLine(`- [-] Removed (${removed.length}):`);
       removed.forEach(f => {
         const relativePath = f.replace(/\\/g, "/");
-        this.channel.appendLine(`  - ${relativePath}`);
+        this.channel.appendLine(`    ${relativePath}`);
       });
     }
 
     if (common.length > 0) {
-      this.channel.appendLine(`- comparing common files:`);
+      this.channel.appendLine(`- [~] Modified:`);
       common.forEach(f => {
         const file1Path = path.join(dir1, f);
         const file2Path = path.join(dir2, f);
@@ -364,7 +366,7 @@ class ExcelVba {
         const content2 = fs.readFileSync(file2Path, "utf8");
         if (content1 !== content2) {
           const relativePath = f.replace(/\\/g, "/");
-          this.channel.appendLine(`  ~ ${relativePath} (modified)`);
+          this.channel.appendLine(`    ${relativePath}`);
           modifiedCount++;
           if (!firstModifiedFile) {
             firstModifiedFile = { file1Path, file2Path, name: relativePath };
@@ -376,9 +378,9 @@ class ExcelVba {
     // Summary and return whether differences exist
     const hasDifferences = added.length > 0 || removed.length > 0 || modifiedCount > 0;
     if (hasDifferences) {
-      this.channel.appendLine(`- result: ${added.length} added, ${removed.length} removed, ${modifiedCount} modified (differences found)`);
+      this.channel.appendLine(`[WARN] Differences found: +${added.length} ~${modifiedCount} -${removed.length}`);
     } else {
-      this.channel.appendLine(`- result: no differences`);
+      this.channel.appendLine(`[SUCCESS] No differences found`);
     }
 
     // Display first modified file in diff view
@@ -456,15 +458,15 @@ class ExcelVba {
         const macroDir = path.dirname(macroPath);
         const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-CustomUI.ps1`;
-        this.channel.appendLine(`--------`);
-        this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- macroPath: ${macroPath}`);
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
 
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, tmpPath]);
 
         // output result
-        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
         }
@@ -480,13 +482,12 @@ class ExcelVba {
 
         // Move tmpPath to new location
         fs.renameSync(tmpPath, newPath);
-        this.channel.appendLine(`- organizing loaded files: moved to ${newPath}`);
+        this.channel.appendLine(`- Organized: Files moved`);
 
         // Verify files exist in new location
         if (fs.existsSync(newPath)) {
           const files = fs.readdirSync(newPath);
-          this.channel.appendLine(`- verified: ${files.length} file(s) in ${newPath}`);
-          files.forEach(f => this.channel.appendLine(`  - ${f}`));
+          this.channel.appendLine(`[SUCCESS] Loaded ${files.length} file(s)`);
         }
 
         // Close all diff editors
@@ -517,21 +518,21 @@ class ExcelVba {
         const macroDir = path.dirname(macroPath);
         const saveSourcePath = path.join(macroDir, `${macroFileName}_customUI`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-CustomUI.ps1`;
-        this.channel.appendLine(`--------`);
-        this.channel.appendLine(`${commandName}:`);
-        this.channel.appendLine(`- macroPath: ${macroPath}`);
-        this.channel.appendLine(`- saving from: ${saveSourcePath}`);
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Source: ${path.basename(saveSourcePath)}`);
 
         // Check if save source folder exists
         if (!fs.existsSync(saveSourcePath)) {
-          throw `FOLDER NOT FOUND: ${saveSourcePath}. Please Load CustomUI first.`;
+          throw `Folder not found: ${path.basename(saveSourcePath)}. Please load CustomUI first.`;
         }
 
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, saveSourcePath]);
 
         // output result
-        if (result.stdout) this.channel.appendLine(`- ${result.stdout}`);
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
         }
@@ -540,8 +541,9 @@ class ExcelVba {
         const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
         if (fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
-          this.channel.appendLine(`- removed temporary folder: ${tmpPath}`);
+          this.channel.appendLine(`- Cleaned: Temporary folder removed`);
         }
+        this.channel.appendLine(`[SUCCESS] CustomUI saved`);
 
         // Close all diff editors
         await this.closeAllDiffEditors();
