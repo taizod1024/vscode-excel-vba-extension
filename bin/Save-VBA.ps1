@@ -242,7 +242,7 @@ try {
         # For add-ins (.xlam), VBA components are stored in the Excel runtime
         # The file cannot be saved directly from VBProject
         Write-Host -ForegroundColor Yellow "  - Opening VB Editor for you to save manually..."
-        $vbProject.ActivateVBProject()
+        $vbProject.Activate
     }
     
     # Compile VBA project
