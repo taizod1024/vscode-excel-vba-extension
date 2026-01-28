@@ -1,5 +1,5 @@
 {
-  "version": "0.0.7",
+  "version": "0.0.8",
   "name": "excel-vba",
   "displayName": "Excel VBA Extension",
   "description": "Excel VBA module load/save/compare extension for windows",

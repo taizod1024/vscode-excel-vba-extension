@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.7...v0.0.8) (2026-01-28)
+
+
+### Features
+
+* add VBA project compilation step with error handling ([18bc1b6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/18bc1b6b812beae6e809d88e6532cd2d64a46800))
+
+
+### Bug Fixes
+
+* improve visibility of VB Editor during manual save for add-ins ([4c29804](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4c29804f65c495e8a4e6a8f827279e5441e1179a))
+
 ### [0.0.7](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.6...v0.0.7) (2026-01-28)
 
 
