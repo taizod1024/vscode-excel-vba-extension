@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.6...v0.0.7) (2026-01-28)
+
+
+### Bug Fixes
+
+* update README and Save-VBA.ps1 to clarify manual saving for .xlam add-ins ([a46de50](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a46de5044249aeb45c6693875bcb6505f9364ccc))
+
 ### [0.0.6](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.5...v0.0.6) (2026-01-27)
 
 
