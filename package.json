@@ -40,7 +40,7 @@
       },
       {
         "command": "excel-vba.loadCustomUI",
-        "title": "Load CustomUI from Excel Add-in (Excel not required)",
+        "title": "Load CustomUI from Excel Add-in",
         "icon": "$(arrow-circle-down)"
       },
       {

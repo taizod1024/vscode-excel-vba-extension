@@ -316,7 +316,6 @@ class ExcelVba {
         // Remove temporary folder only if no differences
         if (!hasDifferences && fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
-          this.channel.appendLine(`- Cleaned: Temporary folder removed`);
         }
 
         // Show the channel
