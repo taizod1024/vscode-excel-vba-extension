@@ -2,7 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### 0.0.2 (2026-01-28)
+### [0.0.7](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.6...v0.0.7) (2026-01-28)
+
+
+### Bug Fixes
+
+* update README and Save-VBA.ps1 to clarify manual saving for .xlam add-ins ([a46de50](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a46de5044249aeb45c6693875bcb6505f9364ccc))
+
+### [0.0.6](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.5...v0.0.6) (2026-01-27)
+
+
+### Bug Fixes
+
+* update display name and description in package.json for clarity ([679f1ec](https://github.com/taizod1024/vscode-excel-vba-extension/commit/679f1ec36ebfb7c769ebf716afcd68685c71696f))
+
+### [0.0.5](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.4...v0.0.5) (2026-01-27)
+
+
+### Bug Fixes
+
+* refine customUI XML file detection to exclude directories ([70501bf](https://github.com/taizod1024/vscode-excel-vba-extension/commit/70501bfda36a4007aad4e992a7565f8f101af623))
+
+### [0.0.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.3...v0.0.4) (2026-01-27)
+
+
+### Features
+
+* enhance workbook/add-in detection and saving logic in Load-VBA and Save-VBA scripts ([b1c59e8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b1c59e87e1338ad028489ec6ca029e10b38a5e74))
+* improve detection logic for workbooks and add-ins in Load-VBA and Save-VBA scripts ([80897fc](https://github.com/taizod1024/vscode-excel-vba-extension/commit/80897fc49421bcb8cdad607864ebc5be89c185f6))
+
+
+### Bug Fixes
+
+* handle errors when closing diff editors to prevent crashes ([5e17ab3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5e17ab3c1d5c53428bf053fc658af619dbe257c6))
+
+### [0.0.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.2...v0.0.3) (2026-01-27)
+
+
+### Features
+
+* update display name in package.json to reflect extension functionality ([bc8dccc](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bc8dccc6c613621be6a724621cc19131dd428a01))
+
+### 0.0.2 (2026-01-27)
 
 
 ### Features
@@ -14,15 +55,12 @@ All notable changes to this project will be documented in this file. See [standa
 * add function to remove blank lines before VBA code ([d1b4af2](https://github.com/taizod1024/vscode-excel-vba-extension/commit/d1b4af24307eda9f2be1ce944a3bfdf69a978ed5))
 * add husky commit-msg hook for commitlint integration ([422db94](https://github.com/taizod1024/vscode-excel-vba-extension/commit/422db9448257ddb2b829520cca8beca8ac17cfaf))
 * add section on unblocking access for downloaded files in README ([4fe0700](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4fe0700c0bb5914c4c9764588ba1aac305e1e932))
-* add VBA project compilation step with error handling ([18bc1b6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/18bc1b6b812beae6e809d88e6532cd2d64a46800))
 * enhance error handling and output logging in PowerShell execution ([f2d3404](https://github.com/taizod1024/vscode-excel-vba-extension/commit/f2d3404223cbdbb052118001bf0383947d9c41c7))
 * enhance export and import functionality with progress notifications ([8a2280a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/8a2280a94ebbe49012c426b84428687adfadae31))
 * enhance export/import functionality with command setup and improved error handling ([7f240fc](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7f240fcbdfe1d9bfd003639a5acc8f87f81eca6c))
 * enhance logging and error handling in Export and Import VBA scripts ([b4b0e29](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b4b0e2987d94b3b015744e8021d44c6407b5f733))
-* enhance workbook/add-in detection and saving logic in Load-VBA and Save-VBA scripts ([b1c59e8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b1c59e87e1338ad028489ec6ca029e10b38a5e74))
 * implement Excel VBA export functionality with error handling and component export ([ee425df](https://github.com/taizod1024/vscode-excel-vba-extension/commit/ee425dfa6f623c9a33d006c38786289fa354010b))
 * implement PowerShell scripts for exporting and importing VBA with temporary path handling ([ab98399](https://github.com/taizod1024/vscode-excel-vba-extension/commit/ab98399d435543ee9a1a5e0a34a6276d403d9605))
-* improve detection logic for workbooks and add-ins in Load-VBA and Save-VBA scripts ([80897fc](https://github.com/taizod1024/vscode-excel-vba-extension/commit/80897fc49421bcb8cdad607864ebc5be89c185f6))
 * improve error handling and logging in PowerShell scripts and TypeScript integration ([5534ed1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5534ed108e6431547659c7a1735c4c5b4a84538c))
 * improve error messages and add workbook saving functionality in Load and Save scripts ([01b570d](https://github.com/taizod1024/vscode-excel-vba-extension/commit/01b570d7844157b77ea3ad4b5169cbb901aab0e5))
 * improve Export-VBA script with enhanced logging and error handling ([d166dfa](https://github.com/taizod1024/vscode-excel-vba-extension/commit/d166dfa4247d13f339b26dee5cec52ba3dd79cd5))
@@ -38,7 +76,6 @@ All notable changes to this project will be documented in this file. See [standa
 * streamline workbook open check and export process in Export-VBA script ([a37eee2](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a37eee2335c5690e87b545080e9133b6aac5158d))
 * update command titles and icons for loading and saving CustomUI in package.json ([a82e867](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a82e8677b60d2e5aed53b12f6736e89347d26e01))
 * update command titles for clarity in README and source files ([5592e3a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5592e3a910eba59dfaf65de270927529bd601eb5))
-* update display name in package.json to reflect extension functionality ([bc8dccc](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bc8dccc6c613621be6a724621cc19131dd428a01))
 * update import/export functionality and improve error handling in scripts ([2c6f26e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/2c6f26e13920b909bd24bfb5fd346acb9f1da81a))
 * update README with new features and improve file encoding handling for VBA modules ([1d62317](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1d62317476a48cbab35a553b03121f18d9290944))
 * update terminology from "Excel Book" to "Excel Macro" in README, scripts, and commands ([c4b6584](https://github.com/taizod1024/vscode-excel-vba-extension/commit/c4b658412f4dcde5038539e506d4972c6de3284d))
@@ -48,9 +85,4 @@ All notable changes to this project will be documented in this file. See [standa
 
 * correct comments and improve clarity in ExcelVba class ([9259eaa](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9259eaac8b4c65321bc54e1a30a3f1016c504cd8))
 * correct spelling of "saving" in output messages for clarity ([a925481](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a925481824981a294c5aef337fa5c7c5ae3453fb))
-* handle errors when closing diff editors to prevent crashes ([5e17ab3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5e17ab3c1d5c53428bf053fc658af619dbe257c6))
-* improve visibility of VB Editor during manual save for add-ins ([4c29804](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4c29804f65c495e8a4e6a8f827279e5441e1179a))
-* refine customUI XML file detection to exclude directories ([70501bf](https://github.com/taizod1024/vscode-excel-vba-extension/commit/70501bfda36a4007aad4e992a7565f8f101af623))
-* update display name and description in package.json for clarity ([679f1ec](https://github.com/taizod1024/vscode-excel-vba-extension/commit/679f1ec36ebfb7c769ebf716afcd68685c71696f))
 * update excel-vba.png image to improve visual representation ([6dcb9ba](https://github.com/taizod1024/vscode-excel-vba-extension/commit/6dcb9babbc0fd1badabcf9411570091acf0d5301))
-* update README and Save-VBA.ps1 to clarify manual saving for .xlam add-ins ([a46de50](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a46de5044249aeb45c6693875bcb6505f9364ccc))
