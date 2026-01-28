@@ -232,16 +232,26 @@ try {
     Write-Host -ForegroundColor Green "- saving workbook/add-in"
     if ($null -ne $macro) {
         # For workbooks, save through the workbook object
+        Write-Host -ForegroundColor Green "  - saving workbook"
         $macro.Save()
     }
     elseif ($isAddIn -and $null -ne $vbProject) {
-        # For add-ins, save through VBProject
-        # It may throw an error but saves anyway, so ignore it
+        # For add-ins (.xlam), VBA components are stored in the Excel runtime
+        # The file cannot be saved directly from VBProject
+        Write-Host -ForegroundColor Yellow "  - Opening VB Editor for you to save manually..."
+        
         try {
-            $vbProject.SaveAs($resolvedPath)
+            # Show VB Editor and bring it to foreground
+            $vbe = $excel.VBE
+            $vbe.MainWindow.Visible = $true
+            $vbe.MainWindow.SetFocus()
+            $vbProject.ActivateVBProject()
         }
         catch {
+            Write-Host -ForegroundColor Yellow "  - Could not open VB Editor automatically"
         }
+        
+        throw "ADD-IN (.XLAM) CANNOT BE SAVED AUTOMATICALLY. Please save manually from Excel using Ctrl+S."
     }
     else {
         Write-Host -ForegroundColor Yellow "  WARNING: Could not find way to save. Please save manually."
