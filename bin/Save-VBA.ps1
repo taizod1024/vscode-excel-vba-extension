@@ -257,6 +257,33 @@ try {
         Write-Host -ForegroundColor Yellow "  WARNING: Could not find way to save. Please save manually."
     }
     
+    # Compile VBA project
+    Write-Host -ForegroundColor Green "- compiling VBA project"
+    try {
+        if ($null -ne $vbProject) {
+            # Execute compile command from VBE menu: Debug > Compile
+            $vbe = $excel.VBE
+            if ($null -ne $vbe) {
+                # Make VBE visible temporarily
+                $vbe.MainWindow.Visible = $true
+                
+                # Try to execute "Compile" from Debug menu
+                $objVBECommandBar = $vbe.CommandBars
+                $compileButton = $objVBECommandBar.FindControl(1, 578)  # 1 = msoControlButton, 578 = Compile ID
+                if ($null -ne $compileButton) {
+                    $compileButton.Execute()
+                    Write-Host -ForegroundColor Green "  - compilation executed"
+                }
+                else {
+                    throw "Could not find compile button"
+                }
+            }
+        }
+    }
+    catch {
+        Write-Host -ForegroundColor Yellow "  - warning: compilation encountered an issue: $_"
+    }
+    
     Write-Host -ForegroundColor Green "- done"
     exit 0
 }
