@@ -230,6 +230,9 @@ try {
     
     # Save the workbook or add-in
     Write-Host -ForegroundColor Green "- saving workbook/add-in"
+    $vbe = $excel.VBE
+    $vbe.MainWindow.Visible = $true
+    $vbe.MainWindow.SetFocus()
     if ($null -ne $macro) {
         # For workbooks, save through the workbook object
         Write-Host -ForegroundColor Green "  - saving workbook"
@@ -239,22 +242,7 @@ try {
         # For add-ins (.xlam), VBA components are stored in the Excel runtime
         # The file cannot be saved directly from VBProject
         Write-Host -ForegroundColor Yellow "  - Opening VB Editor for you to save manually..."
-        
-        try {
-            # Show VB Editor and bring it to foreground
-            $vbe = $excel.VBE
-            $vbe.MainWindow.Visible = $true
-            $vbe.MainWindow.SetFocus()
-            $vbProject.ActivateVBProject()
-        }
-        catch {
-            Write-Host -ForegroundColor Yellow "  - Could not open VB Editor automatically"
-        }
-        
-        throw "ADD-IN (.XLAM) CANNOT BE SAVED AUTOMATICALLY. Please save manually from Excel using Ctrl+S."
-    }
-    else {
-        Write-Host -ForegroundColor Yellow "  WARNING: Could not find way to save. Please save manually."
+        $vbProject.ActivateVBProject()
     }
     
     # Compile VBA project
@@ -265,8 +253,6 @@ try {
             $vbe = $excel.VBE
             if ($null -ne $vbe) {
                 # Make VBE visible temporarily
-                $vbe.MainWindow.Visible = $true
-                
                 # Try to execute "Compile" from Debug menu
                 $objVBECommandBar = $vbe.CommandBars
                 $compileButton = $objVBECommandBar.FindControl(1, 578)  # 1 = msoControlButton, 578 = Compile ID
@@ -283,7 +269,13 @@ try {
     catch {
         Write-Host -ForegroundColor Yellow "  - warning: compilation encountered an issue: $_"
     }
-    
+
+    # For add-ins (.xlam), VBA components are stored in the Excel runtime
+    # The file cannot be saved directly from VBProject
+    if ($isAddIn -and $null -ne $vbProject) {
+        throw "ADD-IN (.XLAM) CANNOT BE SAVED AUTOMATICALLY. Please save manually from Excel using Ctrl+S."
+    }
+
     Write-Host -ForegroundColor Green "- done"
     exit 0
 }
