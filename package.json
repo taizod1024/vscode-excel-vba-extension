@@ -89,7 +89,7 @@
         {
           "command": "excel-vba.openExcel",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",
@@ -126,7 +126,7 @@
         {
           "command": "excel-vba.openExcel",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",

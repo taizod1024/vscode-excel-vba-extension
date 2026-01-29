@@ -125,7 +125,10 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
+          const selectedPath = uri.fsPath;
+          this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
+          const macroPath = this.resolveVbaPath(selectedPath);
+          this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
           await this.openExcelAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
@@ -173,6 +176,7 @@ class ExcelVba {
           if (!subName) {
             throw `No Sub procedure found at cursor position`;
           }
+          await this.saveVbaAsync(macroPath);
           await this.runSubAsync(macroPath, subName);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
