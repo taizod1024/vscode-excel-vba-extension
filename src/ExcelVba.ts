@@ -159,6 +159,27 @@ class ExcelVba {
         }
       }),
     );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.runSub`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const editor = vscode.window.activeTextEditor;
+          if (!editor) {
+            throw `No active editor found`;
+          }
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          const subName = this.extractSubNameAtCursor(editor);
+          if (!subName) {
+            throw `No Sub procedure found at cursor position`;
+          }
+          await this.runSubAsync(macroPath, subName);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
   }
 
   /** load vba */
@@ -565,6 +586,64 @@ class ExcelVba {
 
         // Close all diff editors
         await this.closeAllDiffEditors();
+      },
+    );
+  }
+
+  /** extract sub name at cursor position */
+  private extractSubNameAtCursor(editor: vscode.TextEditor): string | null {
+    const cursorLine = editor.selection.active.line;
+    const document = editor.document;
+    
+    // Search backwards and forwards for Sub/Function declaration
+    let subName: string | null = null;
+    
+    // Search from cursor backwards to find the Sub/Function this cursor is in
+    for (let i = cursorLine; i >= 0; i--) {
+      const line = document.lineAt(i).text;
+      
+      // Match Sub or Function declaration
+      const match = line.match(/^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+(\w+)\s*(?:\(|$)/i);
+      if (match) {
+        subName = match[1];
+        break;
+      }
+      
+      // Stop if we encounter End Sub/Function before finding declaration
+      if (line.match(/^\s*End\s+(?:Sub|Function)\s*$/i) && i !== cursorLine) {
+        break;
+      }
+    }
+    
+    return subName;
+  }
+
+  /** run sub in Excel */
+  public async runSubAsync(macroPath: string, subName: string) {
+    const commandName = "Run VBA Sub";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const scriptPath = `${this.extensionPath}\\bin\\Run-Sub.ps1`;
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Sub: ${subName}`);
+
+        // exec command
+        const result = this.execPowerShell(scriptPath, [macroPath, subName]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] Sub executed`);
       },
     );
   }

@@ -47,6 +47,11 @@
         "command": "excel-vba.saveCustomUI",
         "title": "Save CustomUI to Excel Add-in (Close Excel first)",
         "icon": "$(arrow-circle-up)"
+      },
+      {
+        "command": "excel-vba.runSub",
+        "title": "Run VBA Sub at Cursor",
+        "icon": "$(play)"
       }
     ],
     "menus": {
@@ -74,6 +79,10 @@
         {
           "command": "excel-vba.saveCustomUI",
           "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+        },
+        {
+          "command": "excel-vba.runSub",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         }
       ],
       "explorer/context": [
@@ -106,6 +115,11 @@
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@6",
           "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+        },
+        {
+          "command": "excel-vba.runSub",
+          "group": "navigation@7",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         }
       ],
       "editor/title": [
@@ -138,6 +152,11 @@
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@6",
           "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+        },
+        {
+          "command": "excel-vba.runSub",
+          "group": "navigation@7",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         }
       ]
     },
