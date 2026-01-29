@@ -311,7 +311,7 @@ class ExcelVba {
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-    child_process.spawn("cmd.exe", ["/c", "start", `"excel"`, `${macroPath}`], { detached: true });
+    child_process.spawn("cmd.exe", ["/c", "start", "excel.exe", `"${macroPath}"`], { detached: true });
     this.channel.appendLine(`[SUCCESS] Opened in Excel`);
   }
 

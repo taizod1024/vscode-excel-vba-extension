@@ -22,7 +22,7 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND. Please Open Excel."
+        throw "NO EXCEL FOUND. Please Open Excel Macro."
     }
 
     # Resolve the macro file path
