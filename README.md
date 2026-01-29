@@ -19,7 +19,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Load VBA from Excel Macro**       | マクロファイルから VBA ファイル（.bas, .cls, .frm）を取り出す。                        |
 | **Save VBA to Excel Macro**         | VS Code で編集した VBA ファイルをマクロファイルに保存します。                          |
 | **Compare VBA with Excel Macro**    | VS Code で編集したコードとマクロファイルの状態を比較する。                             |
-| **Run VBA Sub at Cursor**           | カーソル位置の Sub プロシージャを Excel で実行します。                                  |
+| **Run VBA Sub at Cursor**           | カーソル位置の Sub プロシージャを Excel で実行します。                                 |
 | **Load CustomUI from Excel Add-in** | アドインファイル（.xlam）から CustomUI（customUI.xml, customUI14.xml）をエクスポート。 |
 | **Save CustomUI to Excel Add-in**   | VS Code で編集した CustomUI をアドインファイル（.xlam）に保存。                        |
 
@@ -105,7 +105,4 @@ VS Code で Excel VBA を開発するための拡張機能です。
 - .bas, .cls, .frmの文字エンコーティングは Shift_JIS です。
 - .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
 - .frmを保存する際にコードの先頭に空行が追加されます。 https://learn.microsoft.com/en-us/answers/questions/4911760/excel-vba-bug-importing-a-form-adds-a-newline-at-t
-- Sub を実行するには、Excel が起動している必要があります。
-- Sub を実行する際に VBA プロジェクトオブジェクトモデルへのアクセス権が必要です。詳細は「準備」セクションを参照してください。
-- CustomUIは .xlamでのみサポートします。
 - Excel マクロが壊れた場合に備えてバージョン管理システムで管理してください。
