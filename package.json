@@ -53,27 +53,27 @@
       "commandPalette": [
         {
           "command": "excel-vba.openExcel",
-          "when": "false"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.loadVba",
-          "when": "false"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.saveVba",
-          "when": "false"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.compareVba",
-          "when": "false"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
-          "when": "false"
+          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "when": "false"
+          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
         }
       ],
       "explorer/context": [
@@ -100,12 +100,12 @@
         {
           "command": "excel-vba.loadCustomUI",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlam)$/i"
+          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlam)$/i"
+          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
         }
       ],
       "editor/title": [
@@ -132,12 +132,12 @@
         {
           "command": "excel-vba.loadCustomUI",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlam)$/i"
+          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlam)$/i"
+          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
         }
       ]
     },

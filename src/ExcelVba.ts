@@ -49,6 +49,25 @@ class ExcelVba {
       }
     }
 
+    // If .xml is selected in a _customUI folder, find the parent .xlam file
+    if (ext === ".xml") {
+      const parentDir = path.dirname(selectedPath);
+      let parentName = path.basename(parentDir);
+
+      // Remove trailing ~ from parent folder name
+      if (parentName.endsWith("~")) {
+        parentName = parentName.slice(0, -1);
+      }
+
+      // Check if parent folder is _customUI
+      const match = parentName.match(/^(.+)_customUI$/i);
+      if (match) {
+        const macroName = match[1];
+        const macroPath = path.join(path.dirname(parentDir), `${macroName}.xlam`);
+        return macroPath;
+      }
+    }
+
     return selectedPath;
   }
 
