@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.10...v0.0.11) (2026-01-29)
+
+
+### Features
+
+* add run sub at cursor functionality ([9d28d21](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9d28d21175753065d61aa72bafdf2bca578b9052))
+* resolve customUI XLAM file from folder name ([a6520ab](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a6520ab9245ce8fa29caf3efa51f3c57807074da))
+* save VBA before running sub ([338c58f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/338c58fa4a41e24960e2d1ce311ca19b8564a64a))
+
+
+### Bug Fixes
+
+* clean up whitespace in ExcelVba class and README ([eb136b8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/eb136b808a14f162fc5643754f63c1f1780a7edc))
+* remove extra quotes from file path in openExcel ([06a27a3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/06a27a388c210344145e5f5ccf013ea8f70ee71a))
+* use excel.exe explicitly in openExcel command ([59a3f85](https://github.com/taizod1024/vscode-excel-vba-extension/commit/59a3f85f5f84a071f1f17f03d5464e9c6a15d465))
+
 ### [0.0.10](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.9...v0.0.10) (2026-01-28)
 
 
