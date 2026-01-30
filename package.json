@@ -40,12 +40,12 @@
       },
       {
         "command": "excel-vba.loadCustomUI",
-        "title": "Load CustomUI from Excel Add-in",
+        "title": "Load CustomUI from Excel Macro",
         "icon": "$(arrow-circle-down)"
       },
       {
         "command": "excel-vba.saveCustomUI",
-        "title": "Save CustomUI to Excel Add-in (Close Excel first)",
+        "title": "Save CustomUI to Excel Macro (Close Excel first)",
         "icon": "$(arrow-circle-up)"
       },
       {
@@ -74,15 +74,15 @@
         },
         {
           "command": "excel-vba.loadCustomUI",
-          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlam|xxml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlam|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
         }
       ],
       "explorer/context": [
@@ -109,17 +109,17 @@
         {
           "command": "excel-vba.loadCustomUI",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
         }
       ],
       "editor/title": [
