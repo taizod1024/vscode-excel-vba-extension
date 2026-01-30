@@ -54,13 +54,11 @@ try {
     catch {
         throw "NO EXCEL FOUND. Please Open Excel Macro."
     }
-    $macro = $null
 
     # Check if the workbook or add-in is already open in Excel
     Write-Host -ForegroundColor Green "- checking if workbook/add-in is open in Excel"
     $resolvedPath = (Resolve-Path $macroPath).Path
     Write-Host -ForegroundColor Cyan "  resolvedPath: $resolvedPath"
-    $macro = $null
     $vbProject = $null
     
     # Determine if this is an add-in (.xlam) or workbook (.xlsm/.xlsx)
@@ -122,7 +120,6 @@ try {
             
             if ($wbFullName -eq $resolvedPath) {
                 Write-Host -ForegroundColor Yellow "    MATCHED!"
-                $macro = $wb
                 $vbProject = $wb.VBProject
                 break
             }
