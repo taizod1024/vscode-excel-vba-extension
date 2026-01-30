@@ -638,6 +638,9 @@ class ExcelVba {
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
         this.channel.appendLine(`- Sub: ${subName}`);
 
+        // notify macro name
+        vscode.window.showInformationMessage(`Running Sub: ${subName}`);
+
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, subName]);
 

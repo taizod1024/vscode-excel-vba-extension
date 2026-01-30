@@ -21,7 +21,7 @@
       {
         "command": "excel-vba.openExcel",
         "title": "Open Excel Macro",
-        "icon": "$(empty-window)"
+        "icon": "$(vm-connect)"
       },
       {
         "command": "excel-vba.loadVba",
@@ -73,16 +73,16 @@
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
+          "command": "excel-vba.runSub",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+        },
+        {
           "command": "excel-vba.loadCustomUI",
-          "when": "resourceExtname =~ /\\.(xlsx|xlam|xxml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "when": "resourceExtname =~ /\\.(xlsx|xlam|xml)$/i"
-        },
-        {
-          "command": "excel-vba.runSub",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         }
       ],
       "explorer/context": [
@@ -107,19 +107,19 @@
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.loadCustomUI",
+          "command": "excel-vba.runSub",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
         },
         {
-          "command": "excel-vba.saveCustomUI",
+          "command": "excel-vba.loadCustomUI",
           "group": "navigation@6",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         },
         {
-          "command": "excel-vba.runSub",
+          "command": "excel-vba.saveCustomUI",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         }
       ],
       "editor/title": [
@@ -144,19 +144,19 @@
           "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
         },
         {
-          "command": "excel-vba.loadCustomUI",
+          "command": "excel-vba.runSub",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "group": "navigation@6",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlam|xml)$/i"
-        },
-        {
-          "command": "excel-vba.runSub",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
         }
       ]
     },
