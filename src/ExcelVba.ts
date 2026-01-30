@@ -49,7 +49,7 @@ class ExcelVba {
       }
     }
 
-    // If .xml is selected in a _customUI folder, find the parent .xlam file
+    // If .xml is selected in a _customUI folder, find the parent .xlam or .xlsm file
     if (ext === ".xml") {
       const parentDir = path.dirname(selectedPath);
       let parentName = path.basename(parentDir);
@@ -63,8 +63,21 @@ class ExcelVba {
       const match = parentName.match(/^(.+)_customUI$/i);
       if (match) {
         const macroName = match[1];
-        const macroPath = path.join(path.dirname(parentDir), `${macroName}.xlam`);
-        return macroPath;
+        const parentParentDir = path.dirname(parentDir);
+
+        // Try to find .xlam first, then .xlsm
+        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
+        if (fs.existsSync(xlamPath)) {
+          return xlamPath;
+        }
+
+        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
+        if (fs.existsSync(xlsmPath)) {
+          return xlsmPath;
+        }
+
+        // Default to .xlam if neither exists (will be handled as error later)
+        return xlamPath;
       }
     }
 
@@ -483,12 +496,13 @@ class ExcelVba {
   public async loadCustomUIAsync(macroPath: string) {
     const ext = path.extname(macroPath).toLowerCase();
 
-    // CustomUI is only supported for .xlam (add-ins)
-    if (ext !== ".xlam") {
-      throw `CustomUI is only supported for .xlam files. Selected file: ${macroPath}`;
+    // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
+    if (ext !== ".xlam" && ext !== ".xlsm") {
+      throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
     }
 
-    const commandName = "Load CustomUI from Excel Add-in";
+    const fileType = ext === ".xlam" ? "Excel Add-in" : "Excel Workbook";
+    const commandName = `Load CustomUI from ${fileType}`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -543,12 +557,13 @@ class ExcelVba {
   public async saveCustomUIAsync(macroPath: string) {
     const ext = path.extname(macroPath).toLowerCase();
 
-    // CustomUI is only supported for .xlam (add-ins)
-    if (ext !== ".xlam") {
-      throw `CustomUI is only supported for .xlam files. Selected file: ${macroPath}`;
+    // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
+    if (ext !== ".xlam" && ext !== ".xlsm") {
+      throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
     }
 
-    const commandName = "Save CustomUI to Excel Add-in";
+    const fileType = ext === ".xlam" ? "Excel Add-in" : "Excel Workbook";
+    const commandName = `Save CustomUI to ${fileType}`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -606,8 +621,8 @@ class ExcelVba {
     for (let i = cursorLine; i >= 0; i--) {
       const line = document.lineAt(i).text;
 
-      // Match Sub or Function declaration
-      const match = line.match(/^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+(\w+)\s*(?:\(|$)/i);
+      // Match Sub or Function declaration - supports Japanese and other Unicode characters
+      const match = line.match(/^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+([\w\u0080-\uFFFF]+)\s*(?:\(|$)/i);
       if (match) {
         subName = match[1];
         break;
@@ -624,7 +639,7 @@ class ExcelVba {
 
   /** run sub in Excel */
   public async runSubAsync(macroPath: string, subName: string) {
-    const commandName = "Run VBA Sub";
+    const commandName = `Run VBA Sub: ${subName}`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -637,9 +652,6 @@ class ExcelVba {
         this.channel.appendLine(`${commandName}`);
         this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
         this.channel.appendLine(`- Sub: ${subName}`);
-
-        // notify macro name
-        vscode.window.showInformationMessage(`Running Sub: ${subName}`);
 
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, subName]);
