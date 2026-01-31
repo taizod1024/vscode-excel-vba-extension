@@ -23,7 +23,7 @@ class ExcelVba {
   /** resolve VBA path from selected file */
   public resolveVbaPath(selectedPath: string): string {
     let resolvedPath = selectedPath;
-    
+
     // Handle temporary Excel files (~$filename.xlsx)
     const fileName = path.basename(selectedPath);
     if (fileName.startsWith("~$")) {
@@ -31,7 +31,7 @@ class ExcelVba {
       const actualFileName = fileName.substring(2); // Remove ~$ prefix
       resolvedPath = path.join(dir, actualFileName);
     }
-    
+
     const ext = path.extname(resolvedPath).toLowerCase();
 
     // If .xlsm or .xlam is selected, return as is
