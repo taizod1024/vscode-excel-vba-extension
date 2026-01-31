@@ -22,16 +22,26 @@ class ExcelVba {
 
   /** resolve VBA path from selected file */
   public resolveVbaPath(selectedPath: string): string {
-    const ext = path.extname(selectedPath).toLowerCase();
+    let resolvedPath = selectedPath;
+
+    // Handle temporary Excel files (~$filename.xlsx)
+    const fileName = path.basename(selectedPath);
+    if (fileName.startsWith("~$")) {
+      const dir = path.dirname(selectedPath);
+      const actualFileName = fileName.substring(2); // Remove ~$ prefix
+      resolvedPath = path.join(dir, actualFileName);
+    }
+
+    const ext = path.extname(resolvedPath).toLowerCase();
 
     // If .xlsm or .xlam is selected, return as is
     if (ext === ".xlsm" || ext === ".xlam") {
-      return selectedPath;
+      return resolvedPath;
     }
 
     // If .bas, .cls, .frm is selected, find the parent _xlsm or _xlam folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
-      const parentDir = path.dirname(selectedPath);
+      const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
 
       // Remove trailing ~ from parent folder name
@@ -49,7 +59,39 @@ class ExcelVba {
       }
     }
 
-    return selectedPath;
+    // If .xml is selected in a _customUI folder, find the parent .xlam or .xlsm file
+    if (ext === ".xml") {
+      const parentDir = path.dirname(resolvedPath);
+      let parentName = path.basename(parentDir);
+
+      // Remove trailing ~ from parent folder name
+      if (parentName.endsWith("~")) {
+        parentName = parentName.slice(0, -1);
+      }
+
+      // Check if parent folder is _customUI
+      const match = parentName.match(/^(.+)_customUI$/i);
+      if (match) {
+        const macroName = match[1];
+        const parentParentDir = path.dirname(parentDir);
+
+        // Try to find .xlam first, then .xlsm
+        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
+        if (fs.existsSync(xlamPath)) {
+          return xlamPath;
+        }
+
+        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
+        if (fs.existsSync(xlsmPath)) {
+          return xlsmPath;
+        }
+
+        // Default to .xlam if neither exists (will be handled as error later)
+        return xlamPath;
+      }
+    }
+
+    return resolvedPath;
   }
 
   /** activate extension */
@@ -106,7 +148,10 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
+          const selectedPath = uri.fsPath;
+          this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
+          const macroPath = this.resolveVbaPath(selectedPath);
+          this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
           await this.openExcelAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
@@ -134,6 +179,28 @@ class ExcelVba {
         try {
           const macroPath = this.resolveVbaPath(uri.fsPath);
           await this.saveCustomUIAsync(macroPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.runSub`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const editor = vscode.window.activeTextEditor;
+          if (!editor) {
+            throw `No active editor found`;
+          }
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          const subName = this.extractSubNameAtCursor(editor);
+          if (!subName) {
+            throw `No Sub procedure found at cursor position`;
+          }
+          await this.saveVbaAsync(macroPath);
+          await this.runSubAsync(macroPath, subName);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -182,10 +249,35 @@ class ExcelVba {
 
         // Move tmpPath to new location
         fs.renameSync(tmpPath, newPath);
-        this.channel.appendLine(`[SUCCESS] Loaded files organized`);
 
         // Close all diff editors
         await this.closeAllDiffEditors();
+
+        // Open the first file in the explorer view if not already in this folder
+        const files = fs.readdirSync(newPath).filter(file => {
+          const ext = path.extname(file).toLowerCase();
+          return [".bas", ".cls", ".frm", ".xml"].includes(ext);
+        });
+
+        if (files.length > 0) {
+          // Only open if no active editor or the active editor's file doesn't exist in new folder
+          const activeEditor = vscode.window.activeTextEditor;
+          let shouldOpen = true;
+
+          if (activeEditor) {
+            const activeEditorFileName = path.basename(activeEditor.document.uri.fsPath);
+            const activeEditorExists = files.includes(activeEditorFileName);
+            shouldOpen = !activeEditorExists;
+          }
+
+          if (shouldOpen) {
+            const firstFile = path.join(newPath, files[0]);
+            const uri = vscode.Uri.file(firstFile);
+            await vscode.commands.executeCommand("vscode.open", uri);
+          }
+        }
+
+        this.channel.appendLine(`[SUCCESS] Loaded files organized`);
       },
     );
   }
@@ -233,6 +325,12 @@ class ExcelVba {
         }
         this.channel.appendLine(`[SUCCESS] VBA saved`);
 
+        // Show warning for add-in files
+        const ext = path.extname(macroPath).toLowerCase();
+        if (ext === ".xlam") {
+          vscode.window.showWarningMessage(".XLAM CANNOT BE SAVED AUTOMATICALLY. Please save manually from VBE using Ctrl+S.");
+        }
+
         // Close all diff editors
         await this.closeAllDiffEditors();
       },
@@ -271,7 +369,7 @@ class ExcelVba {
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-    child_process.spawn("cmd.exe", ["/c", "start", `"excel"`, `${macroPath}`], { detached: true });
+    child_process.spawn("cmd.exe", ["/c", "start", "excel.exe", macroPath], { detached: true });
     this.channel.appendLine(`[SUCCESS] Opened in Excel`);
   }
 
@@ -439,12 +537,13 @@ class ExcelVba {
   public async loadCustomUIAsync(macroPath: string) {
     const ext = path.extname(macroPath).toLowerCase();
 
-    // CustomUI is only supported for .xlam (add-ins)
-    if (ext !== ".xlam") {
-      throw `CustomUI is only supported for .xlam files. Selected file: ${macroPath}`;
+    // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
+    if (ext !== ".xlam" && ext !== ".xlsm") {
+      throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
     }
 
-    const commandName = "Load CustomUI from Excel Add-in";
+    const fileType = ext === ".xlam" ? "Excel Add-in" : "Excel Workbook";
+    const commandName = `Load CustomUI from ${fileType}`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -491,6 +590,32 @@ class ExcelVba {
 
         // Close all diff editors
         await this.closeAllDiffEditors();
+
+        // Open the first file in the explorer view if not already in this folder
+        const files = fs.readdirSync(newPath).filter(file => {
+          const ext = path.extname(file).toLowerCase();
+          return [".xml"].includes(ext);
+        });
+
+        if (files.length > 0) {
+          // Only open if no active editor or the active editor's file doesn't exist in new folder
+          const activeEditor = vscode.window.activeTextEditor;
+          let shouldOpen = true;
+
+          if (activeEditor) {
+            const activeEditorFileName = path.basename(activeEditor.document.uri.fsPath);
+            const activeEditorExists = files.includes(activeEditorFileName);
+            shouldOpen = !activeEditorExists;
+          }
+
+          if (shouldOpen) {
+            const firstFile = path.join(newPath, files[0]);
+            const uri = vscode.Uri.file(firstFile);
+            await vscode.commands.executeCommand("vscode.open", uri);
+          }
+        }
+
+        this.channel.appendLine(`[SUCCESS] Loaded ${files.length} file(s)`);
       },
     );
   }
@@ -499,12 +624,13 @@ class ExcelVba {
   public async saveCustomUIAsync(macroPath: string) {
     const ext = path.extname(macroPath).toLowerCase();
 
-    // CustomUI is only supported for .xlam (add-ins)
-    if (ext !== ".xlam") {
-      throw `CustomUI is only supported for .xlam files. Selected file: ${macroPath}`;
+    // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
+    if (ext !== ".xlam" && ext !== ".xlsm") {
+      throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
     }
 
-    const commandName = "Save CustomUI to Excel Add-in";
+    const fileType = ext === ".xlam" ? "Excel Add-in" : "Excel Workbook";
+    const commandName = `Save CustomUI to ${fileType}`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -546,6 +672,64 @@ class ExcelVba {
 
         // Close all diff editors
         await this.closeAllDiffEditors();
+      },
+    );
+  }
+
+  /** extract sub name at cursor position */
+  private extractSubNameAtCursor(editor: vscode.TextEditor): string | null {
+    const cursorLine = editor.selection.active.line;
+    const document = editor.document;
+
+    // Search backwards and forwards for Sub/Function declaration
+    let subName: string | null = null;
+
+    // Search from cursor backwards to find the Sub/Function this cursor is in
+    for (let i = cursorLine; i >= 0; i--) {
+      const line = document.lineAt(i).text;
+
+      // Match Sub or Function declaration - supports Japanese and other Unicode characters
+      const match = line.match(/^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+([\w\u0080-\uFFFF]+)\s*(?:\(|$)/i);
+      if (match) {
+        subName = match[1];
+        break;
+      }
+
+      // Stop if we encounter End Sub/Function before finding declaration
+      if (line.match(/^\s*End\s+(?:Sub|Function)\s*$/i) && i !== cursorLine) {
+        break;
+      }
+    }
+
+    return subName;
+  }
+
+  /** run sub in Excel */
+  public async runSubAsync(macroPath: string, subName: string) {
+    const commandName = `Run VBA Sub: ${subName}`;
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const scriptPath = `${this.extensionPath}\\bin\\Run-Sub.ps1`;
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Sub: ${subName}`);
+
+        // exec command
+        const result = this.execPowerShell(scriptPath, [macroPath, subName]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] Sub executed`);
       },
     );
   }

@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.13...v0.0.14) (2026-01-31)
+
+
+### Features
+
+* update README to clarify VBA file addition and CustomUI XML registration requirements ([5450f88](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5450f887deba77ca4721ee690b5f61858a65e779))
+
+### [0.0.13](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.12...v0.0.13) (2026-01-31)
+
+
+### Features
+
+* update excel-vba.png image for improved visual representation ([bb708b6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bb708b64539dbc13a590543cac0b91cb453a7faf))
+
+### [0.0.12](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.11...v0.0.12) (2026-01-31)
+
+
+### Features
+
+* bring Excel and VBE windows to foreground before running macros ([3ba4918](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3ba4918628732be3f2a6a56bf58d9fa1ec0ee167))
+* improve handling of temporary Excel files and add warning for .xlam save limitations ([b0388de](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b0388de7f0944356e5a21f751878f655c0d64e06))
+* open first loaded file in explorer view after organizing files ([7afe801](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7afe801c70ed9013b132655f61fd60c9adc042d1))
+* update command icons and improve user feedback for running VBA subs ([c42f093](https://github.com/taizod1024/vscode-excel-vba-extension/commit/c42f093f212e12bf043acf1f45280c7d3a8d97e7))
+
+
+### Bug Fixes
+
+* remove unnecessary blank lines in resolveVbaPath method ([273ccc5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/273ccc541f0893200e383749b05c732fe06ef7d0))
+* update README and code to support .xlsm files for CustomUI operations ([bac7ec7](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bac7ec7ab0f8445d1d679f4a4683e10e1fead883))
+* update titles and conditions for CustomUI commands in package.json ([dad60b3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/dad60b32d027185893e25cac5cd06a887a620058))
+
+### [0.0.11](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.10...v0.0.11) (2026-01-29)
+
+
+### Features
+
+* add run sub at cursor functionality ([9d28d21](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9d28d21175753065d61aa72bafdf2bca578b9052))
+* resolve customUI XLAM file from folder name ([a6520ab](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a6520ab9245ce8fa29caf3efa51f3c57807074da))
+* save VBA before running sub ([338c58f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/338c58fa4a41e24960e2d1ce311ca19b8564a64a))
+
+
+### Bug Fixes
+
+* clean up whitespace in ExcelVba class and README ([eb136b8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/eb136b808a14f162fc5643754f63c1f1780a7edc))
+* remove extra quotes from file path in openExcel ([06a27a3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/06a27a388c210344145e5f5ccf013ea8f70ee71a))
+* use excel.exe explicitly in openExcel command ([59a3f85](https://github.com/taizod1024/vscode-excel-vba-extension/commit/59a3f85f5f84a071f1f17f03d5464e9c6a15d465))
+
+### [0.0.10](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.9...v0.0.10) (2026-01-28)
+
+
+### Bug Fixes
+
+* update method to activate VB Project for manual saving ([ed0ebf1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/ed0ebf1278f2784f883370b87fa8934500779006))
+
 ### [0.0.9](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.8...v0.0.9) (2026-01-28)
 
 ### [0.0.8](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.7...v0.0.8) (2026-01-28)
