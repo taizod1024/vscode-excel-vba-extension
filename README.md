@@ -132,7 +132,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | ---------------------------------- | ----------------------------------------------------------------------------- |
 | **Open Excel Macro**               | エクスプローラービューから Excel ファイルを開く。                             |
 | **Load VBA from Excel Macro**      | マクロファイル(.xlsm, .xlam)から VBA ファイル（.bas, .cls, .frm）を取り出す。 |
-| **Save VBA to Excel Macro**        | VS Code で編集した VBA ファイルをマクロファイルに保存します。                 |
+| **Save VBA to Excel Macro**        | VS Code で編集した VBA ファイルをマクロファイルに保存する。                   |
 | **Compare VBA with Excel Macro**   | VS Code で編集したコードとマクロファイルの状態を比較する。                    |
 | **Run VBA Sub at Cursor**          | カーソル位置の Sub プロシージャを Excel で実行します。                        |
 | **Load CustomUI from Excel Macro** | マクロファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポート。   |
