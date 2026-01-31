@@ -22,16 +22,26 @@ class ExcelVba {
 
   /** resolve VBA path from selected file */
   public resolveVbaPath(selectedPath: string): string {
-    const ext = path.extname(selectedPath).toLowerCase();
+    let resolvedPath = selectedPath;
+    
+    // Handle temporary Excel files (~$filename.xlsx)
+    const fileName = path.basename(selectedPath);
+    if (fileName.startsWith("~$")) {
+      const dir = path.dirname(selectedPath);
+      const actualFileName = fileName.substring(2); // Remove ~$ prefix
+      resolvedPath = path.join(dir, actualFileName);
+    }
+    
+    const ext = path.extname(resolvedPath).toLowerCase();
 
     // If .xlsm or .xlam is selected, return as is
     if (ext === ".xlsm" || ext === ".xlam") {
-      return selectedPath;
+      return resolvedPath;
     }
 
     // If .bas, .cls, .frm is selected, find the parent _xlsm or _xlam folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
-      const parentDir = path.dirname(selectedPath);
+      const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
 
       // Remove trailing ~ from parent folder name
@@ -51,7 +61,7 @@ class ExcelVba {
 
     // If .xml is selected in a _customUI folder, find the parent .xlam or .xlsm file
     if (ext === ".xml") {
-      const parentDir = path.dirname(selectedPath);
+      const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
 
       // Remove trailing ~ from parent folder name
@@ -81,7 +91,7 @@ class ExcelVba {
       }
     }
 
-    return selectedPath;
+    return resolvedPath;
   }
 
   /** activate extension */
@@ -314,6 +324,12 @@ class ExcelVba {
           this.channel.appendLine(`- Cleaned: Temporary folder removed`);
         }
         this.channel.appendLine(`[SUCCESS] VBA saved`);
+
+        // Show warning for add-in files
+        const ext = path.extname(macroPath).toLowerCase();
+        if (ext === ".xlam") {
+          vscode.window.showWarningMessage(".XLAM CANNOT BE SAVED AUTOMATICALLY. Please save manually from VBE using Ctrl+S.");
+        }
 
         // Close all diff editors
         await this.closeAllDiffEditors();

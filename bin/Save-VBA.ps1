@@ -290,7 +290,7 @@ try {
     # For add-ins (.xlam), VBA components are stored in the Excel runtime
     # The file cannot be saved directly from VBProject
     if ($isAddIn -and $null -ne $vbProject) {
-        throw "ADD-IN (.XLAM) CANNOT BE SAVED AUTOMATICALLY. Please save manually from Excel using Ctrl+S."
+        # 拡張機能本体で通知
     }
 
     Write-Host -ForegroundColor Green "- done"
