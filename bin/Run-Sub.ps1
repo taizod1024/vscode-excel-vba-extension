@@ -96,6 +96,15 @@ try {
     # Try to find the sub in any module
     $subFound = $false
     
+    # Bring Excel window to foreground before running the sub
+    try {
+        $shell = New-Object -ComObject WScript.Shell
+        $shell.AppActivate($excel.Caption)
+    }
+    catch {
+        Write-Host -ForegroundColor Yellow "- Warning: Could not activate window: $_"
+    }
+    
     try {
         # First, try to run it directly using Application.Run
         # This is the most reliable method
