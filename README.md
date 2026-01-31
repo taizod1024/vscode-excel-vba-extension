@@ -107,6 +107,8 @@ Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code.
 - Files downloaded from the internet require access block removal.
 - VBA file encoding is Shift_JIS.
 - The .frx file corresponding to .frm is auto-generated. If you delete .frx, .frm cannot be saved.
+- VBA files can be newly added in VS Code.
+- CustomUI XML files cannot be newly added. They must be pre-registered in the macro file.
 - Manage macro files with a version control system as backup in case they become corrupted.
 
 ---
@@ -216,4 +218,6 @@ VS Code で Excel VBA を開発するための拡張機能です。
 - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
 - VBAファイルの文字エンコーティングは Shift_JIS です。
 - .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
+- VBAファイルはVS Codeで新規追加することができます。
+- CustomUI XMLファイルは新規追加することはできません。事前にマクロファイルに登録されている必要があります。
 - マクロファイルが壊れた場合に備えてバージョン管理システムで管理してください。
