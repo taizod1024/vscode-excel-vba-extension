@@ -218,6 +218,15 @@ try {
                 # Remove trailing whitespace and blank lines before import
                 $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
                 
+                # Check if Attribute VB_Name matches the file name
+                $attributeMatch = [regex]::Match($content, 'Attribute\s+VB_Name\s*=\s*"([^"]+)"')
+                if ($attributeMatch.Success) {
+                    $vbName = $attributeMatch.Groups[1].Value
+                    if ($vbName -ne $componentName) {
+                        throw "MISMATCH Attribute VB_Name: ""$vbName"" != ""$componentName"""
+                    }
+                }
+                
                 # Remove blank lines before VBA code starts
                 $content = Remove-BlankLinesBeforeVBACode $content
                 
