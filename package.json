@@ -52,6 +52,16 @@
         "command": "excel-vba.runSub",
         "title": "Run VBA Sub at Cursor",
         "icon": "$(play)"
+      },
+      {
+        "command": "excel-vba.loadCsv",
+        "title": "Load CSV from Excel Macro",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "excel-vba.saveCsv",
+        "title": "Save CSV to Excel Macro",
+        "icon": "$(cloud-upload)"
       }
     ],
     "menus": {
@@ -83,42 +93,51 @@
         {
           "command": "excel-vba.saveCustomUI",
           "when": "false"
+        },
+        {
+          "command": "excel-vba.loadCsv",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveCsv",
+          "when": "false"
         }
       ],
       "explorer/context": [
         {
           "command": "excel-vba.openExcel",
-          "group": "navigation@1",
           "when": "false"
         },
         {
           "command": "excel-vba.loadVba",
-          "group": "navigation@2",
           "when": "false"
         },
         {
           "command": "excel-vba.saveVba",
-          "group": "navigation@3",
           "when": "false"
         },
         {
           "command": "excel-vba.compareVba",
-          "group": "navigation@4",
           "when": "false"
         },
         {
           "command": "excel-vba.runSub",
-          "group": "navigation@5",
           "when": "false"
         },
         {
           "command": "excel-vba.loadCustomUI",
-          "group": "navigation@6",
           "when": "false"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "group": "navigation@7",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.loadCsv",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveCsv",
           "when": "false"
         }
       ],
@@ -157,6 +176,16 @@
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@7",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+        },
+        {
+          "command": "excel-vba.loadCsv",
+          "group": "navigation@8",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
+        },
+        {
+          "command": "excel-vba.saveCsv",
+          "group": "navigation@9",
+          "when": "resourceExtname =~ /\\.(xlsm|xlam)$/i"
         }
       ]
     },

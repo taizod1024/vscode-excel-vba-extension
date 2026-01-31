@@ -106,6 +106,22 @@ class ExcelVba {
 
     // init vscode
     context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const selectedPath = uri.fsPath;
+          this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
+          const macroPath = this.resolveVbaPath(selectedPath);
+          this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
+          await this.openExcelAsync(macroPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
@@ -137,22 +153,6 @@ class ExcelVba {
         try {
           const macroPath = this.resolveVbaPath(uri.fsPath);
           await this.compareVbaAsync(macroPath);
-        } catch (reason) {
-          this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
-        }
-      }),
-    );
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
-        this.extensionPath = context.extensionPath;
-        try {
-          const selectedPath = uri.fsPath;
-          this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
-          const macroPath = this.resolveVbaPath(selectedPath);
-          this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
-          await this.openExcelAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -201,6 +201,32 @@ class ExcelVba {
           }
           await this.saveVbaAsync(macroPath);
           await this.runSubAsync(macroPath, subName);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.loadCsv`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.loadCsvAsync(macroPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.saveCsv`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.saveCsvAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
@@ -730,6 +756,79 @@ class ExcelVba {
         }
 
         this.channel.appendLine(`[SUCCESS] Sub executed`);
+      },
+    );
+  }
+
+  /** load CSV from sheets */
+  public async loadCsvAsync(macroPath: string) {
+    const commandName = "Load CSV from Sheets";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        // setup command
+        const macroFileName = path.parse(macroPath).name;
+        const macroDir = path.dirname(macroPath);
+        const csvDir = path.join(macroDir, `${macroFileName}_csv`);
+        const scriptPath = `${this.extensionPath}\\bin\\Load-CSV.ps1`;
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Output: ${path.basename(csvDir)}`);
+
+        // exec command
+        const result = this.execPowerShell(scriptPath, [macroPath, csvDir]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] CSV loaded from sheets`);
+      },
+    );
+  }
+
+  /** save sheets from CSV */
+  public async saveCsvAsync(macroPath: string) {
+    const commandName = "Save Sheets from CSV";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        // setup command
+        const macroFileName = path.parse(macroPath).name;
+        const macroDir = path.dirname(macroPath);
+        const csvDir = path.join(macroDir, `${macroFileName}_csv`);
+        const scriptPath = `${this.extensionPath}\\bin\\Save-CSV.ps1`;
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+        this.channel.appendLine(`- Source: ${path.basename(csvDir)}`);
+
+        // Check if CSV directory exists
+        if (!fs.existsSync(csvDir)) {
+          throw `Folder not found: ${path.basename(csvDir)}. Please export CSV first.`;
+        }
+
+        // exec command
+        const result = this.execPowerShell(scriptPath, [macroPath, csvDir]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] Sheets saved from CSV`);
       },
     );
   }
