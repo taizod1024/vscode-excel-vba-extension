@@ -59,6 +59,23 @@ try {
     catch {
         throw "NO EXCEL FOUND. Please Open Excel Macro."
     }
+    
+    # Bring VBE window to foreground if it exists
+    try {
+        $vbe = $excel.VBE
+        if ($null -ne $vbe) {
+            $vbeCaption = $vbe.MainWindow.Caption
+            Write-Host -ForegroundColor Cyan "- VBE caption: $vbeCaption"
+            
+            # Try to activate VBE window using WScript.Shell
+            $shell = New-Object -ComObject WScript.Shell
+            $shell.AppActivate($vbeCaption)
+        }
+    }
+    catch {
+        Write-Host -ForegroundColor Yellow "- Warning: Could not activate VBE window: $_"
+    }
+    
     $macro = $null
 
     # Check if the workbook or add-in is already open in Excel
