@@ -239,10 +239,35 @@ class ExcelVba {
 
         // Move tmpPath to new location
         fs.renameSync(tmpPath, newPath);
-        this.channel.appendLine(`[SUCCESS] Loaded files organized`);
 
         // Close all diff editors
         await this.closeAllDiffEditors();
+
+        // Open the first file in the explorer view if not already in this folder
+        const files = fs.readdirSync(newPath).filter(file => {
+          const ext = path.extname(file).toLowerCase();
+          return [".bas", ".cls", ".frm", ".xml"].includes(ext);
+        });
+
+        if (files.length > 0) {
+          // Only open if no active editor or the active editor's file doesn't exist in new folder
+          const activeEditor = vscode.window.activeTextEditor;
+          let shouldOpen = true;
+
+          if (activeEditor) {
+            const activeEditorFileName = path.basename(activeEditor.document.uri.fsPath);
+            const activeEditorExists = files.includes(activeEditorFileName);
+            shouldOpen = !activeEditorExists;
+          }
+
+          if (shouldOpen) {
+            const firstFile = path.join(newPath, files[0]);
+            const uri = vscode.Uri.file(firstFile);
+            await vscode.commands.executeCommand("vscode.open", uri);
+          }
+        }
+
+        this.channel.appendLine(`[SUCCESS] Loaded files organized`);
       },
     );
   }
@@ -549,6 +574,32 @@ class ExcelVba {
 
         // Close all diff editors
         await this.closeAllDiffEditors();
+
+        // Open the first file in the explorer view if not already in this folder
+        const files = fs.readdirSync(newPath).filter(file => {
+          const ext = path.extname(file).toLowerCase();
+          return [".xml"].includes(ext);
+        });
+
+        if (files.length > 0) {
+          // Only open if no active editor or the active editor's file doesn't exist in new folder
+          const activeEditor = vscode.window.activeTextEditor;
+          let shouldOpen = true;
+
+          if (activeEditor) {
+            const activeEditorFileName = path.basename(activeEditor.document.uri.fsPath);
+            const activeEditorExists = files.includes(activeEditorFileName);
+            shouldOpen = !activeEditorExists;
+          }
+
+          if (shouldOpen) {
+            const firstFile = path.join(newPath, files[0]);
+            const uri = vscode.Uri.file(firstFile);
+            await vscode.commands.executeCommand("vscode.open", uri);
+          }
+        }
+
+        this.channel.appendLine(`[SUCCESS] Loaded ${files.length} file(s)`);
       },
     );
   }
