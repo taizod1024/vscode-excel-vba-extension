@@ -6,14 +6,44 @@ param(
     [string]$CsvInputPath
 )
 
-# Create Excel COM object
-$excel = New-Object -ComObject Excel.Application
-$excel.Visible = $false
-$excel.DisplayAlerts = $false
+# set error action
+$ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# Get running Excel instance
+$excel = $null
+try {
+    $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+}
+catch {
+    throw "NO EXCEL FOUND. Please Open Excel first."
+}
 
 try {
-    # Open the workbook
-    $workbook = $excel.Workbooks.Open([System.IO.Path]::GetFullPath($ExcelFilePath))
+    # Check if CSV input path exists
+    if (-not (Test-Path $CsvInputPath)) {
+        throw "CSV FOLDER NOT FOUND: $($CsvInputPath)"
+    }
+    
+    # Check if Excel file exists
+    if (-not (Test-Path $ExcelFilePath)) {
+        throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
+    }
+    
+    # Check if the workbook is open in Excel
+    $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+    
+    $workbook = $null
+    foreach ($openWorkbook in $excel.Workbooks) {
+        if ($openWorkbook.FullName -eq $fullPath) {
+            $workbook = $openWorkbook
+            break
+        }
+    }
+    
+    if ($null -eq $workbook) {
+        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+    }
     
     # Get all CSV files from input path
     $csvFiles = Get-ChildItem -Path $CsvInputPath -Filter "*.csv" -File
@@ -56,6 +86,7 @@ try {
         $csvContent = $stream.ReadText(-1)  # -1 means read all
         $stream.Close()
         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($stream) | Out-Null
+        $stream = $null
         
         # Parse CSV content
         $lines = $csvContent -split "`r`n" | Where-Object { $_.Length -gt 0 }
@@ -121,9 +152,6 @@ finally {
     # Clean up COM objects
     if ($workbook) {
         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook) | Out-Null
-    }
-    if ($stream) {
-        [System.Runtime.InteropServices.Marshal]::ReleaseComObject($stream) | Out-Null
     }
     $excel.Quit()
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null

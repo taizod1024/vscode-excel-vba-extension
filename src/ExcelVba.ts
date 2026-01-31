@@ -39,6 +39,30 @@ class ExcelVba {
       return resolvedPath;
     }
 
+    // If .csv is selected, find the parent _CSV folder and the corresponding Excel file
+    if (ext === ".csv") {
+      const parentDir = path.dirname(resolvedPath);
+      let parentName = path.basename(parentDir);
+
+      // Check if parent folder is _CSV
+      const match = parentName.match(/^(.+)_CSV$/i);
+      if (match) {
+        const macroName = match[1];
+        const parentParentDir = path.dirname(parentDir);
+
+        // Try to find .xlsm first, then .xlam
+        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
+        if (fs.existsSync(xlsmPath)) {
+          return xlsmPath;
+        }
+
+        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
+        if (fs.existsSync(xlamPath)) {
+          return xlamPath;
+        }
+      }
+    }
+
     // If .bas, .cls, .frm is selected, find the parent _xlsm or _xlam folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
       const parentDir = path.dirname(resolvedPath);

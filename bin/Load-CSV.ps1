@@ -6,19 +6,44 @@ param(
     [string]$CsvOutputPath
 )
 
+# set error action
+$ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
 # Create output directory if it doesn't exist
 if (-not (Test-Path $CsvOutputPath)) {
     New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
 }
 
-# Create Excel COM object
-$excel = New-Object -ComObject Excel.Application
-$excel.Visible = $false
-$excel.DisplayAlerts = $false
+# Get running Excel instance
+$excel = $null
+try {
+    $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+}
+catch {
+    throw "NO EXCEL FOUND. Please Open Excel first."
+}
 
 try {
-    # Open the workbook
-    $workbook = $excel.Workbooks.Open([System.IO.Path]::GetFullPath($ExcelFilePath))
+    # Check if Excel file exists
+    if (-not (Test-Path $ExcelFilePath)) {
+        throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
+    }
+    
+    # Check if the workbook is open in Excel
+    $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+    
+    $workbook = $null
+    foreach ($openWorkbook in $excel.Workbooks) {
+        if ($openWorkbook.FullName -eq $fullPath) {
+            $workbook = $openWorkbook
+            break
+        }
+    }
+    
+    if ($null -eq $workbook) {
+        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+    }
     
     # Get all sheets
     $sheetCount = $workbook.Sheets.Count
