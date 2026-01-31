@@ -111,7 +111,6 @@ try {
         }
     }
     
-    $workbook.Close($false)
     Write-Host "Export completed successfully"
 }
 catch {
@@ -119,11 +118,10 @@ catch {
     exit 1
 }
 finally {
-    # Clean up COM objects
+    # Clean up COM objects (but do not quit Excel to keep it open)
     if ($workbook) {
         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook) | Out-Null
     }
-    $excel.Quit()
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
     [System.GC]::Collect()
     [System.GC]::WaitForPendingFinalizers()
