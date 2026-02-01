@@ -886,6 +886,33 @@ class ExcelVba {
         }
 
         this.channel.appendLine(`[SUCCESS] CSV loaded from sheets`);
+
+        // Close all diff editors
+        await this.closeAllDiffEditors();
+
+        // Open the first file in the explorer view if not already in this folder
+        const files = fs.readdirSync(csvDir).filter(file => {
+          const ext = path.extname(file).toLowerCase();
+          return [".csv"].includes(ext);
+        });
+
+        if (files.length > 0) {
+          // Only open if no active editor or the active editor's file doesn't exist in new folder
+          const activeEditor = vscode.window.activeTextEditor;
+          let shouldOpen = true;
+
+          if (activeEditor) {
+            const activeEditorFileName = path.basename(activeEditor.document.uri.fsPath);
+            const activeEditorExists = files.includes(activeEditorFileName);
+            shouldOpen = !activeEditorExists;
+          }
+
+          if (shouldOpen) {
+            const firstFile = path.join(csvDir, files[0]);
+            const uri = vscode.Uri.file(firstFile);
+            await vscode.commands.executeCommand("vscode.open", uri);
+          }
+        }
       },
     );
   }

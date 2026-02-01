@@ -10,10 +10,13 @@ param(
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# Create output directory if it doesn't exist
-if (-not (Test-Path $CsvOutputPath)) {
-    New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
+# Clean output directory
+if (Test-Path $CsvOutputPath) {
+    Remove-Item $CsvOutputPath -Recurse -Force
 }
+
+# Create output directory
+New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
 
 # Get running Excel instance
 $excel = $null
@@ -73,7 +76,7 @@ try {
                 # Handle different array dimensions
                 if ($rows -eq 1 -and $cols -eq 1) {
                     # Single cell
-                    $value = if ($allValues -eq $null) { "" } else { $allValues }
+                    $value = if ( $null -eq $allValues) { "" } else { $allValues }
                     $value = $value.ToString()
                     if ($value -match '[",\r\n]') {
                         $value = '"' + ($value -replace '"', '""') + '"'
@@ -85,7 +88,7 @@ try {
                     $line = @()
                     for ($c = 0; $c -lt $cols; $c++) {
                         $value = $allValues[$c]
-                        if ($value -eq $null) {
+                        if ($null -eq $value) {
                             $value = ""
                         }
                         $value = $value.ToString()
@@ -100,7 +103,7 @@ try {
                     # Single column - allValues is 1D array
                     for ($r = 0; $r -lt $rows; $r++) {
                         $value = $allValues[$r]
-                        if ($value -eq $null) {
+                        if ($null -eq $value) {
                             $value = ""
                         }
                         $value = $value.ToString()
@@ -116,7 +119,7 @@ try {
                         $line = @()
                         for ($c = 1; $c -le $cols; $c++) {
                             $value = $allValues[$r, $c]
-                            if ($value -eq $null) {
+                            if ($null -eq $value) {
                                 $value = ""
                             }
                             $value = $value.ToString()

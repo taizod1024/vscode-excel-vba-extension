@@ -91,8 +91,8 @@ function Populate-Sheet {
         $maxCols = ($Data | ForEach-Object { $_.Count } | Measure-Object -Maximum).Maximum
         $rowCount = $Data.Count
         
-        # Get range and populate with data
-        $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
+        # Clear all cells first
+        $Sheet.Cells.Clear()
         
         # Create a COM array for Excel
         $excelArray = New-Object 'object[,]' $rowCount, $maxCols
@@ -108,7 +108,8 @@ function Populate-Sheet {
         }
         
         # Set all values at once
-        $range.Value2 = $excelArray | Out-Null
+        $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
+        $range.Value2 = $excelArray
     }
 }
 
