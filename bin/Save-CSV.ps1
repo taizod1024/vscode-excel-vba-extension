@@ -156,6 +156,10 @@ try {
         exit 0
     }
 
+    # Activate Excel window
+    $shell = New-Object -ComObject WScript.Shell
+    $shell.AppActivate($excel.Caption)
+
     # Disable screen updating for performance
     $excel.ScreenUpdating = $false
     $originalCalculation = $excel.Calculation
