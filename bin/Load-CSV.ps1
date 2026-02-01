@@ -143,7 +143,7 @@ try {
                 
                 [System.Runtime.InteropServices.Marshal]::ReleaseComObject($stream) | Out-Null
                 
-                Write-Host "Exported: $csvFileName"
+                Write-Host "Exported: $csvFileName ($($csvLines.Count) rows)"
             }
             else {
                 Write-Host "Sheet is empty: $sheetName"
