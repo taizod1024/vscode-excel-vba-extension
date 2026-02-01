@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.14...v0.0.15) (2026-02-01)
+
+
+### Features
+
+* activate Excel window and update status bar during CSV export and import processes ([3e59b71](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3e59b71626fd81e07ca5d8d0b653cfbb7d10cecc))
+* activate Excel window before disabling screen updating for improved performance ([5b087e3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5b087e3a3cb1673a80cda33124da53e6b53bfe21))
+* add CSV import and export functionality with new commands ([1b7b880](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1b7b880485464240bf132712ad0c17d29e42b1a7))
+* add functionality to delete sheets that don't start with "Sheet" in Save-CSV.ps1 ([d6d8aaa](https://github.com/taizod1024/vscode-excel-vba-extension/commit/d6d8aaa19fcf92856e356d13cabb77ef02548277))
+* add validation for Attribute VB_Name to ensure it matches file names in VBA files ([c04b88a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/c04b88a02b81ee5c197c36c86e6b0436100319fc))
+* add validation for Attribute VB_Name to ensure it matches the file name ([93e3be7](https://github.com/taizod1024/vscode-excel-vba-extension/commit/93e3be74da1d8a82434064041d7c50d23a992730))
+* disable user interaction during CSV processing for improved performance ([307980e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/307980e5598d5e2f52a1fc8d0886facf0daaef54))
+* enhance CSV handling and Excel file validation in Load-CSV and Save-CSV scripts ([3c05a8a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3c05a8a17ff5e49b7a985b1fc9e675cd8b6eec85))
+* enhance CSV import/export by adding row count to output messages and improving sheet handling ([26e6a50](https://github.com/taizod1024/vscode-excel-vba-extension/commit/26e6a5094838a0057fb67e187f6c039fbad74dc6))
+* enhance sheet processing with status updates and count tracking for improved user feedback ([4e70bae](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4e70bae2d7b736ac09a242fcc33cdfb5c75c103d))
+* improve CSV export and import processes by keeping Excel open and managing alerts ([7e03ae5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7e03ae58d1206c9afdf2ae10712476e272a6d82f))
+* improve CSV handling by clearing cells before populating and opening first CSV file in explorer ([4e72199](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4e721991b9e17b8810a0eeca11148bbee94e88f7))
+* optimize CSV import and export processes by using array handling and disabling screen updates ([c3c37ca](https://github.com/taizod1024/vscode-excel-vba-extension/commit/c3c37caa09773400f34aa0734bc74c2aa6899616))
+* refactor error handling and initialization across scripts for consistency ([30d9639](https://github.com/taizod1024/vscode-excel-vba-extension/commit/30d96396eea4caa26ffa4a2848b780b339a91445))
+* refactor sheet data import process and suppress output during cell clearing ([fb6daac](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fb6daac2830848eb85c5f4b614730681ac6c547d))
+* rename Populate-Sheet function to Update-SheetData for clarity ([977143b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/977143bd0450f0b6fb8a4afcacff6de4cd656268))
+* suppress output when clearing existing sheet data for cleaner execution ([1382ec2](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1382ec23807c4ad2f7bac1d4bb50a6e8e633a567))
+* update CSV data handling to use filenames directly for sheet names ([b8d6c9c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b8d6c9cab8e4aea88814e85b0e5bae646763cbe7))
+* update README and package.json to clarify support for Excel Sheets and CustomUI ([7dfc9dd](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7dfc9dd9b231f76e859ac0fae7ecfea24cffd09d))
+* update README with new features and clarifications for CSV and VBA file handling ([08ccd0a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/08ccd0a12932686ef567bafba164970ed07135f1))
+* update terminology from "Excel Macro" to "Excel Book" across documentation and scripts ([0cabd5a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/0cabd5a60c2472473769c51d84893821457a453f))
+
+
+### Bug Fixes
+
+* correct Japanese translation for saving VBA to Excel macro in README ([2875d48](https://github.com/taizod1024/vscode-excel-vba-extension/commit/2875d48fa808ac1cde6cc70c9a68f28a4359899b))
+* correct typos in Japanese README for clarity ([1f63e29](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1f63e29b09d1cb98000108f785f4ce91bf4af85b))
+
 ### [0.0.14](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.13...v0.0.14) (2026-01-31)
 
 
