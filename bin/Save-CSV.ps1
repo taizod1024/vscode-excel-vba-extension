@@ -171,12 +171,10 @@ try {
         $existingSheetNames += $sheet.Name
     }
     
-    # Create a hashtable to store CSV data
+    # Create a hashtable to store CSV data (keyed by CSV filename with .csv extension)
     $csvData = @{}
     foreach ($csvFile in $csvFiles) {
-        # Use BaseName + .csv as sheet name
-        $sheetNameWithExt = $csvFile.BaseName + ".csv"
-        $csvData[$sheetNameWithExt] = $csvFile
+        $csvData[$csvFile.Name] = $csvFile
     }
     
     # Count total sheets to process
@@ -207,7 +205,7 @@ try {
             [object]$ExcelApp
         )
         
-        $sheetName = $CsvFile.BaseName + ".csv"
+        $sheetName = $CsvFile.Name
         Write-Host "Importing sheet: $sheetName"
         
         # Update status bar
