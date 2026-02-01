@@ -4,13 +4,13 @@
 
 ## Excel VBA Extension EN
 
-A VS Code extension for developing Excel VBA.
+A VS Code extension for developing Excel VBA / Sheets / CustomUI.
 
 **Key Benefits:**
 
 - Editing in VS Code
   - Edit, add, update, and delete VBA files
-  - Edit, add, update, and delete Excel sheets
+  - Edit, add, update, and delete Excel Sheets
   - Edit and update CustomUI XML files
   - Execute Sub procedures of VBA files from VS Code
 - Integration with VS Code

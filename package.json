@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "name": "excel-vba",
   "displayName": "Excel VBA Extension",
-  "description": "Excel VBA module load/save/compare/run extension for windows",
+  "description": "A VS Code extension for developing Excel VBA / Sheets / CustomUI",
   "engines": {
     "vscode": "^1.90.0"
   },
