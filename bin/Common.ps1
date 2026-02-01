@@ -24,31 +24,31 @@ function Get-ExcelInstance {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND. Please Open Excel first."
+        throw "EXCEL WORKBOOK NOT FOUND. Please Open Excel first."
     }
     
     return $excel
 }
 
 # Resolve macro file path and determine file type
-function Get-MacroInfo {
+function Get-BookInfo {
     param(
-        [string]$macroPath
+        [string]$bookPath
     )
     
-    Write-Host -ForegroundColor Green "- checking if macro file exists"
-    if (-not (Test-Path $macroPath)) {
-        throw "macro FILE NOT FOUND: $macroPath"
+    Write-Host -ForegroundColor Green "- checking if book file exists"
+    if (-not (Test-Path $bookPath)) {
+        throw "BOOK FILE NOT FOUND: $bookPath"
     }
     
-    $resolvedPath = (Resolve-Path $macroPath).Path
+    $resolvedPath = (Resolve-Path $bookPath).Path
     $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
     $isAddIn = ($fileExtension -eq ".xlam")
     
     return @{
-        ResolvedPath = $resolvedPath
+        ResolvedPath  = $resolvedPath
         FileExtension = $fileExtension
-        IsAddIn = $isAddIn
+        IsAddIn       = $isAddIn
     }
 }
 
@@ -81,8 +81,8 @@ function Find-VBProject {
             if ($null -ne $vbProject) {
                 return @{
                     VBProject = $vbProject
-                    Workbook = $wb
-                    Source = "Workbooks"
+                    Workbook  = $wb
+                    Source    = "Workbooks"
                 }
             }
         }
@@ -113,8 +113,8 @@ function Find-VBProject {
                     Write-Host -ForegroundColor Yellow "    MATCHED!"
                     return @{
                         VBProject = $vbProj
-                        Workbook = $null
-                        Source = "VBE.VBProjects"
+                        Workbook  = $null
+                        Source    = "VBE.VBProjects"
                     }
                 }
             }
@@ -139,8 +139,8 @@ function Find-VBProject {
     
     return @{
         VBProject = $vbProject
-        Workbook = $null
-        Source = "Unknown"
+        Workbook  = $null
+        Source    = "Unknown"
     }
 }
 

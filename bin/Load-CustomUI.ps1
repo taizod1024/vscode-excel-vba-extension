@@ -18,7 +18,7 @@ try {
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
     # Get macro info
-    $macroInfo = Get-MacroInfo $macroPath
+    $macroInfo = Get-BookInfo $macroPath
 
     # Clean temporary directory
     Write-Host -ForegroundColor Green "- cleaning tmpPath"

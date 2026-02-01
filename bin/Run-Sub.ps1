@@ -17,7 +17,7 @@ try {
     $excel = Get-ExcelInstance
     
     # Get VB Project
-    $macroInfo = Get-MacroInfo $macroPath
+    $macroInfo = Get-BookInfo $macroPath
     $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
     $vbProject = $result.VBProject
 

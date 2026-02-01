@@ -222,6 +222,33 @@ try {
         Write-Host "Imported: $sheetName ($($data.Count) rows)"
     }
     
+    # Function to convert range to table
+    function Convert-RangeToTable {
+        param(
+            [object]$Sheet,
+            [object]$ExcelApp
+        )
+        
+        # Find the last used cell
+        $usedRange = $Sheet.UsedRange
+        if ($usedRange.Rows.Count -gt 0 -and $usedRange.Columns.Count -gt 0) {
+            # Create table starting from A1
+            $tableRange = $Sheet.Range("A1").Resize($usedRange.Rows.Count, $usedRange.Columns.Count)
+            
+            # Create table object (ListObject in Excel)
+            $listObject = $Sheet.ListObjects.Add(1, $tableRange, $null, 1)
+            
+            # Set table style
+            $listObject.TableStyle = "TableStyleLight5"
+            
+            # Freeze first row and first column
+            $Sheet.Range("B2").Select()
+            $ExcelApp.ActiveWindow.FreezePanes = $true
+            
+            Write-Host "Converted to table: $($Sheet.Name)"
+        }
+    }
+    
     # Process sheets in the order they appear in the workbook
     # First, update existing sheets
     $currentIndex = 0
@@ -236,6 +263,9 @@ try {
             
             # Import the sheet data
             Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
+            
+            # Convert range to table
+            Convert-RangeToTable -Sheet $existingSheet -ExcelApp $excel
         }
     }
     
@@ -250,6 +280,9 @@ try {
         
         # Import the sheet data
         Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
+        
+        # Convert range to table
+        Convert-RangeToTable -Sheet $newSheet -ExcelApp $excel
     }
     
     # Clear status bar
