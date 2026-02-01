@@ -62,7 +62,7 @@ Right-click a book file in Explorer View or click the icon in the editor title t
 2. Select the book file in VS Code's Explorer View
 3. Select **Load VBA from Excel Book** from the editor title
 4. A folder with the same name as the book file is created
-   - Example: `MyBook.xlsm` → `MyBook_xlsm` folder
+   - Example: `MyBook.xlsm` → `MyBook_bas` folder
 
 ### Edit VBA
 
@@ -95,7 +95,7 @@ Edit VBA files in VS Code.
 1. Select the book file in Explorer View
 2. Select **Load CustomUI from Excel Book** from the editor title
 3. A folder with the same name as the book file is created
-   - Example: `MyAddin.xlam` → `MyAddin_customUI` folder
+   - Example: `MyAddin.xlam` → `MyAddin_xml` folder
    - CustomUI XML files (customUI.xml, customUI14.xml) are extracted directly into the folder
 
 ### Edit CustomUI
@@ -187,7 +187,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 2. VS Code のエクスプローラービューでブックファイルを選択
 3. エディタのタイトルから「Load VBA from Excel Book」を選択
 4. ブックファイルと同じ名前のフォルダが作成される
-   - 例：`MyBook.xlsm` → `MyBook_xlsm` フォルダ
+   - 例：`MyBook.xlsm` → `MyBook_bas` フォルダ
 
 ### VBA を編集する
 
@@ -219,7 +219,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 1. ブックファイルをエクスプローラービューで選択
 2. エディタのタイトルから「Load CustomUI from Excel Book」を選択
 3. アドインファイルと同じ名前のフォルダが作成される
-   - 例：`MyAddin.xlam` → `MyAddin_customUI` フォルダ
+   - 例：`MyAddin.xlam` → `MyAddin_xml` フォルダ
    - CustomUI XMLファイル（`customUI.xml`, `customUI14.xml`）が直接フォルダ内に抽出される
 
 ### CustomUI を編集する
@@ -234,17 +234,17 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 ## 注意事項
 
-- 全般
+- **全般**
   - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
   - ブックファイルが壊れた場合に備えてバージョン管理システムで管理してください。
-- アドインファイル
+- **アドインファイル**
   - .xlam の場合は拡張機能から直接保存することはできません。VBエディタのツールバーから保存してください。
-- VBAファイル
+- **VBAファイル**
   - VBAファイルの文字エンコーティングは Shift_JIS です。
   - .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
-- CSVファイル
+- **CSVファイル**
   - 名前に".csv"が付いたシートを処理対象とします。
-- 追加
+- **追加**
   - VBAファイルはVS Codeで新規追加することができます。
   - CSVファイルはVS Codeで新規追加することができます。
   - CustomUI XMLファイルは新規追加することはできません。事前にブックファイルに登録されている必要があります。
