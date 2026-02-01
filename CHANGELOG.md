@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.15...v0.0.16) (2026-02-01)
+
+
+### Features
+
+* rename macro functions for consistency and add table conversion in CSV saving ([067f8b1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/067f8b16fe735dfa1a115018445c2110aceb279a))
+
 ### [0.0.15](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.14...v0.0.15) (2026-02-01)
 
 
