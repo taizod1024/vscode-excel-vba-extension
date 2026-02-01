@@ -4,26 +4,21 @@ param(
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
-# Configuration
-$ErrorActionPreference = "Stop"
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Import common functions
+. (Join-Path $PSScriptRoot "Common.ps1")
 
-# Required assemblies for ZIP extraction
+# Configuration
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 try {
     
-    # Display script name
-    $scriptName = $MyInvocation.MyCommand.Name
-    Write-Host -ForegroundColor Yellow "$($scriptName):"
+    # Initialize
+    Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- macroPath: $macroPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
-    # Check if the macro file exists
-    Write-Host -ForegroundColor Green "- checking if macro file exists"
-    if (-not (Test-Path $macroPath)) {
-        throw "macro FILE NOT FOUND: $macroPath"
-    }
+    # Get macro info
+    $macroInfo = Get-MacroInfo $macroPath
 
     # Clean temporary directory
     Write-Host -ForegroundColor Green "- cleaning tmpPath"
