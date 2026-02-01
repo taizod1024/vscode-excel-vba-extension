@@ -217,7 +217,7 @@ try {
             $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
             # Clear existing data
-            $existingSheet.Cells.Clear()
+            $existingSheet.Cells.Clear() | Out-Null
             
             # Import the sheet data
             Import-SheetData -Sheet $existingSheet -CsvFile $csvFile
