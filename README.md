@@ -8,24 +8,28 @@ A VS Code extension for developing Excel VBA.
 
 **Key Benefits:**
 
-- Edit VBA files in VS Code
-- Run macros from VS Code
-- Integration with version control systems
-- Leverage AI assistants like GitHub Copilot
+- Editing in VS Code
+  - Edit, add, update, and delete VBA files
+  - Edit, add, update, and delete Excel sheets
+  - Edit and update CustomUI XML files
+  - Execute Sub procedures of VBA files from VS Code
+- Integration with VS Code
+  - Version control for VBA files, Excel sheets, and CustomUI XML files
+  - Apply generative AI to VBA files, Excel sheets, and CustomUI XML files
 
 ![excel-vba](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba.png?raw=true)
 
 ## Features
 
-| Feature                           | Description                                                           |
-| --------------------------------- | --------------------------------------------------------------------- |
-| **Open Excel Book**               | Open Excel files from Explorer View.                                  |
-| **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from macro files (.xlsm, .xlam). |
-| **Save VBA to Excel Book**        | Save VBA files edited in VS Code to macro files.                      |
-| **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of macro files.         |
-| **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.                |
-| **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from macro files.      |
-| **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to macro files.                       |
+| Feature                           | Description                                                          |
+| --------------------------------- | -------------------------------------------------------------------- |
+| **Open Excel Book**               | Open Excel files from Explorer View.                                 |
+| **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam). |
+| **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                      |
+| **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of book files.         |
+| **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.               |
+| **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.      |
+| **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                       |
 
 ## Setup
 
@@ -42,21 +46,21 @@ Configure settings to allow the extension to access Excel VBA.
 
 ## Usage
 
-Right-click a macro file in Explorer View or click the icon in the editor title to run commands.
+Right-click a book file in Explorer View or click the icon in the editor title to run commands.
 
 ### Open Excel File
 
-1. Select a macro file in Explorer View
+1. Select a book file in Explorer View
 2. Select **Open Excel Book** from the editor title
 3. File opens in Excel
 
 ### Load VBA
 
-1. Open the macro file in Excel
-2. Select the macro file in VS Code's Explorer View
+1. Open the book file in Excel
+2. Select the book file in VS Code's Explorer View
 3. Select **Load VBA from Excel Book** from the editor title
-4. A folder with the same name as the macro file is created
-   - Example: `MyMacro.xlsm` → `MyMacro_xlsm` folder
+4. A folder with the same name as the book file is created
+   - Example: `MyBook.xlsm` → `MyBook_xlsm` folder
 
 ### Edit VBA
 
@@ -64,15 +68,15 @@ Edit VBA files in VS Code.
 
 ### Compare VBA
 
-1. Select the macro file in Explorer View
+1. Select the book file in Explorer View
 2. Select **Compare VBA with Excel Book** from the editor title
-3. Differences with the macro file are displayed
+3. Differences with the book file are displayed
 
 ### Save VBA
 
-1. Select the macro file in Explorer View
+1. Select the book file in Explorer View
 2. Select **Save VBA to Excel Book** from the editor title
-3. Changes are saved to the macro file
+3. Changes are saved to the book file
    - For .xlam files, you cannot save directly from the extension. Save from the VB Editor toolbar.
 
 ### Run Sub Procedure
@@ -81,14 +85,14 @@ Edit VBA files in VS Code.
 2. Place the cursor inside the Sub procedure you want to run
 3. Select **Run VBA Sub at Cursor** from the editor title
 4. The following processes are executed automatically:
-   - Save changes to the macro file
+   - Save changes to the book file
    - Execute the Sub procedure in Excel
 
 ### Load CustomUI
 
-1. Select the macro file in Explorer View
+1. Select the book file in Explorer View
 2. Select **Load CustomUI from Excel Book** from the editor title
-3. A folder with the same name as the macro file is created
+3. A folder with the same name as the book file is created
    - Example: `MyAddin.xlam` → `MyAddin_customUI` folder
    - CustomUI XML files (customUI.xml, customUI14.xml) are extracted directly into the folder
 
@@ -98,9 +102,9 @@ Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code.
 
 ### Save CustomUI
 
-1. Select the macro file in Explorer View
+1. Select the book file in Explorer View
 2. Select **Save CustomUI to Excel Book** from the editor title
-3. Changes are saved to the macro file's CustomUI
+3. Changes are saved to the book file's CustomUI
 
 ## Notes
 
@@ -108,8 +112,8 @@ Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code.
 - VBA file encoding is Shift_JIS.
 - The .frx file corresponding to .frm is auto-generated. If you delete .frx, .frm cannot be saved.
 - VBA files can be newly added in VS Code.
-- CustomUI XML files cannot be newly added. They must be pre-registered in the macro file.
-- Manage macro files with a version control system as backup in case they become corrupted.
+- CustomUI XML files cannot be newly added. They must be pre-registered in the book file.
+- Manage book files with a version control system as backup in case they become corrupted.
 
 ---
 
@@ -119,10 +123,14 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 **主な利点：**
 
-- VBA ファイルの VS Code での編集
-- VS Code からのマクロの実行
-- VBA ファイルのバージョン管理との統合
-- GitHub Copilot などの生成 AI アシスタントの活用
+- VS Codeでの編集
+  - VBA ファイルの編集、追加・更新・削除
+  - Excel シートのの編集、追加・更新・削除
+  - CustomUI XML ファイルの編集、更新
+  - VBA ファイルの Sub プロシージャの VS Code からの実行
+- VS Codeとの統合
+  - VBA ファイル、Excelシート、CustomUI XMLファイルのバージョン管理
+  - VBA ファイル、Excelシート、CustomUI XMLファイルへの生成AIの適用
 
 ![excel-vba](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba.png?raw=true)
 
@@ -167,7 +175,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 2. VS Code のエクスプローラービューでブックファイルを選択
 3. エディタのタイトルから「Load VBA from Excel Book」を選択
 4. ブックファイルと同じ名前のフォルダが作成される
-   - 例：`MyMacro.xlsm` → `MyMacro_xlsm` フォルダ
+   - 例：`MyBook.xlsm` → `MyBook_xlsm` フォルダ
 
 ### VBA を編集する
 

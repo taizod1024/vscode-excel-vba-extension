@@ -160,6 +160,21 @@ try {
     $originalCalculation = $excel.Calculation
     $excel.Calculation = -4135  # xlCalculationManual
     
+    # Delete sheets that don't start with "Sheet"
+    $sheetsToDelete = @()
+    foreach ($sheet in $workbook.Sheets) {
+        if (-not $sheet.Name.StartsWith("Sheet")) {
+            $sheetsToDelete += $sheet.Name
+        }
+    }
+    
+    foreach ($sheetName in $sheetsToDelete) {
+        Write-Host "Deleting sheet: $sheetName"
+        $excel.DisplayAlerts = $false
+        $workbook.Sheets.Item($sheetName).Delete()
+        $excel.DisplayAlerts = $true
+    }
+    
     # Get existing sheet names and their order
     $existingSheetNames = @()
     foreach ($sheet in $workbook.Sheets) {
