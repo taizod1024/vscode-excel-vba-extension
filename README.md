@@ -28,6 +28,8 @@ A VS Code extension for developing Excel VBA / Sheets / CustomUI.
 | **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                      |
 | **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of book files.         |
 | **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.               |
+| **Load Sheets from Excel Book**   | Export sheets (.csv) from book files as CSV files.                   |
+| **Save Sheets to Excel Book**     | Save CSV files edited in VS Code to book file sheets.                |
 | **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.      |
 | **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                       |
 
@@ -108,12 +110,20 @@ Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code.
 
 ## Notes
 
-- Files downloaded from the internet require access block removal.
-- VBA file encoding is Shift_JIS.
-- The .frx file corresponding to .frm is auto-generated. If you delete .frx, .frm cannot be saved.
-- VBA files can be newly added in VS Code.
-- CustomUI XML files cannot be newly added. They must be pre-registered in the book file.
-- Manage book files with a version control system as backup in case they become corrupted.
+- **General**
+  - Files downloaded from the internet require unblocking access.
+  - Manage book files with a version control system in case they become corrupted.
+- **Add-in Files**
+  - For .xlam files, they cannot be saved directly from the extension. Please save from the VB Editor toolbar.
+- **VBA Files**
+  - VBA files use Shift_JIS character encoding.
+  - .frx corresponding to .frm is automatically generated. If you delete .frx, .frm cannot be saved.
+- **CSV Files**
+  - Sheets with ".csv" in the name are treated as targets for processing.
+- **Additional**
+  - VBA files can be created new in VS Code.
+  - CSV files can be created new in VS Code.
+  - CustomUI XML files cannot be created new. They must be registered in the book file beforehand.
 
 ---
 
@@ -136,15 +146,17 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 ## 機能
 
-| 機能                              | 説明                                                                          |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **Open Excel Book**               | エクスプローラービューから Excel ファイルを開く。                             |
-| **Load VBA from Excel Book**      | ブックファイル(.xlsm, .xlam)から VBA ファイル（.bas, .cls, .frm）を取り出す。 |
-| **Save VBA to Excel Book**        | VS Code で編集した VBA ファイルをブックファイルに保存する。                   |
-| **Compare VBA with Excel Book**   | VS Code で編集したコードとブックファイルの状態を比較する。                    |
-| **Run VBA Sub at Cursor**         | カーソル位置の Sub プロシージャを Excel で実行します。                        |
-| **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポート。   |
-| **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存。                          |
+| 機能                              | 説明                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------- |
+| **Open Excel Book**               | エクスプローラービューから Excel ファイルを開く。                               |
+| **Load VBA from Excel Book**      | ブックファイル(.xlsm, .xlam)から VBA ファイ(.bas, .cls, .frm)を読み込む。       |
+| **Save VBA to Excel Book**        | VS Code で編集した VBA ファイルをブックファイルに保存する。                     |
+| **Compare VBA with Excel Book**   | VS Code で編集したコードとブックファイルの状態を比較する。                      |
+| **Run VBA Sub at Cursor**         | カーソル位置の Sub プロシージャを Excel で実行する。                            |
+| **Load Sheets from Excel Book**   | ブックファイルのシート(.csv)を CSV ファイルに保存する。                         |
+| **Save Sheets to Excel Book**     | VS Code で編集した CSV ファイルをブックファイルに保存する。                     |
+| **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポートする。 |
+| **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存する。                        |
 
 ## 準備
 
@@ -222,10 +234,17 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 ## 注意事項
 
-- .xlam の場合は拡張機能から直接保存することはできません。VBエディタのツールバーから保存してください。
-- ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
-- VBAファイルの文字エンコーティングは Shift_JIS です。
-- .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
-- VBAファイルはVS Codeで新規追加することができます。
-- CustomUI XMLファイルは新規追加することはできません。事前にブックファイルに登録されている必要があります。
-- ブックファイルが壊れた場合に備えてバージョン管理システムで管理してください。
+- 全般
+  - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
+  - ブックファイルが壊れた場合に備えてバージョン管理システムで管理してください。
+- アドインファイル
+  - .xlam の場合は拡張機能から直接保存することはできません。VBエディタのツールバーから保存してください。
+- VBAファイル
+  - VBAファイルの文字エンコーティングは Shift_JIS です。
+  - .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
+- CSVファイル
+  - 名前に".csv"が付いたシートを処理対象とします。
+- 追加
+  - VBAファイルはVS Codeで新規追加することができます。
+  - CSVファイルはVS Codeで新規追加することができます。
+  - CustomUI XMLファイルは新規追加することはできません。事前にブックファイルに登録されている必要があります。
