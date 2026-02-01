@@ -52,6 +52,9 @@ try {
     $shell = New-Object -ComObject WScript.Shell
     $shell.AppActivate($excel.Caption)
     
+    # Disable user interaction during processing
+    $excel.Interactive = $false
+    
     # Get all sheets
     $sheetCount = $workbook.Sheets.Count
     
@@ -74,6 +77,9 @@ try {
         if ($sheetName -match "\.csv$") {
             $currentIndex++
             Write-Host "Exporting sheet: $sheetName"
+            
+            # Activate the sheet
+            $sheet.Activate()
             
             # Update status bar
             $excel.StatusBar = "Loading sheet ${currentIndex} of ${sheetsToExportCount}: $sheetName"
@@ -174,6 +180,9 @@ try {
     
     # Clear status bar
     $excel.StatusBar = $false
+    
+    # Re-enable user interaction
+    $excel.Interactive = $true
     
     Write-Host "Export completed successfully"
 }

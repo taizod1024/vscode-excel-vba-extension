@@ -162,6 +162,7 @@ try {
 
     # Disable screen updating for performance
     $excel.ScreenUpdating = $false
+    $excel.Interactive = $false
     $originalCalculation = $excel.Calculation
     $excel.Calculation = -4135  # xlCalculationManual
     
@@ -207,6 +208,11 @@ try {
         
         $sheetName = $CsvFile.Name
         Write-Host "Importing sheet: $sheetName"
+        
+        # Temporarily enable screen updating to show sheet selection
+        $ExcelApp.ScreenUpdating = $true
+        $Sheet.Activate()
+        $ExcelApp.ScreenUpdating = $false
         
         # Update status bar
         $ExcelApp.StatusBar = "Saving sheet ${CurrentIndex} of ${TotalCount}: $sheetName"
@@ -257,6 +263,7 @@ try {
     # Restore settings
     $excel.Calculation = $originalCalculation
     $excel.ScreenUpdating = $true
+    $excel.Interactive = $true
     
     Write-Host "Import completed successfully"
 }
