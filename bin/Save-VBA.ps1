@@ -57,7 +57,7 @@ try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "NO EXCEL FOUND. Please Open Excel Macro."
+        throw "NO EXCEL FOUND. Please Open Excel Book."
     }
     
     # Bring VBE window to foreground if it exists

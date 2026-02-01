@@ -20,17 +20,17 @@
     "commands": [
       {
         "command": "excel-vba.openExcel",
-        "title": "Open Excel Macro",
+        "title": "Open Excel Book",
         "icon": "$(vm-connect)"
       },
       {
         "command": "excel-vba.loadVba",
-        "title": "Load VBA from Excel Macro",
+        "title": "Load VBA from Excel Book",
         "icon": "$(repo-pull)"
       },
       {
         "command": "excel-vba.saveVba",
-        "title": "Save VBA to Excel Macro",
+        "title": "Save VBA to Excel Book",
         "icon": "$(repo-push)"
       },
       {
@@ -40,27 +40,27 @@
       },
       {
         "command": "excel-vba.compareVba",
-        "title": "Compare VBA with Excel Macro",
+        "title": "Compare VBA with Excel Book",
         "icon": "$(compare-changes)"
       },
       {
         "command": "excel-vba.loadCsv",
-        "title": "Load CSV from Excel Macro",
+        "title": "Load CSV from Excel Book",
         "icon": "$(cloud-download)"
       },
       {
         "command": "excel-vba.saveCsv",
-        "title": "Save CSV to Excel Macro",
+        "title": "Save CSV to Excel Book",
         "icon": "$(cloud-upload)"
       },
       {
         "command": "excel-vba.loadCustomUI",
-        "title": "Load CustomUI from Excel Macro",
+        "title": "Load CustomUI from Excel Book",
         "icon": "$(arrow-circle-down)"
       },
       {
         "command": "excel-vba.saveCustomUI",
-        "title": "Save CustomUI to Excel Macro (Close Excel first)",
+        "title": "Save CustomUI to Excel Book (Close Excel first)",
         "icon": "$(arrow-circle-up)"
       }
     ],
@@ -145,7 +145,7 @@
         {
           "command": "excel-vba.openExcel",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",
@@ -170,12 +170,12 @@
         {
           "command": "excel-vba.loadCsv",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|csv)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|csv)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",

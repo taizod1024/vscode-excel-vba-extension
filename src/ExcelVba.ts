@@ -34,8 +34,8 @@ class ExcelVba {
 
     const ext = path.extname(resolvedPath).toLowerCase();
 
-    // If .xlsm or .xlam is selected, return as is
-    if (ext === ".xlsm" || ext === ".xlam") {
+    // If .xlsm, .xlam or .xlsx is selected, return as is
+    if (ext === ".xlsm" || ext === ".xlam" || ext === ".xlsx") {
       return resolvedPath;
     }
 
@@ -50,10 +50,15 @@ class ExcelVba {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlsm first, then .xlam
+        // Try to find .xlsm first, then .xlsx, then .xlam
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
+        }
+
+        const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
+        if (fs.existsSync(xlsxPath)) {
+          return xlsxPath;
         }
 
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
@@ -63,7 +68,7 @@ class ExcelVba {
       }
     }
 
-    // If .bas, .cls, .frm is selected, find the parent _xlsm or _xlam folder
+    // If .bas, .cls, .frm is selected, find the parent _xlsm, _xlsx or _xlam folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
       const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
@@ -73,8 +78,8 @@ class ExcelVba {
         parentName = parentName.slice(0, -1);
       }
 
-      // Check if parent folder is _xlsm or _xlam
-      const match = parentName.match(/^(.+)_(?:xlsm|xlam)$/i);
+      // Check if parent folder is _xlsm, _xlsx or _xlam
+      const match = parentName.match(/^(.+)_(?:xlsm|xlsx|xlam)$/i);
       if (match) {
         const macroName = match[1];
         const extType = parentName.endsWith("_xlsm") ? "xlsm" : "xlam";
@@ -261,7 +266,7 @@ class ExcelVba {
 
   /** load vba */
   public async loadVbaAsync(macroPath: string) {
-    const commandName = "Load VBA from Excel Macro";
+    const commandName = "Load VBA from Excel Book";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -398,7 +403,7 @@ class ExcelVba {
 
   /** save vba */
   public async saveVbaAsync(macroPath: string) {
-    const commandName = "Save VBA to Excel Macro";
+    const commandName = "Save VBA to Excel Book";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -480,9 +485,9 @@ class ExcelVba {
     }
   }
 
-  /** open Excel macro */
+  /** open Excel Book */
   public async openExcelAsync(macroPath: string) {
-    const commandName = "Open Excel Macro";
+    const commandName = "Open Excel Book";
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
@@ -492,7 +497,7 @@ class ExcelVba {
 
   /** compare VBA with existing folder */
   public async compareVbaAsync(macroPath: string) {
-    const commandName = "Compare VBA with Excel Macro";
+    const commandName = "Compare VBA with Excel Book";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
