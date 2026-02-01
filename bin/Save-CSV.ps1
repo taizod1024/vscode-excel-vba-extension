@@ -47,12 +47,14 @@ try {
     
     # Get all CSV files from input path
     $csvFiles = Get-ChildItem -Path $CsvInputPath -Filter "*.csv" -File
-    
+
     if ($csvFiles.Count -eq 0) {
         Write-Host "No CSV files found in: $CsvInputPath"
-        $workbook.Close($false)
         exit 0
     }
+
+    # Disable screen updating for performance
+    $excel.ScreenUpdating = $false
     
     # Process each CSV file
     foreach ($csvFile in $csvFiles) {
@@ -93,7 +95,9 @@ try {
         # Parse CSV content
         $lines = $csvContent -split "`r`n" | Where-Object { $_.Length -gt 0 }
         
-        $rowNum = 1
+        # Store all data in a 2D array
+        $data = @()
+        
         foreach ($line in $lines) {
             # Simple CSV parsing (handles quoted fields with commas)
             $fields = @()
@@ -124,18 +128,43 @@ try {
             }
             $fields += $current
             
-            # Write to sheet
-            $colNum = 1
+            # Clean up field values (remove surrounding quotes if present)
+            $cleanedFields = @()
             foreach ($field in $fields) {
-                # Remove surrounding quotes if present
                 if ($field -match '^"(.*)"$') {
-                    $field = $matches[1]
+                    $cleanedFields += $matches[1]
                 }
-                $newSheet.Cells.Item($rowNum, $colNum).Value = $field
-                $colNum++
+                else {
+                    $cleanedFields += $field
+                }
             }
             
-            $rowNum++
+            $data += , $cleanedFields
+        }
+        
+        # Write all data to sheet at once using array formula
+        if ($data.Count -gt 0) {
+            $maxCols = ($data | ForEach-Object { $_.Count } | Measure-Object -Maximum).Maximum
+            $rowCount = $data.Count
+            
+            # Get range and populate with data
+            $range = $newSheet.Range("A1").Resize($rowCount, $maxCols)
+            
+            # Create a COM array for Excel
+            $excelArray = New-Object 'object[,]' $rowCount, $maxCols
+            for ($r = 0; $r -lt $rowCount; $r++) {
+                for ($c = 0; $c -lt $maxCols; $c++) {
+                    if ($c -lt $data[$r].Count) {
+                        $excelArray[$r, $c] = $data[$r][$c]
+                    }
+                    else {
+                        $excelArray[$r, $c] = ""
+                    }
+                }
+            }
+            
+            # Set all values at once
+            $range.Value2 = $excelArray
         }
         
         Write-Host "Imported: $sheetName"
@@ -143,6 +172,10 @@ try {
     
     # Save the workbook
     $workbook.Save()
+    
+    # Re-enable screen updating
+    $excel.ScreenUpdating = $true
+    
     Write-Host "Import completed successfully"
 }
 catch {

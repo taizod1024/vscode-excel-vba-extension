@@ -64,29 +64,69 @@ try {
                 $rows = $usedRange.Rows.Count
                 $cols = $usedRange.Columns.Count
                 
+                # Get all values at once using Value2
+                $allValues = $usedRange.Value2
+                
                 # Create CSV content
                 $csvLines = @()
                 
-                for ($r = 1; $r -le $rows; $r++) {
+                # Handle different array dimensions
+                if ($rows -eq 1 -and $cols -eq 1) {
+                    # Single cell
+                    $value = if ($allValues -eq $null) { "" } else { $allValues }
+                    $value = $value.ToString()
+                    if ($value -match '[",\r\n]') {
+                        $value = '"' + ($value -replace '"', '""') + '"'
+                    }
+                    $csvLines += $value
+                }
+                elseif ($rows -eq 1) {
+                    # Single row - allValues is 1D array
                     $line = @()
-                    for ($c = 1; $c -le $cols; $c++) {
-                        $cell = $usedRange.Cells.Item($r, $c)
-                        $value = $cell.Value2
-                        
-                        # Handle null values
+                    for ($c = 0; $c -lt $cols; $c++) {
+                        $value = $allValues[$c]
                         if ($value -eq $null) {
                             $value = ""
                         }
-                        
-                        # Escape quotes and wrap in quotes if needed
                         $value = $value.ToString()
                         if ($value -match '[",\r\n]') {
                             $value = '"' + ($value -replace '"', '""') + '"'
                         }
-                        
                         $line += $value
                     }
                     $csvLines += $line -join ","
+                }
+                elseif ($cols -eq 1) {
+                    # Single column - allValues is 1D array
+                    for ($r = 0; $r -lt $rows; $r++) {
+                        $value = $allValues[$r]
+                        if ($value -eq $null) {
+                            $value = ""
+                        }
+                        $value = $value.ToString()
+                        if ($value -match '[",\r\n]') {
+                            $value = '"' + ($value -replace '"', '""') + '"'
+                        }
+                        $csvLines += $value
+                    }
+                }
+                else {
+                    # Multiple rows and columns - allValues is 2D array (1-based)
+                    for ($r = 1; $r -le $rows; $r++) {
+                        $line = @()
+                        for ($c = 1; $c -le $cols; $c++) {
+                            $value = $allValues[$r, $c]
+                            if ($value -eq $null) {
+                                $value = ""
+                            }
+                            $value = $value.ToString()
+                            if ($value -match '[",\r\n]') {
+                                $value = '"' + ($value -replace '"', '""') + '"'
+                            }
+                            $line += $value
+                        }
+                        $csvLines += $line -join ","
+                    }
                 }
                 
                 # Save as UTF-8 CSV using ADODB.Stream
