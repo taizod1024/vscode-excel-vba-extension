@@ -6,9 +6,13 @@ param(
     [string]$CsvInputPath
 )
 
-# set error action
-$ErrorActionPreference = "Stop"
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Import common functions
+. (Join-Path $PSScriptRoot "Common.ps1")
+
+# Initialize
+Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
+Write-Host -ForegroundColor Green "- ExcelFilePath: $($ExcelFilePath)"
+Write-Host -ForegroundColor Green "- CsvInputPath: $($CsvInputPath)"
 
 # Function to read and parse CSV file
 function Read-CsvFile {
@@ -114,13 +118,7 @@ function Update-SheetData {
 }
 
 # Get running Excel instance
-$excel = $null
-try {
-    $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
-}
-catch {
-    throw "NO EXCEL FOUND. Please Open Excel first."
-}
+$excel = Get-ExcelInstance
 
 try {
     # Check if CSV input path exists
@@ -268,7 +266,7 @@ try {
     Write-Host "Import completed successfully"
 }
 catch {
-    Write-Error "Error during import: $_"
+    [Console]::Error.WriteLine("$($_)")
     exit 1
 }
 finally {

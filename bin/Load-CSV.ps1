@@ -6,9 +6,13 @@ param(
     [string]$CsvOutputPath
 )
 
-# set error action
-$ErrorActionPreference = "Stop"
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Import common functions
+. (Join-Path $PSScriptRoot "Common.ps1")
+
+# Initialize
+Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
+Write-Host -ForegroundColor Green "- ExcelFilePath: $($ExcelFilePath)"
+Write-Host -ForegroundColor Green "- CsvOutputPath: $($CsvOutputPath)"
 
 # Clean output directory
 if (Test-Path $CsvOutputPath) {
@@ -19,13 +23,7 @@ if (Test-Path $CsvOutputPath) {
 New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
 
 # Get running Excel instance
-$excel = $null
-try {
-    $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
-}
-catch {
-    throw "NO EXCEL FOUND. Please Open Excel first."
-}
+$excel = Get-ExcelInstance
 
 try {
     # Check if Excel file exists
@@ -187,7 +185,7 @@ try {
     Write-Host "Export completed successfully"
 }
 catch {
-    Write-Error "Error during export: $_"
+    [Console]::Error.WriteLine("$($_)")
     exit 1
 }
 finally {

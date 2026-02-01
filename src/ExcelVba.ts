@@ -145,7 +145,7 @@ class ExcelVba {
           await this.openExcelAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -158,7 +158,7 @@ class ExcelVba {
           await this.loadVbaAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -171,7 +171,7 @@ class ExcelVba {
           await this.saveVbaAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -184,7 +184,7 @@ class ExcelVba {
           await this.compareVbaAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -197,7 +197,7 @@ class ExcelVba {
           await this.loadCustomUIAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -210,7 +210,7 @@ class ExcelVba {
           await this.saveCustomUIAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -232,7 +232,7 @@ class ExcelVba {
           await this.runSubAsync(macroPath, subName);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -245,7 +245,7 @@ class ExcelVba {
           await this.loadCsvAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -258,7 +258,7 @@ class ExcelVba {
           await this.saveCsvAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`${this.appName}: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
