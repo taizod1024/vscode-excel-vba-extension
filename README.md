@@ -135,7 +135,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 - VS Codeでの編集
   - VBA ファイルの編集、追加・更新・削除
-  - Excel シートのの編集、追加・更新・削除
+  - Excel シートの編集、追加・更新・削除
   - CustomUI XML ファイルの編集、更新
   - VBA ファイルの Sub プロシージャの VS Code からの実行
 - VS Codeとの統合
@@ -149,7 +149,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | 機能                              | 説明                                                                            |
 | --------------------------------- | ------------------------------------------------------------------------------- |
 | **Open Excel Book**               | エクスプローラービューから Excel ファイルを開く。                               |
-| **Load VBA from Excel Book**      | ブックファイル(.xlsm, .xlam)から VBA ファイ(.bas, .cls, .frm)を読み込む。       |
+| **Load VBA from Excel Book**      | ブックファイル(.xlsm, .xlam)から VBA ファイル(.bas, .cls, .frm)を読み込む。     |
 | **Save VBA to Excel Book**        | VS Code で編集した VBA ファイルをブックファイルに保存する。                     |
 | **Compare VBA with Excel Book**   | VS Code で編集したコードとブックファイルの状態を比較する。                      |
 | **Run VBA Sub at Cursor**         | カーソル位置の Sub プロシージャを Excel で実行する。                            |
