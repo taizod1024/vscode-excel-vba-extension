@@ -92,7 +92,7 @@ function Populate-Sheet {
         $rowCount = $Data.Count
         
         # Clear all cells first
-        $Sheet.Cells.Clear()
+        $Sheet.Cells.Clear() | Out-Null
         
         # Create a COM array for Excel
         $excelArray = New-Object 'object[,]' $rowCount, $maxCols
@@ -188,24 +188,35 @@ try {
         $csvData[$csvFile.BaseName] = $csvFile
     }
     
+    # Function to import sheet data
+    function Import-SheetData {
+        param(
+            [object]$Sheet,
+            [object]$CsvFile
+        )
+        
+        $sheetName = $CsvFile.BaseName
+        Write-Host "Importing sheet: $sheetName"
+        
+        # Read CSV file and populate sheet
+        $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
+        Populate-Sheet -Sheet $Sheet -Data $data
+        
+        Write-Host "Imported: $sheetName ($($data.Count) rows)"
+    }
+    
     # Process sheets in the order they appear in the workbook
     # First, update existing sheets
     foreach ($existingSheetName in $existingSheetNames) {
         if ($csvData.ContainsKey($existingSheetName)) {
             $csvFile = $csvData[$existingSheetName]
-            $sheetName = $csvFile.BaseName
-            Write-Host "Importing sheet: $sheetName"
-            
-            $existingSheet = $workbook.Sheets.Item($sheetName)
+            $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
             # Clear existing data
             $existingSheet.Cells.Clear()
             
-            # Read CSV file and populate sheet
-            $data = Read-CsvFile -CsvFilePath $csvFile.FullName
-            Populate-Sheet -Sheet $existingSheet -Data $data
-            
-            Write-Host "Imported: $sheetName ($($data.Count) rows)"
+            # Import the sheet data
+            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile
         }
     }
     
@@ -222,17 +233,13 @@ try {
     
     foreach ($sheetName in $newSheetNames) {
         $csvFile = $csvData[$sheetName]
-        Write-Host "Importing sheet: $sheetName"
         
         # Create new sheet at the end
         $newSheet = $workbook.Sheets.Add([System.Type]::Missing, $workbook.Sheets($workbook.Sheets.Count))
         $newSheet.Name = $sheetName
         
-        # Read CSV file and populate sheet
-        $data = Read-CsvFile -CsvFilePath $csvFile.FullName
-        Populate-Sheet -Sheet $newSheet -Data $data
-        
-        Write-Host "Imported: $sheetName ($($data.Count) rows)"
+        # Import the sheet data
+        Import-SheetData -Sheet $newSheet -CsvFile $csvFile
     }
     
     # Save the workbook
