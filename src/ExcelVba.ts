@@ -332,6 +332,70 @@ class ExcelVba {
     );
   }
 
+  /** Validate that Attribute VB_Name matches file names */
+  private async validateVbNames(folderPath: string): Promise<void> {
+    const walkDir = (dir: string): string[] => {
+      let results: string[] = [];
+      const files = fs.readdirSync(dir);
+
+      for (const file of files) {
+        const filePath = path.join(dir, file);
+        const stat = fs.statSync(filePath);
+
+        if (stat.isDirectory()) {
+          results = results.concat(this.validateVbNamesHelper(filePath));
+        } else {
+          results.push(filePath);
+        }
+      }
+      return results;
+    };
+
+    const vbaFiles = walkDir(folderPath).filter(filePath => {
+      const ext = path.extname(filePath).toLowerCase();
+      return [".bas", ".cls", ".frm"].includes(ext);
+    });
+
+    for (const filePath of vbaFiles) {
+      const fileName = path.basename(filePath);
+      const componentName = path.parse(fileName).name;
+
+      try {
+        const content = fs.readFileSync(filePath, { encoding: "utf-8" });
+        const attributeMatch = content.match(/Attribute\s+VB_Name\s*=\s*"([^"]+)"/);
+
+        if (attributeMatch) {
+          const vbName = attributeMatch[1];
+          if (vbName !== componentName) {
+            throw new Error(`MISMATCH Attribute VB_Name: "${vbName}" != "${componentName}" in file ${fileName}`);
+          }
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error.message;
+        }
+        throw error;
+      }
+    }
+  }
+
+  private validateVbNamesHelper(dir: string): string[] {
+    let results: string[] = [];
+    const files = fs.readdirSync(dir);
+
+    for (const file of files) {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+
+      if (stat.isDirectory()) {
+        results = results.concat(this.validateVbNamesHelper(filePath));
+      } else {
+        results.push(filePath);
+      }
+    }
+    return results;
+  }
+
   /** save vba */
   public async saveVbaAsync(macroPath: string) {
     const commandName = "Save VBA to Excel Macro";
@@ -357,6 +421,9 @@ class ExcelVba {
         if (!fs.existsSync(saveSourcePath)) {
           throw `Folder not found: ${path.basename(saveSourcePath)}. Please load VBA first.`;
         }
+
+        // Validate VB_Name attribute matches file names
+        await this.validateVbNames(saveSourcePath);
 
         // exec command
         const result = this.execPowerShell(scriptPath, [macroPath, saveSourcePath]);
