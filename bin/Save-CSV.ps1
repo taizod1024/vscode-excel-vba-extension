@@ -165,21 +165,6 @@ try {
     $originalCalculation = $excel.Calculation
     $excel.Calculation = -4135  # xlCalculationManual
     
-    # Delete sheets that don't start with "Sheet"
-    $sheetsToDelete = @()
-    foreach ($sheet in $workbook.Sheets) {
-        if (-not $sheet.Name.StartsWith("Sheet")) {
-            $sheetsToDelete += $sheet.Name
-        }
-    }
-    
-    foreach ($sheetName in $sheetsToDelete) {
-        Write-Host "Deleting sheet: $sheetName"
-        $excel.DisplayAlerts = $false
-        $workbook.Sheets.Item($sheetName).Delete()
-        $excel.DisplayAlerts = $true
-    }
-    
     # Get existing sheet names and their order
     $existingSheetNames = @()
     foreach ($sheet in $workbook.Sheets) {
@@ -189,7 +174,9 @@ try {
     # Create a hashtable to store CSV data
     $csvData = @{}
     foreach ($csvFile in $csvFiles) {
-        $csvData[$csvFile.BaseName] = $csvFile
+        # Use BaseName + .csv as sheet name
+        $sheetNameWithExt = $csvFile.BaseName + ".csv"
+        $csvData[$sheetNameWithExt] = $csvFile
     }
     
     # Count total sheets to process
@@ -220,11 +207,11 @@ try {
             [object]$ExcelApp
         )
         
-        $sheetName = $CsvFile.BaseName
+        $sheetName = $CsvFile.BaseName + ".csv"
         Write-Host "Importing sheet: $sheetName"
         
         # Update status bar
-        $ExcelApp.StatusBar = "Processing sheet ${CurrentIndex} of ${TotalCount}: $sheetName"
+        $ExcelApp.StatusBar = "Saving sheet ${CurrentIndex} of ${TotalCount}: $sheetName"
         
         # Read CSV file and populate sheet
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName

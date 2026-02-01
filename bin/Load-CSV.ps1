@@ -48,17 +48,35 @@ try {
         throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
     }
     
+    # Activate Excel window
+    $shell = New-Object -ComObject WScript.Shell
+    $shell.AppActivate($excel.Caption)
+    
     # Get all sheets
     $sheetCount = $workbook.Sheets.Count
     
-    # Export all sheets except those starting with "Sheet"
+    # Count sheets that end with .csv
+    $sheetsToExportCount = 0
+    for ($i = 1; $i -le $sheetCount; $i++) {
+        $sheet = $workbook.Sheets.Item($i)
+        if ($sheet.Name -match "\.csv$") {
+            $sheetsToExportCount++
+        }
+    }
+    
+    # Export all sheets that end with .csv
+    $currentIndex = 0
     for ($i = 1; $i -le $sheetCount; $i++) {
         $sheet = $workbook.Sheets.Item($i)
         $sheetName = $sheet.Name
         
-        # Skip sheets that match the pattern Sheet* (like Sheet, Sheet1, Sheet2, etc.)
-        if ($sheetName -notmatch "^Sheet\d*$") {
+        # Only process sheets that end with .csv
+        if ($sheetName -match "\.csv$") {
+            $currentIndex++
             Write-Host "Exporting sheet: $sheetName"
+            
+            # Update status bar
+            $excel.StatusBar = "Loading sheet ${currentIndex} of ${sheetsToExportCount}: $sheetName"
             
             # Get the used range from the source sheet
             $usedRange = $sheet.UsedRange
@@ -133,7 +151,7 @@ try {
                 }
                 
                 # Save as UTF-8 CSV using ADODB.Stream
-                $csvFileName = "$sheetName.csv"
+                $csvFileName = $sheetName
                 $csvFilePath = Join-Path $CsvOutputPath $csvFileName
                 
                 $stream = New-Object -ComObject ADODB.Stream
@@ -153,6 +171,9 @@ try {
             }
         }
     }
+    
+    # Clear status bar
+    $excel.StatusBar = $false
     
     Write-Host "Export completed successfully"
 }
