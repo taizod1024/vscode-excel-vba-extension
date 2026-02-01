@@ -81,7 +81,7 @@ function Read-CsvFile {
 }
 
 # Function to populate sheet with data
-function Populate-Sheet {
+function Update-SheetData {
     param(
         [object]$Sheet,
         [object[]]$Data
@@ -200,7 +200,7 @@ try {
         
         # Read CSV file and populate sheet
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
-        Populate-Sheet -Sheet $Sheet -Data $data
+        Update-SheetData -Sheet $Sheet -Data $data
         
         Write-Host "Imported: $sheetName ($($data.Count) rows)"
     }
