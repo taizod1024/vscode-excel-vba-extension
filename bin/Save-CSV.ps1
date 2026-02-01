@@ -192,15 +192,39 @@ try {
         $csvData[$csvFile.BaseName] = $csvFile
     }
     
+    # Count total sheets to process
+    $sheetsToProcessCount = 0
+    foreach ($existingSheetName in $existingSheetNames) {
+        if ($csvData.ContainsKey($existingSheetName)) {
+            $sheetsToProcessCount++
+        }
+    }
+    
+    # Add new sheets count
+    $newSheetNames = @()
+    foreach ($sheetName in $csvData.Keys) {
+        if ($existingSheetNames -notcontains $sheetName) {
+            $newSheetNames += $sheetName
+        }
+    }
+    $newSheetNames = $newSheetNames | Sort-Object
+    $sheetsToProcessCount += $newSheetNames.Count
+    
     # Function to import sheet data
     function Import-SheetData {
         param(
             [object]$Sheet,
-            [object]$CsvFile
+            [object]$CsvFile,
+            [int]$CurrentIndex,
+            [int]$TotalCount,
+            [object]$ExcelApp
         )
         
         $sheetName = $CsvFile.BaseName
         Write-Host "Importing sheet: $sheetName"
+        
+        # Update status bar
+        $ExcelApp.StatusBar = "Processing sheet ${CurrentIndex} of ${TotalCount}: $sheetName"
         
         # Read CSV file and populate sheet
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
@@ -211,8 +235,10 @@ try {
     
     # Process sheets in the order they appear in the workbook
     # First, update existing sheets
+    $currentIndex = 0
     foreach ($existingSheetName in $existingSheetNames) {
         if ($csvData.ContainsKey($existingSheetName)) {
+            $currentIndex++
             $csvFile = $csvData[$existingSheetName]
             $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
@@ -220,22 +246,13 @@ try {
             $existingSheet.Cells.Clear() | Out-Null
             
             # Import the sheet data
-            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile
+            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
         }
     }
     
     # Add new sheets (CSV files that don't exist in the workbook) at the end
-    $newSheetNames = @()
-    foreach ($sheetName in $csvData.Keys) {
-        if ($existingSheetNames -notcontains $sheetName) {
-            $newSheetNames += $sheetName
-        }
-    }
-    
-    # Sort new sheets for consistent order
-    $newSheetNames = $newSheetNames | Sort-Object
-    
     foreach ($sheetName in $newSheetNames) {
+        $currentIndex++
         $csvFile = $csvData[$sheetName]
         
         # Create new sheet at the end
@@ -243,8 +260,11 @@ try {
         $newSheet.Name = $sheetName
         
         # Import the sheet data
-        Import-SheetData -Sheet $newSheet -CsvFile $csvFile
+        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
     }
+    
+    # Clear status bar
+    $excel.StatusBar = $false
     
     # Save the workbook
     $workbook.Save()
