@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.17...v0.1.0) (2026-02-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* ***FOLDER NAME CHANGED*** _xlsm ->_bas, _customUI -> _xml
+
+### Features
+
+* ***FOLDER NAME CHANGED*** _xlsm ->_bas, _customUI -> _xml ([8d7b295](https://github.com/taizod1024/vscode-excel-vba-extension/commit/8d7b29521a42f4aa278c4abda4b006fa380b6c49))
+
 ### [0.0.17](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.16...v0.0.17) (2026-02-01)
 
 ### [0.0.16](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.15...v0.0.16) (2026-02-01)
