@@ -68,7 +68,7 @@ class ExcelVba {
       }
     }
 
-    // If .bas, .cls, .frm is selected, find the parent _xlsm, _xlsx or _xlam folder
+    // If .bas, .cls, .frm is selected, find the parent _bas folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
       const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
@@ -78,17 +78,31 @@ class ExcelVba {
         parentName = parentName.slice(0, -1);
       }
 
-      // Check if parent folder is _xlsm, _xlsx or _xlam
-      const match = parentName.match(/^(.+)_(?:xlsm|xlsx|xlam)$/i);
+      // Check if parent folder is _bas
+      const match = parentName.match(/^(.+)_bas$/i);
       if (match) {
         const macroName = match[1];
-        const extType = parentName.endsWith("_xlsm") ? "xlsm" : "xlam";
-        const macroPath = path.join(path.dirname(parentDir), `${macroName}.${extType}`);
-        return macroPath;
+        const parentParentDir = path.dirname(parentDir);
+
+        // Try to find .xlsm first, then .xlsx, then .xlam
+        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
+        if (fs.existsSync(xlsmPath)) {
+          return xlsmPath;
+        }
+
+        const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
+        if (fs.existsSync(xlsxPath)) {
+          return xlsxPath;
+        }
+
+        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
+        if (fs.existsSync(xlamPath)) {
+          return xlamPath;
+        }
       }
     }
 
-    // If .xml is selected in a _customUI folder, find the parent .xlam or .xlsm file
+    // If .xml is selected in a _xml folder, find the parent .xlam or .xlsm file
     if (ext === ".xml") {
       const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
@@ -98,8 +112,8 @@ class ExcelVba {
         parentName = parentName.slice(0, -1);
       }
 
-      // Check if parent folder is _customUI
-      const match = parentName.match(/^(.+)_customUI$/i);
+      // Check if parent folder is _xml
+      const match = parentName.match(/^(.+)_xml$/i);
       if (match) {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
@@ -276,9 +290,8 @@ class ExcelVba {
       async _progress => {
         // setup command
         const macroFileName = path.parse(macroPath).name;
-        const macroExtension = path.parse(macroPath).ext.replace(".", "");
         const macroDir = path.dirname(macroPath);
-        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_bas~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-VBA.ps1`;
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
@@ -294,7 +307,7 @@ class ExcelVba {
         }
 
         // Organize loaded files
-        const newFolderName = `${macroFileName}_${macroExtension}`;
+        const newFolderName = `${macroFileName}_bas`;
         const newPath = path.join(macroDir, newFolderName);
 
         // Remove existing folder if it exists
@@ -413,9 +426,8 @@ class ExcelVba {
       async _progress => {
         // setup command
         const macroFileName = path.parse(macroPath).name;
-        const macroExtension = path.parse(macroPath).ext.replace(".", "");
         const macroDir = path.dirname(macroPath);
-        const saveSourcePath = path.join(macroDir, `${macroFileName}_${macroExtension}`);
+        const saveSourcePath = path.join(macroDir, `${macroFileName}_bas`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-VBA.ps1`;
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
@@ -440,7 +452,7 @@ class ExcelVba {
         }
 
         // Remove temporary folder if it exists
-        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_bas~`);
         if (fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
           this.channel.appendLine(`- Cleaned: Temporary folder removed`);
@@ -676,7 +688,7 @@ class ExcelVba {
         // setup command
         const macroFileName = path.parse(macroPath).name;
         const macroDir = path.dirname(macroPath);
-        const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_xml~`);
         const scriptPath = `${this.extensionPath}\\bin\\Load-CustomUI.ps1`;
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
@@ -692,7 +704,7 @@ class ExcelVba {
         }
 
         // Organize loaded files
-        const newFolderName = `${macroFileName}_customUI`;
+        const newFolderName = `${macroFileName}_xml`;
         const newPath = path.join(macroDir, newFolderName);
 
         // Remove existing folder if it exists
@@ -763,7 +775,7 @@ class ExcelVba {
         // setup command
         const macroFileName = path.parse(macroPath).name;
         const macroDir = path.dirname(macroPath);
-        const saveSourcePath = path.join(macroDir, `${macroFileName}_customUI`);
+        const saveSourcePath = path.join(macroDir, `${macroFileName}_xml`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-CustomUI.ps1`;
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
@@ -785,7 +797,7 @@ class ExcelVba {
         }
 
         // Remove temporary folder if it exists
-        const tmpPath = path.join(macroDir, `${macroFileName}_customUI~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_xml~`);
         if (fs.existsSync(tmpPath)) {
           fs.rmSync(tmpPath, { recursive: true, force: true });
           this.channel.appendLine(`- Cleaned: Temporary folder removed`);

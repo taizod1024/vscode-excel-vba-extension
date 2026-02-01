@@ -43,7 +43,7 @@ try {
     Write-Host -ForegroundColor Green "- found $($customUIFiles.Count) customUI file(s)"
 
     # Create a temporary directory for backup and work
-    $tempDir = Join-Path $env:TEMP "excel_customui_work_$(Get-Random)"
+    $tempDir = Join-Path $env:TEMP "excel_xml_work_$(Get-Random)"
     New-Item $tempDir -ItemType Directory | Out-Null
     
     try {

@@ -17,9 +17,6 @@ try {
     Write-Host -ForegroundColor Green "- macroPath: $macroPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
-    # Get macro info
-    $macroInfo = Get-BookInfo $macroPath
-
     # Clean temporary directory
     Write-Host -ForegroundColor Green "- cleaning tmpPath"
     if (Test-Path $tmpPath) { 
@@ -32,7 +29,7 @@ try {
     Write-Host -ForegroundColor Green "- extracting customUI from Excel Add-in"
     
     # Copy the .xlam file to a temporary location for extraction
-    $tempZipPath = Join-Path $env:TEMP "excel_customui_temp_$(Get-Random).zip"
+    $tempZipPath = Join-Path $env:TEMP "excel_xml_temp_$(Get-Random).zip"
     Copy-Item $macroPath $tempZipPath
     
     try {
