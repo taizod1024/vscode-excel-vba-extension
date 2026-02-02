@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.0...v0.1.1) (2026-02-02)
+
+
+### Features
+
+* enhance CSV loading and saving functionality with directory management and macro file checks ([833cbf9](https://github.com/taizod1024/vscode-excel-vba-extension/commit/833cbf95206ef5d78996ffeb00c630612aa7d0ac))
+
+
+### Bug Fixes
+
+* update file extension conditions for command triggers in package.json ([655d2fb](https://github.com/taizod1024/vscode-excel-vba-extension/commit/655d2fb2d28a364fdeb8df20be2e3791eeaa6410))
+
 ## [0.1.0](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.0.17...v0.1.0) (2026-02-01)
 
 

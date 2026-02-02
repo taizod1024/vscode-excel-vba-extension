@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "excel-vba",
   "displayName": "Excel VBA Extension",
   "description": "A VS Code extension for developing Excel VBA / Sheets / CustomUI",
