@@ -150,42 +150,42 @@
         {
           "command": "excel-vba.loadVba",
           "group": "navigation@2",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveVba",
           "group": "navigation@3",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.compareVba",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.loadCsv",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
           "group": "navigation@8",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@9",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         }
       ]
     },
