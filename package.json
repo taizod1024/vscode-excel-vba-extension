@@ -160,7 +160,7 @@
         {
           "command": "excel-vba.runSub",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|bas)$/i"
         },
         {
           "command": "excel-vba.compareVba",
@@ -170,7 +170,7 @@
         {
           "command": "excel-vba.loadCsv",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
