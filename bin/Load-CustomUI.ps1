@@ -17,6 +17,30 @@ try {
     Write-Host -ForegroundColor Green "- macroPath: $macroPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
+    # Check if macro file exists
+    Write-Host -ForegroundColor Green "- checking if macro file exists"
+    if (-not (Test-Path $macroPath)) {
+        throw "MACRO FILE NOT FOUND: $macroPath"
+    }
+
+    # Get Excel instance and check if workbook is open
+    $excel = Get-ExcelInstance
+    $macroInfo = Get-BookInfo $macroPath
+    
+    # Try to find the workbook in open workbooks
+    $resolvedPath = $macroInfo.ResolvedPath
+    $workbookFound = $false
+    foreach ($wb in $excel.Workbooks) {
+        if ($wb.FullName -eq $resolvedPath) {
+            $workbookFound = $true
+            break
+        }
+    }
+    
+    if (-not $workbookFound) {
+        throw "EXCEL WORKBOOK NOT OPEN: $resolvedPath is not currently open in Excel"
+    }
+
     # Clean temporary directory
     Write-Host -ForegroundColor Green "- cleaning tmpPath"
     if (Test-Path $tmpPath) { 

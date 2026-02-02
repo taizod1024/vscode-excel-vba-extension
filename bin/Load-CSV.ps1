@@ -14,14 +14,6 @@ Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
 Write-Host -ForegroundColor Green "- ExcelFilePath: $($ExcelFilePath)"
 Write-Host -ForegroundColor Green "- CsvOutputPath: $($CsvOutputPath)"
 
-# Clean output directory
-if (Test-Path $CsvOutputPath) {
-    Remove-Item $CsvOutputPath -Recurse -Force
-}
-
-# Create output directory
-New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
-
 # Get running Excel instance
 $excel = Get-ExcelInstance
 
@@ -45,6 +37,14 @@ try {
     if ($null -eq $workbook) {
         throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
     }
+
+    # Clean output directory
+    if (Test-Path $CsvOutputPath) {
+        Remove-Item $CsvOutputPath -Recurse -Force
+    }
+
+    # Create output directory
+    New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
     
     # Activate Excel window
     $shell = New-Object -ComObject WScript.Shell

@@ -150,42 +150,42 @@
         {
           "command": "excel-vba.loadVba",
           "group": "navigation@2",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveVba",
           "group": "navigation@3",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|bas)$/i"
         },
         {
           "command": "excel-vba.compareVba",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.loadCsv",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
           "group": "navigation@8",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@9",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         }
       ]
     },
@@ -230,7 +230,7 @@
     "eslint": "^8.0.1",
     "generator-code": "^1.6.2",
     "husky": "^9.1.7",
-    "standard-version": "^9.3.2",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4",
     "utf-8-validate": "^5.0.7",
