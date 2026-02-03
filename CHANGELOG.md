@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.2...v0.1.3) (2026-02-03)
+
+
+### Features
+
+* replace ([bca2f7f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bca2f7fbba2b58bb9e0ec829827dfa6a1854cd58))
+
+
+### Bug Fixes
+
+* remove unnecessary blank lines in openExcelAsync method ([1cad887](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1cad88725332147530eb737c201c9ec7afd23816))
+
 ### [0.1.2](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.1...v0.1.2) (2026-02-03)
 
 
