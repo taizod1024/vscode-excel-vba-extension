@@ -18,24 +18,38 @@ Write-Host -ForegroundColor Green "- CsvOutputPath: $($CsvOutputPath)"
 $excel = Get-ExcelInstance
 
 try {
-    # Check if Excel file exists
-    if (-not (Test-Path $ExcelFilePath)) {
-        throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
-    }
+    # Check if the file is a .url marker file or doesn't exist locally
+    $isUrlFile = [System.IO.Path]::GetExtension($ExcelFilePath).ToLower() -eq ".url"
+    $fileExists = Test-Path $ExcelFilePath
     
-    # Check if the workbook is open in Excel
-    $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
-    
-    $workbook = $null
-    foreach ($openWorkbook in $excel.Workbooks) {
-        if ($openWorkbook.FullName -eq $fullPath) {
-            $workbook = $openWorkbook
-            break
+    # If it's a .url file or doesn't exist, use the active workbook
+    if ($isUrlFile -or -not $fileExists) {
+        Write-Host -ForegroundColor Green "- Using active Excel workbook"
+        $workbook = $excel.ActiveWorkbook
+        if ($null -eq $workbook) {
+            throw "NO ACTIVE WORKBOOK: No workbook is currently open in Excel"
         }
     }
+    else {
+        # Check if Excel file exists
+        if (-not $fileExists) {
+            throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
+        }
+        
+        # Check if the workbook is open in Excel
+        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
     
-    if ($null -eq $workbook) {
-        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        $workbook = $null
+        foreach ($openWorkbook in $excel.Workbooks) {
+            if ($openWorkbook.FullName -eq $fullPath) {
+                $workbook = $openWorkbook
+                break
+            }
+        }
+        
+        if ($null -eq $workbook) {
+            throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        }
     }
 
     # Clean output directory

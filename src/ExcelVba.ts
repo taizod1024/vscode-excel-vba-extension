@@ -34,6 +34,33 @@ class ExcelVba {
 
     const ext = path.extname(resolvedPath).toLowerCase();
 
+    // If .url file is selected, treat it as a marker for cloud-based files
+    // Use the corresponding local Excel file if it exists
+    if (ext === ".url") {
+      const dir = path.dirname(resolvedPath);
+      const fileNameWithoutExt = path.parse(resolvedPath).name;
+
+      // Try to find .xlsm first, then .xlsx, then .xlam
+      const xlsmPath = path.join(dir, `${fileNameWithoutExt}.xlsm`);
+      if (fs.existsSync(xlsmPath)) {
+        return xlsmPath;
+      }
+
+      const xlsxPath = path.join(dir, `${fileNameWithoutExt}.xlsx`);
+      if (fs.existsSync(xlsxPath)) {
+        return xlsxPath;
+      }
+
+      const xlamPath = path.join(dir, `${fileNameWithoutExt}.xlam`);
+      if (fs.existsSync(xlamPath)) {
+        return xlamPath;
+      }
+
+      // If local file doesn't exist, return the .url path itself
+      // This will allow CSV/BAS/XML operations to use the corresponding folders
+      return resolvedPath;
+    }
+
     // If .xlsm, .xlam or .xlsx is selected, return as is
     if (ext === ".xlsm" || ext === ".xlam" || ext === ".xlsx") {
       return resolvedPath;
@@ -50,7 +77,7 @@ class ExcelVba {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlsm first, then .xlsx, then .xlam
+        // Try to find .xlsm first, then .xlsx, then .xlam, then .url
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
@@ -64,6 +91,11 @@ class ExcelVba {
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
         if (fs.existsSync(xlamPath)) {
           return xlamPath;
+        }
+
+        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
         }
       }
     }
@@ -84,7 +116,7 @@ class ExcelVba {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlsm first, then .xlsx, then .xlam
+        // Try to find .xlsm first, then .xlsx, then .xlam, then .url
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
@@ -98,6 +130,11 @@ class ExcelVba {
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
         if (fs.existsSync(xlamPath)) {
           return xlamPath;
+        }
+
+        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
         }
       }
     }
@@ -118,7 +155,7 @@ class ExcelVba {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlam first, then .xlsm
+        // Try to find .xlam first, then .xlsm, then .url
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
         if (fs.existsSync(xlamPath)) {
           return xlamPath;
@@ -127,6 +164,11 @@ class ExcelVba {
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
+        }
+
+        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
         }
 
         // Default to .xlam if neither exists (will be handled as error later)
@@ -290,11 +332,10 @@ class ExcelVba {
     );
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.createUrlShortcut`, async (uri: vscode.Uri) => {
+      vscode.commands.registerCommand(`${this.appId}.createDummyUrlShortcut`, async () => {
         this.extensionPath = context.extensionPath;
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await this.createUrlShortcutAsync(macroPath);
+          await this.createDummyUrlShortcutAsync();
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -1061,9 +1102,9 @@ class ExcelVba {
     );
   }
 
-  /** create URL shortcuts from hyperlinks in Excel file */
-  public async createUrlShortcutAsync(macroPath: string) {
-    const commandName = "Create URL Shortcuts to Excel Book";
+  /** create dummy URL shortcut files for cloud-based Excel workbooks */
+  public async createDummyUrlShortcutAsync() {
+    const commandName = "Create Dummy URL Shortcut for Cloud Files";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -1076,9 +1117,8 @@ class ExcelVba {
 
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
-        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
 
-        // Use PowerShell to create .url file
+        // Use PowerShell to create .url files for all open workbooks
         const scriptPath = `${this.extensionPath}\\bin\\Create-UrlShortcuts.ps1`;
         const result = this.execPowerShell(scriptPath, [workspaceFolder]);
 
@@ -1088,7 +1128,7 @@ class ExcelVba {
           throw `${result.stderr}`;
         }
 
-        this.channel.appendLine(`[SUCCESS] Shortcut created`);
+        this.channel.appendLine(`[SUCCESS] Dummy URL shortcuts created for all cloud-based workbooks`);
       },
     );
   }

@@ -126,24 +126,38 @@ try {
         throw "CSV FOLDER NOT FOUND: $($CsvInputPath)"
     }
     
-    # Check if Excel file exists
-    if (-not (Test-Path $ExcelFilePath)) {
-        throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
-    }
+    # Check if the file is a .url marker file or doesn't exist locally
+    $isUrlFile = [System.IO.Path]::GetExtension($ExcelFilePath).ToLower() -eq ".url"
+    $fileExists = Test-Path $ExcelFilePath
     
-    # Check if the workbook is open in Excel
-    $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
-    
-    $workbook = $null
-    foreach ($openWorkbook in $excel.Workbooks) {
-        if ($openWorkbook.FullName -eq $fullPath) {
-            $workbook = $openWorkbook
-            break
+    # If it's a .url file or doesn't exist, use the active workbook
+    if ($isUrlFile -or -not $fileExists) {
+        Write-Host -ForegroundColor Green "- Using active Excel workbook"
+        $workbook = $excel.ActiveWorkbook
+        if ($null -eq $workbook) {
+            throw "NO ACTIVE WORKBOOK: No workbook is currently open in Excel"
         }
     }
-    
-    if ($null -eq $workbook) {
-        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+    else {
+        # Check if Excel file exists
+        if (-not (Test-Path $ExcelFilePath)) {
+            throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
+        }
+        
+        # Check if the workbook is open in Excel
+        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        
+        $workbook = $null
+        foreach ($openWorkbook in $excel.Workbooks) {
+            if ($openWorkbook.FullName -eq $fullPath) {
+                $workbook = $openWorkbook
+                break
+            }
+        }
+        
+        if ($null -eq $workbook) {
+            throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        }
     }
     
     # Get all CSV files from input path
@@ -258,11 +272,14 @@ try {
             $Sheet.ListObjects(1).TableStyle = "TableStyleLight2"
             
             # Freeze first row and first column
-            $Sheet.Range("B2").Select()
             try {
-                $ExcelApp.Windows(1).SplitRow = 1
-                $ExcelApp.Windows(1).SplitColumn = 1
-                $ExcelApp.Windows(1).FreezePanes = $true
+                # Select cell B2 first
+                $Sheet.Range("B2").Select()
+                # Set split position
+                $ExcelApp.ActiveWindow.SplitRow = 1
+                $ExcelApp.ActiveWindow.SplitColumn = 1
+                # Freeze the panes
+                $ExcelApp.ActiveWindow.FreezePanes = $true
             }
             catch {
                 Write-Host -ForegroundColor Yellow "- Warning: Failed to set freeze panes"
