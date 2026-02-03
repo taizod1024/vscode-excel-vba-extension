@@ -106,10 +106,10 @@ try {
                     $csvLines += $value
                 }
                 elseif ($rows -eq 1) {
-                    # Single row - allValues is 1D array
+                    # Single row - handle 2D array from Excel
                     $line = @()
-                    for ($c = 0; $c -lt $cols; $c++) {
-                        $value = $allValues[$c]
+                    for ($c = 1; $c -le $cols; $c++) {
+                        $value = $allValues[1, $c]
                         if ($null -eq $value) {
                             $value = ""
                         }
@@ -122,9 +122,9 @@ try {
                     $csvLines += $line -join ","
                 }
                 elseif ($cols -eq 1) {
-                    # Single column - allValues is 1D array
-                    for ($r = 0; $r -lt $rows; $r++) {
-                        $value = $allValues[$r]
+                    # Single column - handle 2D array from Excel
+                    for ($r = 1; $r -le $rows; $r++) {
+                        $value = $allValues[$r, 1]
                         if ($null -eq $value) {
                             $value = ""
                         }
