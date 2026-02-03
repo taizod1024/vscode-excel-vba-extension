@@ -128,18 +128,13 @@
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.createDummyUrlShortcut",
+          "command": "excel-vba.loadCustomUI",
           "group": "navigation@9",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.loadCustomUI",
-          "group": "navigation@10",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
-        },
-        {
           "command": "excel-vba.saveCustomUI",
-          "group": "navigation@11",
+          "group": "navigation@10",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         }
       ]
