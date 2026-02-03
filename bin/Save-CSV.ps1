@@ -237,8 +237,8 @@ try {
         # Set font for entire sheet to Meiryo UI 9pt and auto-fit row heights
         try {
             $allCells = $Sheet.Cells
-            $allCells.Font.Name = "xxxMeiryo UIxx"
-            $allCells.Font.Size = 9
+            $allCells.Font.Name = "Meiryo UI"
+            \            $allCells.Font.Size = 9
             
             # Auto-fit row heights
             $Sheet.Rows.AutoFit() | Out-Null
