@@ -4,90 +4,22 @@ param(
     [Parameter(Mandatory = $true)] [string] $subName
 )
 
-# set error action
-$ErrorActionPreference = "Stop"
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Import common functions
+. (Join-Path $PSScriptRoot "Common.ps1")
 
 try {
-    # Display script name
-    $scriptName = $MyInvocation.MyCommand.Name
-    Write-Host -ForegroundColor Yellow "$($scriptName):"
+    # Initialize
+    Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
     Write-Host -ForegroundColor Green "- subName: $($subName)"
 
-    # check if Excel is running
-    Write-Host -ForegroundColor Green "- checking Excel running"
-    $excel = $null
-    try {
-        $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
-    }
-    catch {
-        throw "NO EXCEL FOUND. Please Open Excel Macro."
-    }
-
-    # Resolve the macro file path
-    $resolvedPath = (Resolve-Path $macroPath).Path
-    Write-Host -ForegroundColor Cyan "- resolvedPath: $resolvedPath"
+    # Get Excel instance
+    $excel = Get-ExcelInstance
     
-    # Determine if this is an add-in (.xlam) or workbook (.xlsm/.xlsx)
-    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
-    Write-Host -ForegroundColor Cyan "- file extension: $fileExtension"
-    
-    $isAddIn = ($fileExtension -eq ".xlam")
-    
-    $vbProject = $null
-    
-    if ($isAddIn) {
-        # For add-ins (.xlam), search through VBE.VBProjects
-        Write-Host -ForegroundColor Cyan "- searching VBE.VBProjects (add-in):"
-        try {
-            $vbe = $excel.VBE
-            if ($null -eq $vbe) {
-                throw "Excel.VBE is null - VBA project object model access may not be enabled"
-            }
-            
-            $vbProjects = $vbe.VBProjects
-            if ($null -eq $vbProjects) {
-                throw "Excel.VBE.VBProjects is null - VBA project object model access may not be enabled"
-            }
-            
-            foreach ($vbProj in $vbProjects) {
-                if ($vbProj.FileName -eq $resolvedPath) {
-                    $vbProject = $vbProj
-                    break
-                }
-            }
-        }
-        catch {
-            throw "Failed to access VBA project object model. Please enable: Excel Options > Trust Center > Trust Center Settings > Macro Settings > Trust access to the VBA project object model"
-        }
-    }
-    else {
-        # For workbooks, get the active workbook or search by path
-        Write-Host -ForegroundColor Cyan "- searching workbooks:"
-        if ($null -ne $excel.ActiveWorkbook) {
-            $activeWorkbookPath = $excel.ActiveWorkbook.FullName
-            if ($activeWorkbookPath -eq $resolvedPath) {
-                Write-Host -ForegroundColor Cyan "  using active workbook: $activeWorkbookPath"
-                $vbProject = $excel.ActiveWorkbook.VBProject
-            }
-        }
-        
-        if ($null -eq $vbProject) {
-            # Search through open workbooks
-            foreach ($workbook in $excel.Workbooks) {
-                if ($workbook.FullName -eq $resolvedPath) {
-                    Write-Host -ForegroundColor Cyan "  found workbook: $($workbook.FullName)"
-                    $vbProject = $workbook.VBProject
-                    break
-                }
-            }
-        }
-    }
-    
-    if ($null -eq $vbProject) {
-        throw "Macro file not found in Excel: $resolvedPath"
-    }
+    # Get VB Project
+    $macroInfo = Get-BookInfo $macroPath
+    $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
+    $vbProject = $result.VBProject
 
     # Run the Sub
     Write-Host -ForegroundColor Green "- running Sub: $subName"
@@ -99,7 +31,7 @@ try {
     # Bring Excel window to foreground before running the sub
     try {
         $shell = New-Object -ComObject WScript.Shell
-        $shell.AppActivate($excel.Caption)
+        $shell.AppActivate($excel.Caption) | Out-Null
     }
     catch {
         Write-Host -ForegroundColor Yellow "- Warning: Could not activate window: $_"
@@ -148,6 +80,6 @@ try {
     Write-Host -ForegroundColor Green "[SUCCESS] Sub executed: $subName"
 }
 catch {
-    Write-Host -ForegroundColor Red "[ERROR] $($_.Exception.Message)"
+    [Console]::Error.WriteLine("$($_)")
     exit 1
 }

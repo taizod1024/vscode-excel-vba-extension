@@ -2,7 +2,7 @@
   "version": "0.0.14",
   "name": "excel-vba",
   "displayName": "Excel VBA Extension",
-  "description": "Excel VBA module load/save/compare/run extension for windows",
+  "description": "A VS Code extension for developing Excel VBA / Sheets / CustomUI",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -19,144 +19,123 @@
   "contributes": {
     "commands": [
       {
+        "command": "excel-vba.newExcel",
+        "title": "New Excel Book",
+        "icon": "$(empty-window)"
+      },
+      {
         "command": "excel-vba.openExcel",
-        "title": "Open Excel Macro",
-        "icon": "$(vm-connect)"
+        "title": "Open Excel Book",
+        "icon": "$(window)"
+      },
+      {
+        "command": "excel-vba.createDummyUrlShortcut",
+        "title": "Create Dummy URL Shortcut for Cloud Files",
+        "icon": "$(link)"
       },
       {
         "command": "excel-vba.loadVba",
-        "title": "Load VBA from Excel Macro",
+        "title": "Load VBA from Excel Book",
         "icon": "$(repo-pull)"
       },
       {
         "command": "excel-vba.saveVba",
-        "title": "Save VBA to Excel Macro",
+        "title": "Save VBA to Excel Book",
         "icon": "$(repo-push)"
-      },
-      {
-        "command": "excel-vba.compareVba",
-        "title": "Compare VBA with Excel Macro",
-        "icon": "$(compare-changes)"
-      },
-      {
-        "command": "excel-vba.loadCustomUI",
-        "title": "Load CustomUI from Excel Macro",
-        "icon": "$(arrow-circle-down)"
-      },
-      {
-        "command": "excel-vba.saveCustomUI",
-        "title": "Save CustomUI to Excel Macro (Close Excel first)",
-        "icon": "$(arrow-circle-up)"
       },
       {
         "command": "excel-vba.runSub",
         "title": "Run VBA Sub at Cursor",
         "icon": "$(play)"
+      },
+      {
+        "command": "excel-vba.compareVba",
+        "title": "Compare VBA with Excel Book",
+        "icon": "$(compare-changes)"
+      },
+      {
+        "command": "excel-vba.loadCsv",
+        "title": "Load CSV from Excel Book",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "excel-vba.saveCsv",
+        "title": "Save CSV to Excel Book",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "excel-vba.loadCustomUI",
+        "title": "Load CustomUI from Excel Book",
+        "icon": "$(arrow-circle-down)"
+      },
+      {
+        "command": "excel-vba.saveCustomUI",
+        "title": "Save CustomUI to Excel Book (Close Excel first)",
+        "icon": "$(arrow-circle-up)"
       }
     ],
     "menus": {
-      "commandPalette": [
+      "file/newFile": [
         {
-          "command": "excel-vba.openExcel",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.compareVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.runSub",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadCustomUI",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveCustomUI",
-          "when": "false"
+          "command": "excel-vba.newExcel"
         }
       ],
-      "explorer/context": [
+      "commandPalette": [
         {
-          "command": "excel-vba.openExcel",
-          "group": "navigation@1",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadVba",
-          "group": "navigation@2",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveVba",
-          "group": "navigation@3",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.compareVba",
-          "group": "navigation@4",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.runSub",
-          "group": "navigation@5",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadCustomUI",
-          "group": "navigation@6",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveCustomUI",
-          "group": "navigation@7",
-          "when": "false"
+          "command": "excel-vba.newExcel",
+          "when": "true"
         }
       ],
       "editor/title": [
         {
-          "command": "excel-vba.openExcel",
+          "command": "excel-vba.newExcel",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xlsx|csv|bas|cls|frm|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.openExcel",
+          "group": "navigation@2",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",
-          "group": "navigation@2",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "group": "navigation@3",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveVba",
-          "group": "navigation@3",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
-        },
-        {
-          "command": "excel-vba.compareVba",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas|cls|frm)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|bas)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|bas)$/i"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "group": "navigation@6",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|bas|cls|frm)$/i"
+        },
+        {
+          "command": "excel-vba.loadCsv",
+          "group": "navigation@7",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.saveCsv",
+          "group": "navigation@8",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
-          "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "group": "navigation@9",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|xml)$/i"
+          "group": "navigation@10",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         }
       ]
     },
@@ -201,7 +180,7 @@
     "eslint": "^8.0.1",
     "generator-code": "^1.6.2",
     "husky": "^9.1.7",
-    "standard-version": "^9.3.2",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4",
     "utf-8-validate": "^5.0.7",

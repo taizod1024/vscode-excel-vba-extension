@@ -4,18 +4,16 @@ param(
     [Parameter(Mandatory = $true)] [string] $customUISourcePath
 )
 
-# set error action
-$ErrorActionPreference = "Stop"
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Import common functions
+. (Join-Path $PSScriptRoot "Common.ps1")
 
 # Required assemblies for ZIP manipulation
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 try {
 
-    # Display script name
-    $scriptName = $MyInvocation.MyCommand.Name
-    Write-Host -ForegroundColor Yellow "$($scriptName):"
+    # Initialize
+    Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
     Write-Host -ForegroundColor Green "- customUISourcePath: $($customUISourcePath)"
 
@@ -45,7 +43,7 @@ try {
     Write-Host -ForegroundColor Green "- found $($customUIFiles.Count) customUI file(s)"
 
     # Create a temporary directory for backup and work
-    $tempDir = Join-Path $env:TEMP "excel_customui_work_$(Get-Random)"
+    $tempDir = Join-Path $env:TEMP "excel_xml_work_$(Get-Random)"
     New-Item $tempDir -ItemType Directory | Out-Null
     
     try {

@@ -4,25 +4,41 @@ param(
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
-# Configuration
-$ErrorActionPreference = "Stop"
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Import common functions
+. (Join-Path $PSScriptRoot "Common.ps1")
 
-# Required assemblies for ZIP extraction
+# Configuration
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 try {
     
-    # Display script name
-    $scriptName = $MyInvocation.MyCommand.Name
-    Write-Host -ForegroundColor Yellow "$($scriptName):"
+    # Initialize
+    Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- macroPath: $macroPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
-    # Check if the macro file exists
+    # Check if macro file exists
     Write-Host -ForegroundColor Green "- checking if macro file exists"
     if (-not (Test-Path $macroPath)) {
-        throw "macro FILE NOT FOUND: $macroPath"
+        throw "MACRO FILE NOT FOUND: $macroPath"
+    }
+
+    # Get Excel instance and check if workbook is open
+    $excel = Get-ExcelInstance
+    $macroInfo = Get-BookInfo $macroPath
+    
+    # Try to find the workbook in open workbooks
+    $resolvedPath = $macroInfo.ResolvedPath
+    $workbookFound = $false
+    foreach ($wb in $excel.Workbooks) {
+        if ($wb.FullName -eq $resolvedPath) {
+            $workbookFound = $true
+            break
+        }
+    }
+    
+    if (-not $workbookFound) {
+        throw "EXCEL WORKBOOK NOT OPEN: $resolvedPath is not currently open in Excel"
     }
 
     # Clean temporary directory
@@ -37,7 +53,7 @@ try {
     Write-Host -ForegroundColor Green "- extracting customUI from Excel Add-in"
     
     # Copy the .xlam file to a temporary location for extraction
-    $tempZipPath = Join-Path $env:TEMP "excel_customui_temp_$(Get-Random).zip"
+    $tempZipPath = Join-Path $env:TEMP "excel_xml_temp_$(Get-Random).zip"
     Copy-Item $macroPath $tempZipPath
     
     try {
