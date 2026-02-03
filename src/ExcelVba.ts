@@ -276,6 +276,18 @@ class ExcelVba {
         }
       }),
     );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.newExcel`, async () => {
+        this.extensionPath = context.extensionPath;
+        try {
+          await this.newExcelAsync();
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
   }
 
   /** load vba */
@@ -964,6 +976,74 @@ class ExcelVba {
         }
 
         this.channel.appendLine(`[SUCCESS] Sheets saved from CSV`);
+      },
+    );
+  }
+
+  /** create new Excel file */
+  public async newExcelAsync() {
+    const commandName = "New Excel Book";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) {
+          throw `No workspace folder found`;
+        }
+
+        // Get the first workspace folder
+        const workspaceFolder = workspaceFolders[0].uri.fsPath;
+
+        // Ask user for file name
+        const fileName = await vscode.window.showInputBox({
+          prompt: "Enter new Excel file name",
+          placeHolder: "example",
+          validateInput: input => {
+            if (!input) {
+              return "File name cannot be empty";
+            }
+            if (/[/\\:*?"<>|]/.test(input)) {
+              return 'File name cannot contain: / \\ : * ? " < > |';
+            }
+            return "";
+          },
+        });
+
+        if (!fileName) {
+          throw `File creation cancelled`;
+        }
+
+        const filePath = path.join(workspaceFolder, `${fileName}.xlsx`);
+
+        // Check if file already exists
+        if (fs.existsSync(filePath)) {
+          throw `File already exists: ${fileName}.xlsx`;
+        }
+
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${fileName}.xlsx`);
+        this.channel.appendLine(`- Path: ${filePath}`);
+
+        // Use PowerShell to create a new Excel file
+        const scriptPath = `${this.extensionPath}\\bin\\New-Excel.ps1`;
+        const result = this.execPowerShell(scriptPath, [filePath]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] Created new Excel file`);
+
+        // Open the created file in the file explorer
+        const fileUri = vscode.Uri.file(filePath);
+        await vscode.commands.executeCommand("vscode.open", fileUri);
       },
     );
   }

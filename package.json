@@ -21,7 +21,7 @@
       {
         "command": "excel-vba.openExcel",
         "title": "Open Excel Book",
-        "icon": "$(vm-connect)"
+        "icon": "$(window)"
       },
       {
         "command": "excel-vba.loadVba",
@@ -62,86 +62,31 @@
         "command": "excel-vba.saveCustomUI",
         "title": "Save CustomUI to Excel Book (Close Excel first)",
         "icon": "$(arrow-circle-up)"
+      },
+      {
+        "command": "excel-vba.newExcel",
+        "title": "New Excel Book",
+        "icon": "$(empty-window)"
       }
     ],
     "menus": {
-      "commandPalette": [
+      "file/newFile": [
         {
-          "command": "excel-vba.openExcel",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.compareVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.runSub",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadCsv",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveCsv",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadCustomUI",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveCustomUI",
-          "when": "false"
+          "command": "excel-vba.newExcel"
         }
       ],
-      "explorer/context": [
+      "commandPalette": [
         {
-          "command": "excel-vba.openExcel",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.compareVba",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.runSub",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadCsv",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveCsv",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.loadCustomUI",
-          "when": "false"
-        },
-        {
-          "command": "excel-vba.saveCustomUI",
-          "when": "false"
+          "command": "excel-vba.newExcel",
+          "when": "true"
         }
       ],
       "editor/title": [
+        {
+          "command": "excel-vba.newExcel",
+          "group": "navigation@1",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
+        },
         {
           "command": "excel-vba.openExcel",
           "group": "navigation@1",
