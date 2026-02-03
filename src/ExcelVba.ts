@@ -288,6 +288,19 @@ class ExcelVba {
         }
       }),
     );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.createUrlShortcut`, async (uri: vscode.Uri) => {
+        this.extensionPath = context.extensionPath;
+        try {
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await this.createUrlShortcutAsync(macroPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
   }
 
   /** load vba */
@@ -1044,6 +1057,38 @@ class ExcelVba {
         // Open the created file in the file explorer
         const fileUri = vscode.Uri.file(filePath);
         await vscode.commands.executeCommand("vscode.open", fileUri);
+      },
+    );
+  }
+
+  /** create URL shortcuts from hyperlinks in Excel file */
+  public async createUrlShortcutAsync(macroPath: string) {
+    const commandName = "Create URL Shortcuts to Excel Book";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        const workspaceFolder = workspaceFolders ? workspaceFolders[0].uri.fsPath : path.join(process.env.USERPROFILE || "", "Desktop");
+
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+
+        // Use PowerShell to create .url file
+        const scriptPath = `${this.extensionPath}\\bin\\Create-UrlShortcuts.ps1`;
+        const result = this.execPowerShell(scriptPath, [workspaceFolder]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] Shortcut created`);
       },
     );
   }

@@ -66,7 +66,12 @@
       {
         "command": "excel-vba.newExcel",
         "title": "New Excel Book",
-        "icon": "$(empty-window)"
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "excel-vba.createUrlShortcut",
+        "title": "Create URL Shortcuts to Excel Book",
+        "icon": "$(link)"
       }
     ],
     "menus": {
@@ -131,6 +136,11 @@
           "command": "excel-vba.saveCustomUI",
           "group": "navigation@9",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.createUrlShortcut",
+          "group": "navigation@10",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam)$/i"
         }
       ]
     },
