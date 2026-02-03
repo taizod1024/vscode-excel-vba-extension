@@ -31,7 +31,7 @@ try {
     # Bring Excel window to foreground before running the sub
     try {
         $shell = New-Object -ComObject WScript.Shell
-        $shell.AppActivate($excel.Caption)
+        $shell.AppActivate($excel.Caption) | Out-Null
     }
     catch {
         Write-Host -ForegroundColor Yellow "- Warning: Could not activate window: $_"

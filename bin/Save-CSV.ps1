@@ -156,7 +156,7 @@ try {
 
     # Activate Excel window
     $shell = New-Object -ComObject WScript.Shell
-    $shell.AppActivate($excel.Caption)
+    $shell.AppActivate($excel.Caption) | Out-Null
 
     # Disable screen updating for performance
     $excel.ScreenUpdating = $false
@@ -164,6 +164,7 @@ try {
     $originalCalculation = $excel.Calculation
     $excel.Calculation = -4135  # xlCalculationManual
     
+       
     # Get existing sheet names and their order
     $existingSheetNames = @()
     foreach ($sheet in $workbook.Sheets) {

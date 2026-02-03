@@ -48,7 +48,7 @@ try {
     
     # Activate Excel window
     $shell = New-Object -ComObject WScript.Shell
-    $shell.AppActivate($excel.Caption)
+    $shell.AppActivate($excel.Caption) | Out-Null
     
     # Disable user interaction during processing
     $excel.Interactive = $false
@@ -77,7 +77,7 @@ try {
             Write-Host "Exporting sheet: $sheetName"
             
             # Activate the sheet
-            $sheet.Activate()
+            $sheet.Activate() | Out-Null
             
             # Update status bar
             $excel.StatusBar = "Loading sheet ${currentIndex} of ${sheetsToExportCount}: $sheetName"

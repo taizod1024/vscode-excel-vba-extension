@@ -32,7 +32,7 @@ try {
             
             # Try to activate VBE window using WScript.Shell
             $shell = New-Object -ComObject WScript.Shell
-            $shell.AppActivate($vbeCaption)
+            $shell.AppActivate($vbeCaption) | Out-Null
         }
     }
     catch {
