@@ -23,6 +23,7 @@ A VS Code extension for developing Excel VBA / Sheets / CustomUI.
 
 | Feature                           | Description                                                          |
 | --------------------------------- | -------------------------------------------------------------------- |
+| **New Excel Book**                | Create a new Excel file.                                             |
 | **Open Excel Book**               | Open Excel files from Explorer View.                                 |
 | **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam). |
 | **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                      |
@@ -49,6 +50,15 @@ Configure settings to allow the extension to access Excel VBA.
 ## Usage
 
 Right-click a book file in Explorer View or click the icon in the editor title to run commands.
+
+### New Excel Book
+
+1. **File** → **New File** from the menu
+2. Select **New Excel Book** from the options
+3. Enter the file name (supports Japanese and other characters)
+   - Note: Enter the name without the `.xlsx` extension
+   - Example: `MyBook` (the file will be created as `MyBook.xlsx`)
+4. A new Excel file (.xlsx) is created and opened in Excel
 
 ### Open Excel File
 
@@ -148,6 +158,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 | 機能                              | 説明                                                                            |
 | --------------------------------- | ------------------------------------------------------------------------------- |
+| **New Excel Book**                | 新しい Excel ファイルを作成する。                                               |
 | **Open Excel Book**               | エクスプローラービューから Excel ファイルを開く。                               |
 | **Load VBA from Excel Book**      | ブックファイル(.xlsm, .xlam)から VBA ファイル(.bas, .cls, .frm)を読み込む。     |
 | **Save VBA to Excel Book**        | VS Code で編集した VBA ファイルをブックファイルに保存する。                     |
@@ -174,6 +185,15 @@ VS Code で Excel VBA を開発するための拡張機能です。
 ## 使い方
 
 エクスプローラービューでブックファイルを右クリック、またはエディタタイトルのアイコンをクリックして実行します。
+
+### 新しい Excel ブックを作成する
+
+1. メニューから **ファイル** → **新しいファイル** を選択
+2. 選択肢から **New Excel Book** を選択
+3. ファイル名を入力（日本語など各国語に対応）
+   - 注：`.xlsx` 拡張子を除いた名前を入力してください
+   - 例：`MyBook` と入力すると `MyBook.xlsx` として作成されます
+4. 新しい Excel ファイル（.xlsx）が作成されて Excel で開く
 
 ### Excel ファイルを開く
 
