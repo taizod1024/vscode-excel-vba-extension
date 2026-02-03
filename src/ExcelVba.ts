@@ -492,30 +492,7 @@ class ExcelVba {
       async _progress => {
         // setup command
         const macroFileName = path.parse(macroPath).name;
-        let macroDir = path.dirname(macroPath);
-        const macroExtension = path.parse(macroPath).ext.replace(".", "");
-
-        // If .bas file, find the parent Excel workbook
-        if (macroExtension === "bas") {
-          const folderName = path.basename(macroDir);
-          // Check if this folder ends with _vba, and look for corresponding .xlsm/.xlsx/.xlam
-          const match = folderName.match(/^(.+)_vba$/);
-          if (match) {
-            const parentDir = path.dirname(macroDir);
-            const baseFileName = match[1];
-            const extensions = [".xlsm", ".xlsx", ".xlam"];
-
-            for (const ext of extensions) {
-              const excelPath = path.join(parentDir, baseFileName + ext);
-              if (fs.existsSync(excelPath)) {
-                macroPath = excelPath;
-                macroDir = parentDir;
-                break;
-              }
-            }
-          }
-        }
-
+        const macroDir = path.dirname(macroPath);
         const saveSourcePath = path.join(macroDir, `${macroFileName}_bas`);
         const scriptPath = `${this.extensionPath}\\bin\\Save-VBA.ps1`;
         this.channel.appendLine("");
@@ -618,42 +595,16 @@ class ExcelVba {
         cancellable: false,
       },
       async _progress => {
-        let macroFileName = path.parse(macroPath).name;
-        const originalExtension = path.parse(macroPath).ext.replace(".", "");
-        let macroDir = path.dirname(macroPath);
-        let resolvedMacroPath = macroPath;
-
-        // If VBA component file (.bas, .cls, .frm, .frx), find the parent Excel workbook
-        const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-        if (vbaComponentExtensions.includes(originalExtension)) {
-          const folderName = path.basename(macroDir);
-          // Check if this folder ends with _vba, and look for corresponding .xlsm/.xlsx/.xlam
-          const match = folderName.match(/^(.+)_vba$/);
-          if (match) {
-            const parentDir = path.dirname(macroDir);
-            const baseFileName = match[1];
-            const extensions = [".xlsm", ".xlsx", ".xlam"];
-
-            for (const ext of extensions) {
-              const excelPath = path.join(parentDir, baseFileName + ext);
-              if (fs.existsSync(excelPath)) {
-                resolvedMacroPath = excelPath;
-                macroDir = parentDir;
-                macroFileName = path.parse(excelPath).name;  // Update macroFileName to match Excel file
-                break;
-              }
-            }
-          }
-        }
-
-        // For VBA component files, always reference the _bas folder
-        const currentFolderName = vbaComponentExtensions.includes(originalExtension) ? `${macroFileName}_bas` : `${macroFileName}_${originalExtension}`;
+        const macroFileName = path.parse(macroPath).name;
+        const macroExtension = path.parse(macroPath).ext.replace(".", "");
+        const currentFolderName = `${macroFileName}_${macroExtension}`;
+        const macroDir = path.dirname(macroPath);
         const currentPath = path.join(macroDir, currentFolderName);
-        const tmpPath = path.join(macroDir, `${macroFileName}_bas~`);
+        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
 
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
-        this.channel.appendLine(`- File: ${path.basename(resolvedMacroPath)}`);
+        this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
         this.channel.appendLine(`- Current: ${path.basename(currentPath)}`);
         this.channel.appendLine(`- Loading from Excel...`);
 
@@ -663,7 +614,7 @@ class ExcelVba {
 
         // Load to temporary folder
         const scriptPath = `${this.extensionPath}\\bin\\Load-VBA.ps1`;
-        const result = this.execPowerShell(scriptPath, [resolvedMacroPath, tmpPath]);
+        const result = this.execPowerShell(scriptPath, [macroPath, tmpPath]);
 
         if (result.exitCode !== 0) {
           throw `${result.stderr}`;
