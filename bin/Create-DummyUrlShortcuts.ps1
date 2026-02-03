@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 param(
     [Parameter(Mandatory = $true)] [string] $workspacePath
 )
@@ -40,8 +40,8 @@ try {
 URL=$fileUrl
 "@
         
-        # Create .url file with Internet Shortcut format
-        $content | Out-File -LiteralPath $shortcutPath -Encoding UTF8 -Force
+        # Create .url file with Internet Shortcut format (SJIS encoding)
+        $content | Out-File -LiteralPath $shortcutPath -Encoding Default -Force
         
         Write-Host -ForegroundColor Green "  - Created: $shortcutPath"
         $workbookCount++

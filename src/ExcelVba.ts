@@ -595,12 +595,34 @@ class ExcelVba {
         cancellable: false,
       },
       async _progress => {
-        const macroFileName = path.parse(macroPath).name;
         const macroExtension = path.parse(macroPath).ext.replace(".", "");
-        const currentFolderName = `${macroFileName}_${macroExtension}`;
-        const macroDir = path.dirname(macroPath);
+        const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
+        let macroDir = path.dirname(macroPath);
+        let referenceFileName = path.parse(macroPath).name;
+
+        // If VBA component file, find the parent Excel workbook to get the correct folder name
+        if (vbaComponentExtensions.includes(macroExtension)) {
+          const folderName = path.basename(macroDir);
+          const match = folderName.match(/^(.+)_vba$/);
+          if (match) {
+            const parentDir = path.dirname(macroDir);
+            const baseFileName = match[1];
+            const extensions = [".xlsm", ".xlsx", ".xlam"];
+
+            for (const ext of extensions) {
+              const excelPath = path.join(parentDir, baseFileName + ext);
+              if (fs.existsSync(excelPath)) {
+                referenceFileName = path.parse(excelPath).name;
+                macroDir = parentDir;
+                break;
+              }
+            }
+          }
+        }
+
+        const currentFolderName = `${referenceFileName}_bas`;
         const currentPath = path.join(macroDir, currentFolderName);
-        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
+        const tmpPath = path.join(macroDir, `${referenceFileName}_bas~`);
 
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
@@ -797,7 +819,6 @@ class ExcelVba {
         // Verify files exist in new location
         if (fs.existsSync(newPath)) {
           const files = fs.readdirSync(newPath);
-          this.channel.appendLine(`[SUCCESS] Loaded ${files.length} file(s)`);
         }
 
         // Close all diff editors
