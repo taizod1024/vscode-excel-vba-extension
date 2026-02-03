@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 param(
     [Parameter(Mandatory = $true)] [string] $workspacePath
 )

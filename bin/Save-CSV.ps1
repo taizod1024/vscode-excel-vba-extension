@@ -303,8 +303,8 @@ try {
             
             # Reset freeze panes
             try {
-                $ExcelApp.Windows(1).SplitRow = 0
-                $ExcelApp.Windows(1).SplitColumn = 0
+                $excel.Windows(1).SplitRow = 0
+                $excel.Windows(1).SplitColumn = 0
             }
             catch {
                 Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
@@ -329,8 +329,8 @@ try {
         
         # Reset freeze panes for new sheet
         try {
-            $ExcelApp.Windows(1).SplitRow = 0
-            $ExcelApp.Windows(1).SplitColumn = 0
+            $excel.Windows(1).SplitRow = 0
+            $excel.Windows(1).SplitColumn = 0
         }
         catch {
             Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
