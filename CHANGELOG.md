@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.3...v0.1.4) (2026-02-03)
+
+
+### Bug Fixes
+
+* correct font name in Save-CSV.ps1 ([1b9db55](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1b9db5518bc163f4fe5b55f0c78c8e49f3a8192d))
+* enhance macro path resolution for VBA components to locate parent Excel workbook ([3ff4de5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3ff4de5bf727220d2c7b982e91735dfd91c210bc))
+* remove unnecessary encoding comment and update variable references in scripts ([9ff76e6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9ff76e6d8f97050246df1ea14117d31dd9dcf64c))
+* simplify macro path resolution logic in loadVbaAsync and compareVbaAsync methods ([5bd46be](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5bd46be21fa0d9f6bacb105a60bab81ecf1d90c0))
+* update encoding comment and correct font size assignment in scripts ([fe3194c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fe3194cb2674fdc5a897e568cb6013e6be1eff6b))
+
 ### [0.1.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.2...v0.1.3) (2026-02-03)
 
 
