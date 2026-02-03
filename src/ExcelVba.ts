@@ -71,8 +71,8 @@ class ExcelVba {
       const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
 
-      // Check if parent folder is _CSV
-      const match = parentName.match(/^(.+)_CSV$/i);
+      // Check if parent folder is _csv
+      const match = parentName.match(/^(.+)_csv$/i);
       if (match) {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
