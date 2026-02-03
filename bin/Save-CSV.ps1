@@ -219,6 +219,21 @@ try {
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
         Update-SheetData -Sheet $Sheet -Data $data
         
+        # Set font for entire sheet to Meiryo UI 9pt and auto-fit row heights
+        try {
+            $allCells = $Sheet.Cells
+            $allCells.Font.Name = "xxxMeiryo UIxx"
+            $allCells.Font.Size = 9
+            
+            # Auto-fit row heights
+            $Sheet.Rows.AutoFit() | Out-Null
+            
+            Write-Host "Applied formatting: Meiryo UI 9pt and auto-fit row heights"
+        }
+        catch {
+            Write-Host "Warning: Could not apply formatting to $sheetName : $_"
+        }
+        
         Write-Host "Imported: $sheetName ($($data.Count) rows)"
     }
     
@@ -236,10 +251,10 @@ try {
             $tableRange = $Sheet.Range("A1").Resize($usedRange.Rows.Count, $usedRange.Columns.Count)
             
             # Create table object (ListObject in Excel)
-            $listObject = $Sheet.ListObjects.Add(1, $tableRange, $null, 1)
+            [void]$Sheet.ListObjects.Add(1, $tableRange, $null, 1)
             
             # Set table style
-            $listObject.TableStyle = "TableStyleLight2"
+            $Sheet.ListObjects(1).TableStyle = "TableStyleLight2"
             
             # Freeze first row and first column
             $Sheet.Range("B2").Select()
@@ -262,10 +277,10 @@ try {
             $existingSheet.Cells.Clear() | Out-Null
             
             # Import the sheet data
-            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
+            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
             
             # Convert range to table
-            Convert-RangeToTable -Sheet $existingSheet -ExcelApp $excel
+            Convert-RangeToTable -Sheet $existingSheet -ExcelApp $excel | Out-Null
         }
     }
     
@@ -279,10 +294,10 @@ try {
         $newSheet.Name = $sheetName
         
         # Import the sheet data
-        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
+        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
         
         # Convert range to table
-        Convert-RangeToTable -Sheet $newSheet -ExcelApp $excel
+        Convert-RangeToTable -Sheet $newSheet -ExcelApp $excel | Out-Null
     }
     
     # Clear status bar

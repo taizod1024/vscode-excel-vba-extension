@@ -11,10 +11,6 @@ function Initialize-Script {
     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     
     Write-Host -ForegroundColor Yellow "${scriptName}:"
-    
-    return @{
-        ScriptName = $scriptName
-    }
 }
 
 # Get the active Excel instance
