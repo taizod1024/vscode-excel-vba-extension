@@ -238,7 +238,7 @@ try {
         try {
             $allCells = $Sheet.Cells
             $allCells.Font.Name = "Meiryo UI"
-            \            $allCells.Font.Size = 9
+            $allCells.Font.Size = 9
             
             # Auto-fit row heights
             $Sheet.Rows.AutoFit() | Out-Null
