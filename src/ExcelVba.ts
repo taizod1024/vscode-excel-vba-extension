@@ -566,7 +566,7 @@ class ExcelVba {
   /** open Excel Book */
   public async openExcelAsync(macroPath: string) {
     const commandName = "Open Excel Book";
-    
+
     // Check if file is .url
     const ext = path.extname(macroPath).toLowerCase();
     if (ext === ".url") {
@@ -577,7 +577,7 @@ class ExcelVba {
       this.channel.appendLine(`[WARNING] Cannot open .url files. Please open the cloud-hosted file directly.`);
       return;
     }
-    
+
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
