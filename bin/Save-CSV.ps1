@@ -259,7 +259,14 @@ try {
             
             # Freeze first row and first column
             $Sheet.Range("B2").Select()
-            $ExcelApp.ActiveWindow.FreezePanes = $true
+            try {
+                $ExcelApp.Windows(1).SplitRow = 1
+                $ExcelApp.Windows(1).SplitColumn = 1
+                $ExcelApp.Windows(1).FreezePanes = $true
+            }
+            catch {
+                Write-Host -ForegroundColor Yellow "- Warning: Failed to set freeze panes"
+            }
             
             Write-Host "Converted to table: $($Sheet.Name)"
         }
@@ -274,8 +281,17 @@ try {
             $csvFile = $csvData[$existingSheetName]
             $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
-            # Clear existing data
+            # Clear existing data and reset freeze panes
             $existingSheet.Cells.Clear() | Out-Null
+            
+            # Reset freeze panes
+            try {
+                $ExcelApp.Windows(1).SplitRow = 0
+                $ExcelApp.Windows(1).SplitColumn = 0
+            }
+            catch {
+                Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+            }
             
             # Import the sheet data
             Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
@@ -293,6 +309,15 @@ try {
         # Create new sheet at the end
         $newSheet = $workbook.Sheets.Add([System.Type]::Missing, $workbook.Sheets($workbook.Sheets.Count))
         $newSheet.Name = $sheetName
+        
+        # Reset freeze panes for new sheet
+        try {
+            $ExcelApp.Windows(1).SplitRow = 0
+            $ExcelApp.Windows(1).SplitColumn = 0
+        }
+        catch {
+            Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+        }
         
         # Import the sheet data
         Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
