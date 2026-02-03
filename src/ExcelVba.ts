@@ -566,6 +566,18 @@ class ExcelVba {
   /** open Excel Book */
   public async openExcelAsync(macroPath: string) {
     const commandName = "Open Excel Book";
+
+    // Check if file is .url
+    const ext = path.extname(macroPath).toLowerCase();
+    if (ext === ".url") {
+      vscode.window.showWarningMessage("Cannot open .url files directly. Please open the cloud-hosted Excel file in your web browser.");
+      this.channel.appendLine("");
+      this.channel.appendLine(`${commandName}`);
+      this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+      this.channel.appendLine(`[WARNING] Cannot open .url files. Please open the cloud-hosted file directly.`);
+      return;
+    }
+
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
@@ -1119,7 +1131,7 @@ class ExcelVba {
         this.channel.appendLine(`${commandName}`);
 
         // Use PowerShell to create .url files for all open workbooks
-        const scriptPath = `${this.extensionPath}\\bin\\Create-UrlShortcuts.ps1`;
+        const scriptPath = `${this.extensionPath}\\bin\\Create-DummyUrlShortcuts.ps1`;
         const result = this.execPowerShell(scriptPath, [workspaceFolder]);
 
         // output result

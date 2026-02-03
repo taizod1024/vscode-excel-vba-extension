@@ -29,11 +29,6 @@
         "icon": "$(window)"
       },
       {
-        "command": "excel-vba.createDummyUrlShortcut",
-        "title": "Create Dummy URL Shortcut for Cloud Files",
-        "icon": "$(link)"
-      },
-      {
         "command": "excel-vba.loadVba",
         "title": "Load VBA from Excel Book",
         "icon": "$(repo-pull)"
@@ -64,6 +59,11 @@
         "icon": "$(cloud-upload)"
       },
       {
+        "command": "excel-vba.createDummyUrlShortcut",
+        "title": "Create Dummy URL Shortcut for Cloud Files",
+        "icon": "$(link)"
+      },
+      {
         "command": "excel-vba.loadCustomUI",
         "title": "Load CustomUI from Excel Book",
         "icon": "$(arrow-circle-down)"
@@ -84,6 +84,46 @@
         {
           "command": "excel-vba.newExcel",
           "when": "true"
+        },
+        {
+          "command": "excel-vba.openExcel",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.loadVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.runSub",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.compareVba",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.loadCsv",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveCsv",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.createDummyUrlShortcut",
+          "when": "true"
+        },
+        {
+          "command": "excel-vba.loadCustomUI",
+          "when": "false"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "when": "false"
         }
       ],
       "editor/title": [
@@ -95,7 +135,7 @@
         {
           "command": "excel-vba.openExcel",
           "group": "navigation@2",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|csv|bas|cls|frm|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",
@@ -128,13 +168,18 @@
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.loadCustomUI",
+          "command": "excel-vba.createDummyUrlShortcut",
           "group": "navigation@9",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.saveCustomUI",
+          "command": "excel-vba.loadCustomUI",
           "group": "navigation@10",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.saveCustomUI",
+          "group": "navigation@11",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|bas|cls|frm|xml)$/i"
         }
       ]

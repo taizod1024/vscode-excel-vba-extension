@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-Write-Host -ForegroundColor Yellow "Create-UrlShortcuts.ps1:"
+Write-Host -ForegroundColor Yellow "Create-DummyUrlShortcuts.ps1:"
 
 try {
     Write-Host -ForegroundColor Green "- workspacePath: $workspacePath"
