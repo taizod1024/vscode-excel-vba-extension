@@ -83,64 +83,51 @@ try {
             $excel.StatusBar = "Loading sheet ${currentIndex} of ${sheetsToExportCount}: $sheetName"
             
             # Get the used range from the source sheet
-            $usedRange = $sheet.UsedRange
+            try {
+                $usedRange = $sheet.UsedRange
+                if (-not $usedRange) {
+                    $usedRange = $null
+                }
+            }
+            catch {
+                Write-Host "Warning: Could not get UsedRange from $sheetName"
+                $usedRange = $null
+            }
+            
+            # Check if sheet has content
             if ($usedRange -and $usedRange.Cells.Count -gt 0) {
-                # Get dimensions
-                $rows = $usedRange.Rows.Count
-                $cols = $usedRange.Columns.Count
-                
-                # Get all values at once using Value2
-                $allValues = $usedRange.Value2
-                
-                # Create CSV content
-                $csvLines = @()
-                
-                # Handle different array dimensions
-                if ($rows -eq 1 -and $cols -eq 1) {
-                    # Single cell
-                    $value = if ( $null -eq $allValues) { "" } else { $allValues }
-                    $value = $value.ToString()
-                    if ($value -match '[",\r\n]') {
-                        $value = '"' + ($value -replace '"', '""') + '"'
+                try {
+                    # Get dimensions
+                    $rows = $usedRange.Rows.Count
+                    $cols = $usedRange.Columns.Count
+                    
+                    # Skip if empty
+                    if ($rows -le 0 -or $cols -le 0) {
+                        Write-Host "Sheet is empty: $sheetName"
+                        continue
                     }
-                    $csvLines += $value
-                }
-                elseif ($rows -eq 1) {
-                    # Single row - handle 2D array from Excel
-                    $line = @()
-                    for ($c = 1; $c -le $cols; $c++) {
-                        $value = $allValues[1, $c]
-                        if ($null -eq $value) {
-                            $value = ""
-                        }
-                        $value = $value.ToString()
-                        if ($value -match '[",\r\n]') {
-                            $value = '"' + ($value -replace '"', '""') + '"'
-                        }
-                        $line += $value
-                    }
-                    $csvLines += $line -join ","
-                }
-                elseif ($cols -eq 1) {
-                    # Single column - handle 2D array from Excel
-                    for ($r = 1; $r -le $rows; $r++) {
-                        $value = $allValues[$r, 1]
-                        if ($null -eq $value) {
-                            $value = ""
-                        }
+                    
+                    # Get all values at once using Value2
+                    $allValues = $usedRange.Value2
+                    
+                    # Create CSV content
+                    $csvLines = @()
+                    
+                    # Handle different array dimensions
+                    if ($rows -eq 1 -and $cols -eq 1) {
+                        # Single cell
+                        $value = if ( $null -eq $allValues) { "" } else { $allValues }
                         $value = $value.ToString()
                         if ($value -match '[",\r\n]') {
                             $value = '"' + ($value -replace '"', '""') + '"'
                         }
                         $csvLines += $value
                     }
-                }
-                else {
-                    # Multiple rows and columns - allValues is 2D array (1-based)
-                    for ($r = 1; $r -le $rows; $r++) {
+                    elseif ($rows -eq 1) {
+                        # Single row - handle 2D array from Excel
                         $line = @()
                         for ($c = 1; $c -le $cols; $c++) {
-                            $value = $allValues[$r, $c]
+                            $value = $allValues[1, $c]
                             if ($null -eq $value) {
                                 $value = ""
                             }
@@ -152,23 +139,58 @@ try {
                         }
                         $csvLines += $line -join ","
                     }
+                    elseif ($cols -eq 1) {
+                        # Single column - handle 2D array from Excel
+                        for ($r = 1; $r -le $rows; $r++) {
+                            $value = $allValues[$r, 1]
+                            if ($null -eq $value) {
+                                $value = ""
+                            }
+                            $value = $value.ToString()
+                            if ($value -match '[",\r\n]') {
+                                $value = '"' + ($value -replace '"', '""') + '"'
+                            }
+                            $csvLines += $value
+                        }
+                    }
+                    else {
+                        # Multiple rows and columns - allValues is 2D array (1-based)
+                        for ($r = 1; $r -le $rows; $r++) {
+                            $line = @()
+                            for ($c = 1; $c -le $cols; $c++) {
+                                $value = $allValues[$r, $c]
+                                if ($null -eq $value) {
+                                    $value = ""
+                                }
+                                $value = $value.ToString()
+                                if ($value -match '[",\r\n]') {
+                                    $value = '"' + ($value -replace '"', '""') + '"'
+                                }
+                                $line += $value
+                            }
+                            $csvLines += $line -join ","
+                        }
+                    }
+                    
+                    # Save as UTF-8 CSV using ADODB.Stream
+                    $csvFileName = $sheetName
+                    $csvFilePath = Join-Path $CsvOutputPath $csvFileName
+                    
+                    $stream = New-Object -ComObject ADODB.Stream
+                    $stream.Type = 2  # Text
+                    $stream.Charset = "UTF-8"
+                    $stream.Open()
+                    $stream.WriteText(($csvLines -join "`r`n"), 1)  # 1 means add line terminator
+                    $stream.SaveToFile($csvFilePath, 2)  # 2 means overwrite
+                    $stream.Close()
+                    
+                    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($stream) | Out-Null
+                    
+                    Write-Host "Exported: $csvFileName ($($csvLines.Count) rows)"
                 }
-                
-                # Save as UTF-8 CSV using ADODB.Stream
-                $csvFileName = $sheetName
-                $csvFilePath = Join-Path $CsvOutputPath $csvFileName
-                
-                $stream = New-Object -ComObject ADODB.Stream
-                $stream.Type = 2  # Text
-                $stream.Charset = "UTF-8"
-                $stream.Open()
-                $stream.WriteText(($csvLines -join "`r`n"), 1)  # 1 means add line terminator
-                $stream.SaveToFile($csvFilePath, 2)  # 2 means overwrite
-                $stream.Close()
-                
-                [System.Runtime.InteropServices.Marshal]::ReleaseComObject($stream) | Out-Null
-                
-                Write-Host "Exported: $csvFileName ($($csvLines.Count) rows)"
+                catch {
+                    Write-Host "Error processing sheet $sheetName : $_"
+                }
             }
             else {
                 Write-Host "Sheet is empty: $sheetName"

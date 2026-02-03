@@ -239,7 +239,7 @@ try {
             $listObject = $Sheet.ListObjects.Add(1, $tableRange, $null, 1)
             
             # Set table style
-            $listObject.TableStyle = "TableStyleLight5"
+            $listObject.TableStyle = "TableStyleLight2"
             
             # Freeze first row and first column
             $Sheet.Range("B2").Select()
