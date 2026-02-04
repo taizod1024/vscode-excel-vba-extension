@@ -563,25 +563,68 @@ class ExcelVba {
     }
   }
 
+  /** read URL reference from .url file */
+  private readUrlFile(urlPath: string): string | null {
+    try {
+      const content = fs.readFileSync(urlPath, "utf8");
+      const urlMatch = content.match(/URL=(.+)/);
+      if (urlMatch) {
+        return urlMatch[1].trim();
+      }
+    } catch (error) {
+      // ファイル読み込みエラー
+    }
+    return null;
+  }
+
+  /** get Excel executable path */
+  private getExcelPath(): string {
+    try {
+      // assoc で .xlsx の関連付けを確認
+      const assocResult = child_process.execSync("cmd /c assoc .xlsx", { encoding: "utf8" }).trim();
+      const progIdMatch = assocResult.match(/=(.+)$/);
+
+      if (progIdMatch) {
+        const progId = progIdMatch[1];
+        // ftype で実行コマンドを取得
+        const ftypeResult = child_process.execSync(`cmd /c ftype ${progId}`, { encoding: "utf8" }).trim();
+        const exePathMatch = ftypeResult.match(/"([^"]+\.exe)"/i);
+
+        if (exePathMatch) {
+          const excelPath = exePathMatch[1];
+          if (fs.existsSync(excelPath)) {
+            return excelPath;
+          }
+        }
+      }
+    } catch (error) {
+      // assoc/ftype コマンド失敗
+    }
+
+    throw new Error("Excel installation not found");
+  }
+
   /** open Excel Book */
   public async openExcelAsync(macroPath: string) {
     const commandName = "Open Excel Book";
 
-    // Check if file is .url
+    let fileToOpen = macroPath;
     const ext = path.extname(macroPath).toLowerCase();
+
+    // .url ファイルの場合、中身から参照を取得
     if (ext === ".url") {
-      vscode.window.showWarningMessage("Cannot open .url files directly. Please open the cloud-hosted Excel file in your web browser.");
-      this.channel.appendLine("");
-      this.channel.appendLine(`${commandName}`);
-      this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      this.channel.appendLine(`[WARNING] Cannot open .url files. Please open the cloud-hosted file directly.`);
-      return;
+      const reference = this.readUrlFile(macroPath);
+      if (reference) {
+        fileToOpen = reference;
+      }
     }
 
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-    child_process.spawn("cmd.exe", ["/c", "start", "excel.exe", macroPath], { detached: true });
+    // Excel の実行ファイルパスを取得して起動
+    const excelPath = this.getExcelPath();
+    child_process.spawn(excelPath, [fileToOpen], { detached: true });
     this.channel.appendLine(`[SUCCESS] Opened in Excel`);
   }
 
