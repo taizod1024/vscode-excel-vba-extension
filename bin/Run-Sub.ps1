@@ -31,7 +31,7 @@ try {
     # Bring Excel window to foreground before running the sub
     try {
         $shell = New-Object -ComObject WScript.Shell
-        $shell.AppActivate($excel.Caption)
+        $shell.AppActivate($excel.Caption) | Out-Null
     }
     catch {
         Write-Host -ForegroundColor Yellow "- Warning: Could not activate window: $_"
@@ -62,7 +62,7 @@ try {
                         break
                     }
                     catch {
-                        throw "Failed to run Sub: $_"
+                        throw "FAILED TO RUN SUB: $_"
                     }
                 }
             }
@@ -74,7 +74,7 @@ try {
     }
     
     if (-not $subFound) {
-        throw "Sub not found: $subName"
+        throw "SUB NOT FOUND: $subName"
     }
 
     Write-Host -ForegroundColor Green "[SUCCESS] Sub executed: $subName"

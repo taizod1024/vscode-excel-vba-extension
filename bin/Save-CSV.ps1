@@ -32,7 +32,7 @@ function Read-CsvFile {
     $stream = $null
     
     # Parse CSV content
-    $lines = $csvContent -split "`r`n" | Where-Object { $_.Length -gt 0 }
+    $lines = @($csvContent -split "`r`n" | Where-Object { $_.Length -gt 0 })
     
     # Store all data in a 2D array
     $data = @()
@@ -78,43 +78,51 @@ function Read-CsvFile {
             }
         }
         
-        $data += , $cleanedFields
+        $data += , @($cleanedFields)
     }
     
-    return $data
+    return , $data
 }
 
 # Function to populate sheet with data
 function Update-SheetData {
     param(
         [object]$Sheet,
-        [object[]]$Data
+        [object]$Data
     )
     
-    if ($Data.Count -gt 0) {
-        $maxCols = ($Data | ForEach-Object { $_.Count } | Measure-Object -Maximum).Maximum
-        $rowCount = $Data.Count
-        
-        # Clear all cells first
-        $Sheet.Cells.Clear() | Out-Null
-        
-        # Create a COM array for Excel
-        $excelArray = New-Object 'object[,]' $rowCount, $maxCols
-        for ($r = 0; $r -lt $rowCount; $r++) {
-            for ($c = 0; $c -lt $maxCols; $c++) {
-                if ($c -lt $Data[$r].Count) {
-                    $excelArray[$r, $c] = $Data[$r][$c]
-                }
-                else {
-                    $excelArray[$r, $c] = ""
-                }
-            }
+    if ($null -eq $Data) { return }
+    
+    $dataArray = @($Data)
+    $rowCount = @($dataArray).Count
+    if ($rowCount -eq 0) { return }
+    
+    # Get max columns
+    $maxCols = 0
+    foreach ($row in $dataArray) {
+        if ($null -ne $row) {
+            $colCount = @($row).Count
+            if ($colCount -gt $maxCols) { $maxCols = $colCount }
         }
-        
-        # Set all values at once
-        $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
-        $range.Value2 = $excelArray
     }
+    
+    if ($maxCols -eq 0) { return }
+    
+    # Clear all cells and create COM array
+    $Sheet.Cells.Clear() | Out-Null
+    $excelArray = New-Object 'object[,]' $rowCount, $maxCols
+    
+    # Populate array
+    for ($r = 0; $r -lt $rowCount; $r++) {
+        $fields = @($dataArray[$r])
+        for ($c = 0; $c -lt $maxCols; $c++) {
+            $excelArray[$r, $c] = if ($c -lt @($fields).Count) { $fields[$c] } else { "" }
+        }
+    }
+    
+    # Set values in Excel
+    $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
+    $range.Value2 = $excelArray
 }
 
 # Get running Excel instance
@@ -126,14 +134,43 @@ try {
         throw "CSV FOLDER NOT FOUND: $($CsvInputPath)"
     }
     
-    # Check if Excel file exists
-    if (-not (Test-Path $ExcelFilePath)) {
-        throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
+    # Check if the file is a .url marker file
+    $isUrlFile = [System.IO.Path]::GetExtension($ExcelFilePath).ToLower() -eq ".url"
+    
+    if ($isUrlFile) {
+        # For .url files, try to find the corresponding Excel file in the same directory
+        $csvDir = Split-Path $CsvInputPath -Parent
+        $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvInputPath)
+        
+        # Look for Excel files matching the CSV folder name (without _csv suffix)
+        $possibleFiles = @()
+        foreach ($ext in @(".xlsm", ".xlsx", ".xlam")) {
+            $possiblePath = Join-Path $csvDir ($baseFileName + $ext)
+            if (Test-Path $possiblePath) {
+                $possibleFiles += $possiblePath
+            }
+        }
+        
+        if ($possibleFiles.Count -eq 0) {
+            throw ".URL FILE DETECTED: Cannot find corresponding Excel file in $(Split-Path $CsvInputPath -Parent). Expected file: $($baseFileName).xlsx|.xlsm|.xlam"
+        }
+        
+        if ($possibleFiles.Count -gt 1) {
+            throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
+        }
+        
+        $excelFilePath = $possibleFiles[0]
+        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
+    }
+    else {
+        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        
+        if (-not (Test-Path $fullPath)) {
+            throw "EXCEL FILE NOT FOUND: $($fullPath)"
+        }
     }
     
-    # Check if the workbook is open in Excel
-    $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
-    
+    # Find the workbook in open workbooks
     $workbook = $null
     foreach ($openWorkbook in $excel.Workbooks) {
         if ($openWorkbook.FullName -eq $fullPath) {
@@ -156,7 +193,7 @@ try {
 
     # Activate Excel window
     $shell = New-Object -ComObject WScript.Shell
-    $shell.AppActivate($excel.Caption)
+    $shell.AppActivate($excel.Caption) | Out-Null
 
     # Disable screen updating for performance
     $excel.ScreenUpdating = $false
@@ -164,6 +201,7 @@ try {
     $originalCalculation = $excel.Calculation
     $excel.Calculation = -4135  # xlCalculationManual
     
+       
     # Get existing sheet names and their order
     $existingSheetNames = @()
     foreach ($sheet in $workbook.Sheets) {
@@ -219,6 +257,21 @@ try {
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
         Update-SheetData -Sheet $Sheet -Data $data
         
+        # Set font for entire sheet to Meiryo UI 9pt and auto-fit row heights
+        try {
+            $allCells = $Sheet.Cells
+            $allCells.Font.Name = "Meiryo UI"
+            $allCells.Font.Size = 9
+            
+            # Auto-fit row heights
+            $Sheet.Rows.AutoFit() | Out-Null
+            
+            Write-Host "Applied formatting: Meiryo UI 9pt and auto-fit row heights"
+        }
+        catch {
+            Write-Host "Warning: Could not apply formatting to $sheetName : $_"
+        }
+        
         Write-Host "Imported: $sheetName ($($data.Count) rows)"
     }
     
@@ -236,14 +289,24 @@ try {
             $tableRange = $Sheet.Range("A1").Resize($usedRange.Rows.Count, $usedRange.Columns.Count)
             
             # Create table object (ListObject in Excel)
-            $listObject = $Sheet.ListObjects.Add(1, $tableRange, $null, 1)
+            [void]$Sheet.ListObjects.Add(1, $tableRange, $null, 1)
             
             # Set table style
-            $listObject.TableStyle = "TableStyleLight5"
+            $Sheet.ListObjects(1).TableStyle = "TableStyleLight2"
             
             # Freeze first row and first column
-            $Sheet.Range("B2").Select()
-            $ExcelApp.ActiveWindow.FreezePanes = $true
+            try {
+                # Select cell B2 first
+                $Sheet.Range("B2").Select()
+                # Set split position
+                $ExcelApp.ActiveWindow.SplitRow = 1
+                $ExcelApp.ActiveWindow.SplitColumn = 1
+                # Freeze the panes
+                $ExcelApp.ActiveWindow.FreezePanes = $true
+            }
+            catch {
+                Write-Host -ForegroundColor Yellow "- Warning: Failed to set freeze panes"
+            }
             
             Write-Host "Converted to table: $($Sheet.Name)"
         }
@@ -258,14 +321,23 @@ try {
             $csvFile = $csvData[$existingSheetName]
             $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
-            # Clear existing data
+            # Clear existing data and reset freeze panes
             $existingSheet.Cells.Clear() | Out-Null
             
+            # Reset freeze panes
+            try {
+                $excel.Windows(1).SplitRow = 0
+                $excel.Windows(1).SplitColumn = 0
+            }
+            catch {
+                Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+            }
+            
             # Import the sheet data
-            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
+            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
             
             # Convert range to table
-            Convert-RangeToTable -Sheet $existingSheet -ExcelApp $excel
+            Convert-RangeToTable -Sheet $existingSheet -ExcelApp $excel | Out-Null
         }
     }
     
@@ -278,11 +350,20 @@ try {
         $newSheet = $workbook.Sheets.Add([System.Type]::Missing, $workbook.Sheets($workbook.Sheets.Count))
         $newSheet.Name = $sheetName
         
+        # Reset freeze panes for new sheet
+        try {
+            $excel.Windows(1).SplitRow = 0
+            $excel.Windows(1).SplitColumn = 0
+        }
+        catch {
+            Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+        }
+        
         # Import the sheet data
-        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel
+        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
         
         # Convert range to table
-        Convert-RangeToTable -Sheet $newSheet -ExcelApp $excel
+        Convert-RangeToTable -Sheet $newSheet -ExcelApp $excel | Out-Null
     }
     
     # Clear status bar

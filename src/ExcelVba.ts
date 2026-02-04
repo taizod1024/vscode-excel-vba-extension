@@ -34,6 +34,33 @@ class ExcelVba {
 
     const ext = path.extname(resolvedPath).toLowerCase();
 
+    // If .url file is selected, treat it as a marker for cloud-based files
+    // Use the corresponding local Excel file if it exists
+    if (ext === ".url") {
+      const dir = path.dirname(resolvedPath);
+      const fileNameWithoutExt = path.parse(resolvedPath).name;
+
+      // Try to find .xlsm first, then .xlsx, then .xlam
+      const xlsmPath = path.join(dir, `${fileNameWithoutExt}.xlsm`);
+      if (fs.existsSync(xlsmPath)) {
+        return xlsmPath;
+      }
+
+      const xlsxPath = path.join(dir, `${fileNameWithoutExt}.xlsx`);
+      if (fs.existsSync(xlsxPath)) {
+        return xlsxPath;
+      }
+
+      const xlamPath = path.join(dir, `${fileNameWithoutExt}.xlam`);
+      if (fs.existsSync(xlamPath)) {
+        return xlamPath;
+      }
+
+      // If local file doesn't exist, return the .url path itself
+      // This will allow CSV/BAS/XML operations to use the corresponding folders
+      return resolvedPath;
+    }
+
     // If .xlsm, .xlam or .xlsx is selected, return as is
     if (ext === ".xlsm" || ext === ".xlam" || ext === ".xlsx") {
       return resolvedPath;
@@ -44,13 +71,13 @@ class ExcelVba {
       const parentDir = path.dirname(resolvedPath);
       let parentName = path.basename(parentDir);
 
-      // Check if parent folder is _CSV
-      const match = parentName.match(/^(.+)_CSV$/i);
+      // Check if parent folder is _csv
+      const match = parentName.match(/^(.+)_csv$/i);
       if (match) {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlsm first, then .xlsx, then .xlam
+        // Try to find .xlsm first, then .xlsx, then .xlam, then .url
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
@@ -64,6 +91,11 @@ class ExcelVba {
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
         if (fs.existsSync(xlamPath)) {
           return xlamPath;
+        }
+
+        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
         }
       }
     }
@@ -84,7 +116,7 @@ class ExcelVba {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlsm first, then .xlsx, then .xlam
+        // Try to find .xlsm first, then .xlsx, then .xlam, then .url
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
@@ -98,6 +130,11 @@ class ExcelVba {
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
         if (fs.existsSync(xlamPath)) {
           return xlamPath;
+        }
+
+        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
         }
       }
     }
@@ -118,7 +155,7 @@ class ExcelVba {
         const macroName = match[1];
         const parentParentDir = path.dirname(parentDir);
 
-        // Try to find .xlam first, then .xlsm
+        // Try to find .xlam first, then .xlsm, then .url
         const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
         if (fs.existsSync(xlamPath)) {
           return xlamPath;
@@ -127,6 +164,11 @@ class ExcelVba {
         const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
         if (fs.existsSync(xlsmPath)) {
           return xlsmPath;
+        }
+
+        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
         }
 
         // Default to .xlam if neither exists (will be handled as error later)
@@ -270,6 +312,30 @@ class ExcelVba {
         try {
           const macroPath = this.resolveVbaPath(uri.fsPath);
           await this.saveCsvAsync(macroPath);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.newExcel`, async () => {
+        this.extensionPath = context.extensionPath;
+        try {
+          await this.newExcelAsync();
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.createUrlShortcut`, async () => {
+        this.extensionPath = context.extensionPath;
+        try {
+          await this.createUrlShortcutAsync();
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -497,13 +563,68 @@ class ExcelVba {
     }
   }
 
+  /** read URL reference from .url file */
+  private readUrlFile(urlPath: string): string | null {
+    try {
+      const content = fs.readFileSync(urlPath, "utf8");
+      const urlMatch = content.match(/URL=(.+)/);
+      if (urlMatch) {
+        return urlMatch[1].trim();
+      }
+    } catch (error) {
+      // ファイル読み込みエラー
+    }
+    return null;
+  }
+
+  /** get Excel executable path */
+  private getExcelPath(): string {
+    try {
+      // assoc で .xlsx の関連付けを確認
+      const assocResult = child_process.execSync("cmd /c assoc .xlsx", { encoding: "utf8" }).trim();
+      const progIdMatch = assocResult.match(/=(.+)$/);
+
+      if (progIdMatch) {
+        const progId = progIdMatch[1];
+        // ftype で実行コマンドを取得
+        const ftypeResult = child_process.execSync(`cmd /c ftype ${progId}`, { encoding: "utf8" }).trim();
+        const exePathMatch = ftypeResult.match(/"([^"]+\.exe)"/i);
+
+        if (exePathMatch) {
+          const excelPath = exePathMatch[1];
+          if (fs.existsSync(excelPath)) {
+            return excelPath;
+          }
+        }
+      }
+    } catch (error) {
+      // assoc/ftype コマンド失敗
+    }
+
+    throw new Error("Excel installation not found");
+  }
+
   /** open Excel Book */
   public async openExcelAsync(macroPath: string) {
     const commandName = "Open Excel Book";
+
+    let fileToOpen = macroPath;
+    const ext = path.extname(macroPath).toLowerCase();
+
+    // .url ファイルの場合、中身から参照を取得
+    if (ext === ".url") {
+      const reference = this.readUrlFile(macroPath);
+      if (reference) {
+        fileToOpen = reference;
+      }
+    }
+
     this.channel.appendLine("");
     this.channel.appendLine(`${commandName}`);
     this.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-    child_process.spawn("cmd.exe", ["/c", "start", "excel.exe", macroPath], { detached: true });
+    // Excel の実行ファイルパスを取得して起動
+    const excelPath = this.getExcelPath();
+    child_process.spawn(excelPath, [fileToOpen], { detached: true });
     this.channel.appendLine(`[SUCCESS] Opened in Excel`);
   }
 
@@ -517,12 +638,34 @@ class ExcelVba {
         cancellable: false,
       },
       async _progress => {
-        const macroFileName = path.parse(macroPath).name;
         const macroExtension = path.parse(macroPath).ext.replace(".", "");
-        const currentFolderName = `${macroFileName}_${macroExtension}`;
-        const macroDir = path.dirname(macroPath);
+        const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
+        let macroDir = path.dirname(macroPath);
+        let referenceFileName = path.parse(macroPath).name;
+
+        // If VBA component file, find the parent Excel workbook to get the correct folder name
+        if (vbaComponentExtensions.includes(macroExtension)) {
+          const folderName = path.basename(macroDir);
+          const match = folderName.match(/^(.+)_vba$/);
+          if (match) {
+            const parentDir = path.dirname(macroDir);
+            const baseFileName = match[1];
+            const extensions = [".xlsm", ".xlsx", ".xlam"];
+
+            for (const ext of extensions) {
+              const excelPath = path.join(parentDir, baseFileName + ext);
+              if (fs.existsSync(excelPath)) {
+                referenceFileName = path.parse(excelPath).name;
+                macroDir = parentDir;
+                break;
+              }
+            }
+          }
+        }
+
+        const currentFolderName = `${referenceFileName}_bas`;
         const currentPath = path.join(macroDir, currentFolderName);
-        const tmpPath = path.join(macroDir, `${macroFileName}_${macroExtension}~`);
+        const tmpPath = path.join(macroDir, `${referenceFileName}_bas~`);
 
         this.channel.appendLine("");
         this.channel.appendLine(`${commandName}`);
@@ -719,7 +862,6 @@ class ExcelVba {
         // Verify files exist in new location
         if (fs.existsSync(newPath)) {
           const files = fs.readdirSync(newPath);
-          this.channel.appendLine(`[SUCCESS] Loaded ${files.length} file(s)`);
         }
 
         // Close all diff editors
@@ -964,6 +1106,105 @@ class ExcelVba {
         }
 
         this.channel.appendLine(`[SUCCESS] Sheets saved from CSV`);
+      },
+    );
+  }
+
+  /** create new Excel file */
+  public async newExcelAsync() {
+    const commandName = "New Excel Book";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) {
+          throw `No workspace folder found`;
+        }
+
+        // Get the first workspace folder
+        const workspaceFolder = workspaceFolders[0].uri.fsPath;
+
+        // Ask user for file name
+        const fileName = await vscode.window.showInputBox({
+          prompt: "Enter new Excel file name",
+          placeHolder: "Example: MyBook (no extension)",
+          validateInput: input => {
+            if (!input) {
+              return "File name cannot be empty";
+            }
+            if (/[/\\:*?"<>|]/.test(input)) {
+              return 'File name cannot contain: / \\ : * ? " < > |';
+            }
+            return "";
+          },
+        });
+
+        if (!fileName) {
+          throw `File creation cancelled`;
+        }
+
+        const filePath = path.join(workspaceFolder, `${fileName}.xlsx`);
+
+        // Check if file already exists
+        if (fs.existsSync(filePath)) {
+          throw `File already exists: ${fileName}.xlsx`;
+        }
+
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${fileName}.xlsx`);
+        this.channel.appendLine(`- Path: ${filePath}`);
+
+        // Use PowerShell to create a new Excel file
+        const scriptPath = `${this.extensionPath}\\bin\\New-Excel.ps1`;
+        const result = this.execPowerShell(scriptPath, [filePath]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] Created new Excel file`);
+
+        // Open the created file in the file explorer
+        const fileUri = vscode.Uri.file(filePath);
+        await vscode.commands.executeCommand("vscode.open", fileUri);
+      },
+    );
+  }
+
+  /** create URL shortcut files for cloud-based Excel workbooks */
+  public async createUrlShortcutAsync() {
+    const commandName = "Create URL Shortcut for Cloud Files";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        const workspaceFolder = workspaceFolders ? workspaceFolders[0].uri.fsPath : path.join(process.env.USERPROFILE || "", "Desktop");
+
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+
+        // Use PowerShell to create .url files for all open workbooks
+        const scriptPath = `${this.extensionPath}\\bin\\Create-UrlShortcuts.ps1`;
+        const result = this.execPowerShell(scriptPath, [workspaceFolder]);
+
+        // output result
+        if (result.stdout) this.channel.appendLine(`- Output: ${result.stdout}`);
+        if (result.exitCode !== 0) {
+          throw `${result.stderr}`;
+        }
+
+        this.channel.appendLine(`[SUCCESS] URL shortcuts created for all cloud-based workbooks`);
       },
     );
   }
