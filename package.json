@@ -31,12 +31,12 @@
       {
         "command": "excel-vba.loadVba",
         "title": "Load VBA from Excel Book",
-        "icon": "$(repo-pull)"
+        "icon": "$(repo-push)"
       },
       {
         "command": "excel-vba.saveVba",
         "title": "Save VBA to Excel Book",
-        "icon": "$(repo-push)"
+        "icon": "$(repo-pull)"
       },
       {
         "command": "excel-vba.runSub",
@@ -51,12 +51,12 @@
       {
         "command": "excel-vba.loadCsv",
         "title": "Load CSV from Excel Book",
-        "icon": "$(cloud-download)"
+        "icon": "$(cloud-upload)"
       },
       {
         "command": "excel-vba.saveCsv",
         "title": "Save CSV to Excel Book",
-        "icon": "$(cloud-upload)"
+        "icon": "$(cloud-download)"
       },
       {
         "command": "excel-vba.createUrlShortcut",
@@ -66,12 +66,12 @@
       {
         "command": "excel-vba.loadCustomUI",
         "title": "Load CustomUI from Excel Book",
-        "icon": "$(arrow-circle-down)"
+        "icon": "$(arrow-circle-up)"
       },
       {
         "command": "excel-vba.saveCustomUI",
         "title": "Save CustomUI to Excel Book (Close Excel first)",
-        "icon": "$(arrow-circle-up)"
+        "icon": "$(arrow-circle-down)"
       }
     ],
     "menus": {

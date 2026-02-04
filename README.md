@@ -4,18 +4,18 @@
 
 ## Excel VBA Extension EN
 
-A VS Code extension for developing Excel VBA / Sheets / CustomUI.
+A VS Code extension for developing Excel VBA / CSV / CustomUI.
 
 **Key Benefits:**
 
 - Editing in VS Code
   - Edit, add, update, and delete VBA files
-  - Edit, add, update, and delete Excel Sheets
+  - Edit, add, update, and delete Excel CSV
   - Edit and update CustomUI XML files
   - Execute Sub procedures of VBA files from VS Code
 - Integration with VS Code
-  - Version control for VBA files, Excel sheets, and CustomUI XML files
-  - Apply generative AI to VBA files, Excel sheets, and CustomUI XML files
+  - Version control for VBA files, Excel CSV, and CustomUI XML files
+  - Apply generative AI to VBA files, Excel CSV, and CustomUI XML files
 
 ![excel-vba](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba.png?raw=true)
 
@@ -29,11 +29,11 @@ A VS Code extension for developing Excel VBA / Sheets / CustomUI.
 | **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                               |
 | **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of book files.                  |
 | **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.                        |
-| **Load Sheets from Excel Book**   | Export sheets (.csv) from book files as CSV files.                            |
-| **Save Sheets to Excel Book**     | Save CSV files edited in VS Code to book file sheets.                         |
+| **Load CSV from Excel Book**      | Export sheets (.csv) from book files as CSV files.                            |
+| **Save CSV to Excel Book**        | Save CSV files edited in VS Code to book file sheets.                         |
+| **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
 | **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
 | **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                |
-| **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
 
 ## Setup
 
@@ -182,11 +182,11 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Save VBA to Excel Book**        | VS Code で編集した VBA ファイルをブックファイルに保存する。                                      |
 | **Compare VBA with Excel Book**   | VS Code で編集したコードとブックファイルの状態を比較する。                                       |
 | **Run VBA Sub at Cursor**         | カーソル位置の Sub プロシージャを Excel で実行する。                                             |
-| **Load Sheets from Excel Book**   | ブックファイルのシート(.csv)を CSV ファイルに保存する。                                          |
-| **Save Sheets to Excel Book**     | VS Code で編集した CSV ファイルをブックファイルに保存する。                                      |
+| **Load CSV from Excel Book**      | ブックファイルのシート(.csv)を CSV ファイルに保存する。                                          |
+| **Save CSV to Excel Book**        | VS Code で編集した CSV ファイルをブックファイルに保存する。                                      |
+| **Create URL Shortcut**           | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
 | **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポートする。                  |
 | **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存する。                                         |
-| **Create URL Shortcut**           | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
 
 ## 準備
 
