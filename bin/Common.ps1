@@ -130,7 +130,7 @@ function Find-VBProject {
     }
     
     if ($null -eq $vbProject) {
-        throw "NO OPENED WORKBOOK OR ADD-IN FOUND. Please Open Workbook or Add-in."
+        throw "NO OPENED WORKBOOK. Please Open Workbook."
     }
     
     return @{
