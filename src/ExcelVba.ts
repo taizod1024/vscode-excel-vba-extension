@@ -332,10 +332,10 @@ class ExcelVba {
     );
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.createDummyUrlShortcut`, async () => {
+      vscode.commands.registerCommand(`${this.appId}.createUrlShortcut`, async () => {
         this.extensionPath = context.extensionPath;
         try {
-          await this.createDummyUrlShortcutAsync();
+          await this.createUrlShortcutAsync();
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -1178,9 +1178,9 @@ class ExcelVba {
     );
   }
 
-  /** create dummy URL shortcut files for cloud-based Excel workbooks */
-  public async createDummyUrlShortcutAsync() {
-    const commandName = "Create Dummy URL Shortcut for Cloud Files";
+  /** create URL shortcut files for cloud-based Excel workbooks */
+  public async createUrlShortcutAsync() {
+    const commandName = "Create URL Shortcut for Cloud Files";
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -1195,7 +1195,7 @@ class ExcelVba {
         this.channel.appendLine(`${commandName}`);
 
         // Use PowerShell to create .url files for all open workbooks
-        const scriptPath = `${this.extensionPath}\\bin\\Create-DummyUrlShortcuts.ps1`;
+        const scriptPath = `${this.extensionPath}\\bin\\Create-UrlShortcuts.ps1`;
         const result = this.execPowerShell(scriptPath, [workspaceFolder]);
 
         // output result
@@ -1204,7 +1204,7 @@ class ExcelVba {
           throw `${result.stderr}`;
         }
 
-        this.channel.appendLine(`[SUCCESS] Dummy URL shortcuts created for all cloud-based workbooks`);
+        this.channel.appendLine(`[SUCCESS] URL shortcuts created for all cloud-based workbooks`);
       },
     );
   }

@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-Write-Host -ForegroundColor Yellow "Create-DummyUrlShortcuts.ps1:"
+Write-Host -ForegroundColor Yellow "Create-UrlShortcuts.ps1:"
 
 try {
     Write-Host -ForegroundColor Green "- workspacePath: $workspacePath"
@@ -40,8 +40,8 @@ try {
 URL=$fileUrl
 "@
         
-        # Create .url file with Internet Shortcut format (SJIS encoding)
-        $content | Out-File -LiteralPath $shortcutPath -Encoding Default -Force
+        # Create .url file with Internet Shortcut format (UTF-8 encoding)
+        $content | Out-File -LiteralPath $shortcutPath -Encoding UTF8 -Force
         
         Write-Host -ForegroundColor Green "  - Created: $shortcutPath"
         $workbookCount++

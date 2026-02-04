@@ -21,19 +21,19 @@ A VS Code extension for developing Excel VBA / Sheets / CustomUI.
 
 ## Features
 
-| Feature                           | Description                                                                         |
-| --------------------------------- | ----------------------------------------------------------------------------------- |
-| **New Excel Book**                | Create a new Excel file.                                                            |
-| **Open Excel Book**               | Open Excel files from Explorer View.                                                |
-| **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam).                |
-| **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                                     |
-| **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of book files.                        |
-| **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.                              |
-| **Load Sheets from Excel Book**   | Export sheets (.csv) from book files as CSV files.                                  |
-| **Save Sheets to Excel Book**     | Save CSV files edited in VS Code to book file sheets.                               |
-| **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.                     |
-| **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                      |
-| **Create Dummy URL Shortcut**     | Create dummy URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
+| Feature                           | Description                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| **New Excel Book**                | Create a new Excel file.                                                      |
+| **Open Excel Book**               | Open Excel files from Explorer View.                                          |
+| **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam).          |
+| **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                               |
+| **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of book files.                  |
+| **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.                        |
+| **Load Sheets from Excel Book**   | Export sheets (.csv) from book files as CSV files.                            |
+| **Save Sheets to Excel Book**     | Save CSV files edited in VS Code to book file sheets.                         |
+| **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
+| **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                |
+| **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
 
 ## Setup
 
@@ -119,19 +119,19 @@ Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code.
 2. Select **Save CustomUI to Excel Book** from the editor title
 3. Changes are saved to the book file's CustomUI
 
-### Create Dummy URL Shortcut
+### Create URL Shortcut
 
 For Excel files stored on OneDrive or SharePoint:
 
 1. Open all the cloud-hosted book files in Excel that you want to process
 2. Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
-3. Search for and select **"Create Dummy URL Shortcut"**
-4. Dummy URL shortcut files (.url) are created in the workspace folder
+3. Search for and select **"Create URL Shortcut"**
+4. URL shortcut files (.url) are created in the workspace folder
    - These act as markers for cloud-hosted Excel files
 
 **How it works:**
 
-- Dummy URL files serve as markers for cloud-hosted Excel files
+- URL files serve as markers for cloud-hosted Excel files
 - When you Load/Save VBA, Sheets, or CustomUI, the extension automatically detects these markers
 - The active Excel workbook is used for processing (no local file copy needed)
 - This enables seamless version control and editing of cloud-hosted files
@@ -186,7 +186,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Save Sheets to Excel Book**     | VS Code で編集した CSV ファイルをブックファイルに保存する。                                      |
 | **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポートする。                  |
 | **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存する。                                         |
-| **Create Dummy URL Shortcut**     | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
+| **Create URL Shortcut**           | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
 
 ## 準備
 
@@ -277,7 +277,7 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
 
 1. 処理したいクラウドホストのブックファイルを Excel で開く（複数可）
 2. コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）を開く
-3. **「Create Dummy URL Shortcut」** を検索して実行
+3. **「Create URL Shortcut」** を検索して実行
 4. ワークスペースフォルダにダミー URL ショートカットファイル（.url）が作成される
    - これはクラウドホストの Excel ファイルのマーカーとして機能する
 
