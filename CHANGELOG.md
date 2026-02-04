@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.4...v0.1.5) (2026-02-04)
+
+
+### Bug Fixes
+
+* add URL file handling and improve Excel executable path resolution in openExcelAsync method ([7aab25b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7aab25bcbeec259d8e4a99a07e4c664e162da2ef))
+* remove .url file check in openExcelAsync method ([4b62b7f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4b62b7f9d21b34f386982346245c45e7cc9ada81))
+
 ### [0.1.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.3...v0.1.4) (2026-02-03)
 
 
