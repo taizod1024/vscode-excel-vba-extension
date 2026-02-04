@@ -2,7 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.1.2](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.1...v0.1.2) (2026-02-04)
+### [0.1.5](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.4...v0.1.5) (2026-02-04)
+
+
+### Bug Fixes
+
+* add URL file handling and improve Excel executable path resolution in openExcelAsync method ([7aab25b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7aab25bcbeec259d8e4a99a07e4c664e162da2ef))
+* remove .url file check in openExcelAsync method ([4b62b7f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4b62b7f9d21b34f386982346245c45e7cc9ada81))
+
+### [0.1.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.3...v0.1.4) (2026-02-03)
+
+
+### Bug Fixes
+
+* correct font name in Save-CSV.ps1 ([1b9db55](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1b9db5518bc163f4fe5b55f0c78c8e49f3a8192d))
+* enhance macro path resolution for VBA components to locate parent Excel workbook ([3ff4de5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3ff4de5bf727220d2c7b982e91735dfd91c210bc))
+* remove unnecessary encoding comment and update variable references in scripts ([9ff76e6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9ff76e6d8f97050246df1ea14117d31dd9dcf64c))
+* simplify macro path resolution logic in loadVbaAsync and compareVbaAsync methods ([5bd46be](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5bd46be21fa0d9f6bacb105a60bab81ecf1d90c0))
+* update encoding comment and correct font size assignment in scripts ([fe3194c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fe3194cb2674fdc5a897e568cb6013e6be1eff6b))
+
+### [0.1.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.2...v0.1.3) (2026-02-03)
+
+
+### Features
+
+* replace ([bca2f7f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bca2f7fbba2b58bb9e0ec829827dfa6a1854cd58))
+
+
+### Bug Fixes
+
+* remove unnecessary blank lines in openExcelAsync method ([1cad887](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1cad88725332147530eb737c201c9ec7afd23816))
+
+### [0.1.2](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.1...v0.1.2) (2026-02-03)
 
 
 ### Features
@@ -12,30 +43,15 @@ All notable changes to this project will be documented in this file. See [standa
 * add detailed instructions for creating a new Excel file in README.md ([bbc1259](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bbc12599576cbae68210cb7fa44c4372aea7058b))
 * add instructions for creating dummy URL shortcuts for cloud-hosted Excel files ([1816bac](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1816bace4b43d80037d4089642eb536966d65a2b))
 * enhance URL shortcut creation for cloud-based Excel workbooks ([c729368](https://github.com/taizod1024/vscode-excel-vba-extension/commit/c729368005e2af00c86e18d11b15d237029b8723))
-* replace ([bca2f7f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/bca2f7fbba2b58bb9e0ec829827dfa6a1854cd58))
 
 
 ### Bug Fixes
 
-* add URL file handling and improve Excel executable path resolution in openExcelAsync method ([7aab25b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7aab25bcbeec259d8e4a99a07e4c664e162da2ef))
-* correct font name in Save-CSV.ps1 ([1b9db55](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1b9db5518bc163f4fe5b55f0c78c8e49f3a8192d))
-* enhance .url file handling and improve workbook detection in Load-CSV and Save-CSV scripts ([de7d477](https://github.com/taizod1024/vscode-excel-vba-extension/commit/de7d477a853847049a5601075c50a04e2e29a062))
-* enhance macro path resolution for VBA components to locate parent Excel workbook ([3ff4de5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3ff4de5bf727220d2c7b982e91735dfd91c210bc))
 * handle 2D array for single row and column exports in Load-CSV.ps1 ([157f763](https://github.com/taizod1024/vscode-excel-vba-extension/commit/157f763da6c1450c94ff23e7f84686e2c9af5706))
-* improve CSV parsing and data handling in Read-CsvFile and Update-SheetData functions ([a0387b6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a0387b65a015d7c8bfe3c2f3688b339eb2b382f6))
 * improve freeze panes handling in Save-CSV.ps1 with error handling ([baed12e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/baed12eb5fc8e483df2e8d397ed90dfdeffafb22))
 * normalize case sensitivity in parent folder check for CSV ([20a5ff6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/20a5ff6a58ffa0758111f2407e1af841f6d9b643))
-* remove .url file check in openExcelAsync method ([4b62b7f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4b62b7f9d21b34f386982346245c45e7cc9ada81))
-* remove unnecessary blank lines in openExcelAsync method ([1cad887](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1cad88725332147530eb737c201c9ec7afd23816))
-* remove unnecessary encoding comment and update variable references in scripts ([9ff76e6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9ff76e6d8f97050246df1ea14117d31dd9dcf64c))
 * remove unnecessary return ([3dd3d38](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3dd3d38101c974f23ef092beaa9181542a140423))
-* rename dummy URL shortcut to URL shortcut and update related functionality ([999a4d1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/999a4d1bde1653033077e3a6d054ff55b399a461))
-* simplify macro path resolution logic in loadVbaAsync and compareVbaAsync methods ([5bd46be](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5bd46be21fa0d9f6bacb105a60bab81ecf1d90c0))
 * suppress output of AppActivate calls in multiple scripts ([00fd377](https://github.com/taizod1024/vscode-excel-vba-extension/commit/00fd377be6f58a69644837a9858cb4ccdb599b00))
-* update encoding comment and correct font size assignment in scripts ([fe3194c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fe3194cb2674fdc5a897e568cb6013e6be1eff6b))
-* update error message for opened workbook check and restore Create-UrlShortcuts.ps1 script ([3ea2bad](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3ea2badc17f5f753206da66a6fd3dff59e3cf4ba))
-* update placeholder text for new Excel file name input prompt ([dc731e8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/dc731e8404efc89e4cc4fd016bba27ee14579735))
-* update README and package.json for CSV terminology and icon changes ([dbe5b64](https://github.com/taizod1024/vscode-excel-vba-extension/commit/dbe5b6486c807d0bdcf6212c09c7ede889659f34))
 * update table style in Save-CSV.ps1 from TableStyleLight5 to TableStyleLight2 ([23b5e9a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/23b5e9a53af192c71063ebe2f0eda211edbb1c7f))
 
 ### [0.1.1](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.0...v0.1.1) (2026-02-02)
