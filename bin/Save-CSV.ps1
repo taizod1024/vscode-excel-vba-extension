@@ -32,7 +32,7 @@ function Read-CsvFile {
     $stream = $null
     
     # Parse CSV content
-    $lines = $csvContent -split "`r`n" | Where-Object { $_.Length -gt 0 }
+    $lines = @($csvContent -split "`r`n" | Where-Object { $_.Length -gt 0 })
     
     # Store all data in a 2D array
     $data = @()
@@ -78,43 +78,51 @@ function Read-CsvFile {
             }
         }
         
-        $data += , $cleanedFields
+        $data += , @($cleanedFields)
     }
     
-    return $data
+    return , $data
 }
 
 # Function to populate sheet with data
 function Update-SheetData {
     param(
         [object]$Sheet,
-        [object[]]$Data
+        [object]$Data
     )
     
-    if ($Data.Count -gt 0) {
-        $maxCols = ($Data | ForEach-Object { $_.Count } | Measure-Object -Maximum).Maximum
-        $rowCount = $Data.Count
-        
-        # Clear all cells first
-        $Sheet.Cells.Clear() | Out-Null
-        
-        # Create a COM array for Excel
-        $excelArray = New-Object 'object[,]' $rowCount, $maxCols
-        for ($r = 0; $r -lt $rowCount; $r++) {
-            for ($c = 0; $c -lt $maxCols; $c++) {
-                if ($c -lt $Data[$r].Count) {
-                    $excelArray[$r, $c] = $Data[$r][$c]
-                }
-                else {
-                    $excelArray[$r, $c] = ""
-                }
-            }
+    if ($null -eq $Data) { return }
+    
+    $dataArray = @($Data)
+    $rowCount = @($dataArray).Count
+    if ($rowCount -eq 0) { return }
+    
+    # Get max columns
+    $maxCols = 0
+    foreach ($row in $dataArray) {
+        if ($null -ne $row) {
+            $colCount = @($row).Count
+            if ($colCount -gt $maxCols) { $maxCols = $colCount }
         }
-        
-        # Set all values at once
-        $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
-        $range.Value2 = $excelArray
     }
+    
+    if ($maxCols -eq 0) { return }
+    
+    # Clear all cells and create COM array
+    $Sheet.Cells.Clear() | Out-Null
+    $excelArray = New-Object 'object[,]' $rowCount, $maxCols
+    
+    # Populate array
+    for ($r = 0; $r -lt $rowCount; $r++) {
+        $fields = @($dataArray[$r])
+        for ($c = 0; $c -lt $maxCols; $c++) {
+            $excelArray[$r, $c] = if ($c -lt @($fields).Count) { $fields[$c] } else { "" }
+        }
+    }
+    
+    # Set values in Excel
+    $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
+    $range.Value2 = $excelArray
 }
 
 # Get running Excel instance
@@ -139,11 +147,6 @@ try {
         }
     }
     else {
-        # Check if Excel file exists
-        if (-not (Test-Path $ExcelFilePath)) {
-            throw "EXCEL FILE NOT FOUND: $($ExcelFilePath)"
-        }
-        
         # Check if the workbook is open in Excel
         $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
         
