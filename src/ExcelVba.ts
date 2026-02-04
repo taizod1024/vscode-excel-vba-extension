@@ -1131,7 +1131,7 @@ class ExcelVba {
         // Ask user for file name
         const fileName = await vscode.window.showInputBox({
           prompt: "Enter new Excel file name",
-          placeHolder: "example",
+          placeHolder: "Example: MyBook (no extension)",
           validateInput: input => {
             if (!input) {
               return "File name cannot be empty";
