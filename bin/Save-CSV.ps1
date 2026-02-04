@@ -134,33 +134,53 @@ try {
         throw "CSV FOLDER NOT FOUND: $($CsvInputPath)"
     }
     
-    # Check if the file is a .url marker file or doesn't exist locally
+    # Check if the file is a .url marker file
     $isUrlFile = [System.IO.Path]::GetExtension($ExcelFilePath).ToLower() -eq ".url"
-    $fileExists = Test-Path $ExcelFilePath
     
-    # If it's a .url file or doesn't exist, use the active workbook
-    if ($isUrlFile -or -not $fileExists) {
-        Write-Host -ForegroundColor Green "- Using active Excel workbook"
-        $workbook = $excel.ActiveWorkbook
-        if ($null -eq $workbook) {
-            throw "NO ACTIVE WORKBOOK: No workbook is currently open in Excel"
-        }
-    }
-    else {
-        # Check if the workbook is open in Excel
-        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+    if ($isUrlFile) {
+        # For .url files, try to find the corresponding Excel file in the same directory
+        $csvDir = Split-Path $CsvInputPath -Parent
+        $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvInputPath)
         
-        $workbook = $null
-        foreach ($openWorkbook in $excel.Workbooks) {
-            if ($openWorkbook.FullName -eq $fullPath) {
-                $workbook = $openWorkbook
-                break
+        # Look for Excel files matching the CSV folder name (without _csv suffix)
+        $possibleFiles = @()
+        foreach ($ext in @(".xlsm", ".xlsx", ".xlam")) {
+            $possiblePath = Join-Path $csvDir ($baseFileName + $ext)
+            if (Test-Path $possiblePath) {
+                $possibleFiles += $possiblePath
             }
         }
         
-        if ($null -eq $workbook) {
-            throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        if ($possibleFiles.Count -eq 0) {
+            throw ".URL FILE DETECTED: Cannot find corresponding Excel file in $(Split-Path $CsvInputPath -Parent). Expected file: $($baseFileName).xlsx|.xlsm|.xlam"
         }
+        
+        if ($possibleFiles.Count -gt 1) {
+            throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
+        }
+        
+        $excelFilePath = $possibleFiles[0]
+        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
+    }
+    else {
+        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        
+        if (-not (Test-Path $fullPath)) {
+            throw "EXCEL FILE NOT FOUND: $($fullPath)"
+        }
+    }
+    
+    # Find the workbook in open workbooks
+    $workbook = $null
+    foreach ($openWorkbook in $excel.Workbooks) {
+        if ($openWorkbook.FullName -eq $fullPath) {
+            $workbook = $openWorkbook
+            break
+        }
+    }
+    
+    if ($null -eq $workbook) {
+        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
     }
     
     # Get all CSV files from input path

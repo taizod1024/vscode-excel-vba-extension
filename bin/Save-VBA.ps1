@@ -166,7 +166,7 @@ try {
                     Write-Host -ForegroundColor Green "  - compilation executed"
                 }
                 else {
-                    throw "Could not find compile button"
+                    throw "COMPILE BUTTON NOT FOUND"
                 }
             }
         }
