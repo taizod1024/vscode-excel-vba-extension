@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.5...v0.1.6) (2026-02-04)
+
+
+### Bug Fixes
+
+* enhance .url file handling and improve workbook detection in Load-CSV and Save-CSV scripts ([de7d477](https://github.com/taizod1024/vscode-excel-vba-extension/commit/de7d477a853847049a5601075c50a04e2e29a062))
+* improve CSV parsing and data handling in Read-CsvFile and Update-SheetData functions ([a0387b6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a0387b65a015d7c8bfe3c2f3688b339eb2b382f6))
+* rename dummy URL shortcut to URL shortcut and update related functionality ([999a4d1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/999a4d1bde1653033077e3a6d054ff55b399a461))
+* update error message for opened workbook check and restore Create-UrlShortcuts.ps1 script ([3ea2bad](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3ea2badc17f5f753206da66a6fd3dff59e3cf4ba))
+* update placeholder text for new Excel file name input prompt ([dc731e8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/dc731e8404efc89e4cc4fd016bba27ee14579735))
+* update README and package.json for CSV terminology and icon changes ([dbe5b64](https://github.com/taizod1024/vscode-excel-vba-extension/commit/dbe5b6486c807d0bdcf6212c09c7ede889659f34))
+
 ### [0.1.5](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.4...v0.1.5) (2026-02-04)
 
 
