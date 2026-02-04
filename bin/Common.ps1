@@ -20,7 +20,7 @@ function Get-ExcelInstance {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "EXCEL WORKBOOK NOT FOUND. Please Open Excel first."
+        throw "EXCEL NOT RUNNING. Please Open Excel first."
     }
     
     return $excel
