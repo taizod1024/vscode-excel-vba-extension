@@ -198,3 +198,46 @@ function Remove-BlankLinesBeforeVBACode {
     }
     return $content
 }
+
+# Get VBA code from Document Module by removing metadata
+function Get-DocumentModuleCode {
+    param([string]$content)
+    
+    # For Document Modules, strip metadata (VERSION, CLASS, Attribute lines)
+    # Keep only the actual VBA code starting from Option Explicit or first actual code
+    $lines = $content -split "`r`n"
+    $codeLines = @()
+    $foundCodeStart = $false
+    
+    foreach ($line in $lines) {
+        # Once we find Option Explicit, collect everything from there on
+        if ($line -match '^\s*Option\s+') {
+            $foundCodeStart = $true
+            $codeLines += $line
+            continue
+        }
+        
+        # Collect all lines after code start (including empty lines and everything)
+        if ($foundCodeStart) {
+            $codeLines += $line
+            continue
+        }
+        
+        # Before code starts, skip metadata lines
+        # Match: VERSION, Begin, End (at start of line), Attribute, MultiUse, etc.
+        if ($line -match '^\s*(VERSION|Begin|End|Attribute|MultiUse)\s*') {
+            continue
+        }
+        
+        # Skip empty lines before actual code starts
+        if ($line -match '^\s*$') {
+            continue
+        }
+        
+        # If we find any other non-empty, non-metadata line, treat it as code start
+        $foundCodeStart = $true
+        $codeLines += $line
+    }
+    
+    return $codeLines -join "`r`n"
+}

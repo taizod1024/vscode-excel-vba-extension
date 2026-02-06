@@ -109,46 +109,15 @@ try {
                     foreach ($component in $vbComponents) {
                         if ($component.Name -eq $componentName) {
                             try {
-                                # Remove trailing whitespace and blank lines before import
+                                # Read file content
                                 $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
                                 
-                                # For Document Modules, strip metadata (VERSION, CLASS, Attribute lines)
-                                # Keep only the actual VBA code
-                                $lines = $content -split "`r`n"
-                                $codeLines = @()
-                                $inCode = $false
+                                # Get VBA code from Document Module by removing metadata
+                                $content = Get-DocumentModuleCode $content
                                 
-                                foreach ($line in $lines) {
-                                    # Skip metadata lines at the beginning
-                                    if (-not $inCode) {
-                                        # Check if this line starts the actual code
-                                        if ($line -match '^\s*(Option|Sub|Function|Const|Private|Public|Dim|Type|Enum|Declare|Global|Static|Param|''|Attribute\s+VB_Name)' -and -not ($line -match '^Attribute\s+VB_')) {
-                                            $inCode = $true
-                                        }
-                                        
-                                        # Include Option, but skip VERSION, CLASS, BEGIN, END, other Attributes
-                                        if ($line -match '^\s*Option') {
-                                            $codeLines += $line
-                                            $inCode = $true
-                                            continue
-                                        }
-                                        
-                                        # Skip metadata lines
-                                        if ($line -match '^\s*(VERSION|Begin|End|Attribute(?!\s+VB_Name))') {
-                                            continue
-                                        }
-                                    }
-                                    
-                                    if ($inCode) {
-                                        $codeLines += $line
-                                    }
-                                }
-                                
-                                $content = $codeLines -join "`r`n"
-                                
-                                # Remove blank lines before VBA code starts
-                                $content = Remove-BlankLinesBeforeVBACode $content
-                                
+                                # For Document Module, do not call Remove-BlankLinesBeforeVBACode
+                                # because it would remove blank lines after Option Explicit
+                                # Instead, just trim trailing whitespace
                                 $content = $content -replace '\s+$', ''
                                 
                                 # Clear existing code in the Document Module
