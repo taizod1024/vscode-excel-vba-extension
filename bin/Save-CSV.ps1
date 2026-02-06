@@ -120,8 +120,9 @@ function Update-SheetData {
         }
     }
     
-    # Set values in Excel
+    # Set values in Excel with text format
     $range = $Sheet.Range("A1").Resize($rowCount, $maxCols)
+    $range.NumberFormat = "@"  # Set format to text
     $range.Value2 = $excelArray
 }
 
@@ -200,8 +201,6 @@ try {
     $excel.Interactive = $false
     $originalCalculation = $excel.Calculation
     $excel.Calculation = -4135  # xlCalculationManual
-    
-       
     # Get existing sheet names and their order
     $existingSheetNames = @()
     foreach ($sheet in $workbook.Sheets) {
