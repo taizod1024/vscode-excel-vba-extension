@@ -2,7 +2,7 @@
   "version": "0.1.7",
   "name": "excel-vba",
   "displayName": "Excel VBA Extension",
-  "description": "A VS Code extension for developing Excel VBA / Sheets / CustomUI",
+  "description": "A VS Code extension for developing Excel VBA / CSV / CustomUI",
   "engines": {
     "vscode": "^1.90.0"
   },

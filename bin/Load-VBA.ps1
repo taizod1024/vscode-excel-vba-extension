@@ -53,17 +53,12 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         
         Write-Host -ForegroundColor Green "- loading component [$i/$componentCount] $componentName"
         
-        # Skip Document Modules (cannot be loaded)
-        if ($componentType -eq 100) {
-            Write-Host -ForegroundColor Yellow "  (skipped - Document Module)"
-            continue
-        }
-        
         # Determine file extension based on component type
         $fileExt = switch ($componentType) {
             1 { ".bas" }      # Standard Module
             2 { ".cls" }      # Class Module
             3 { ".frm" }      # Form
+            100 { ".cls" }    # Document Module
             default { ".bas" }
         }
         
