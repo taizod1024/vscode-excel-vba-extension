@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.8...v0.1.9) (2026-02-06)
+
+
+### Bug Fixes
+
+* update excel-vba.png to improve visual representation ([4261c11](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4261c11c681e04c6c2b15b367641d8f239361658))
+
 ### [0.1.8](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.7...v0.1.8) (2026-02-06)
 
 
