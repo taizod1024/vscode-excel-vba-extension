@@ -93,26 +93,103 @@ try {
             # For standard modules (.bas), class modules (.cls), and forms (.frm), 
             # remove existing component with same name before saving
             if ($fileExtension -eq ".frm" -or $fileExtension -eq ".bas" -or $fileExtension -eq ".cls") {
+                $isDocumentModule = $false
+                
+                # Check if this is a Document Module
                 foreach ($component in $vbComponents) {
-                    if ($component.Name -eq $componentName) {
-                        Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
-                        $vbProject.VBComponents.Remove($component)
+                    if ($component.Name -eq $componentName -and $component.Type -eq 100) {
+                        $isDocumentModule = $true
                         break
                     }
                 }
                 
-                Write-Host -ForegroundColor Green "  - saving: $fileName"
-                
-                # Remove trailing whitespace and blank lines before import
-                $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
-                
-                # Remove blank lines before VBA code starts
-                $content = Remove-BlankLinesBeforeVBACode $content
-                
-                $content = $content -replace '\s+$', ''
-                [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
-                
-                $vbProject.VBComponents.Import($filePath) | Out-Null
+                # For Document Modules, clear existing code and import new code
+                if ($isDocumentModule) {
+                    Write-Host -ForegroundColor Green "  - updating Document Module: $componentName"
+                    foreach ($component in $vbComponents) {
+                        if ($component.Name -eq $componentName) {
+                            try {
+                                # Remove trailing whitespace and blank lines before import
+                                $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                                
+                                # For Document Modules, strip metadata (VERSION, CLASS, Attribute lines)
+                                # Keep only the actual VBA code
+                                $lines = $content -split "`r`n"
+                                $codeLines = @()
+                                $inCode = $false
+                                
+                                foreach ($line in $lines) {
+                                    # Skip metadata lines at the beginning
+                                    if (-not $inCode) {
+                                        # Check if this line starts the actual code
+                                        if ($line -match '^\s*(Option|Sub|Function|Const|Private|Public|Dim|Type|Enum|Declare|Global|Static|Param|''|Attribute\s+VB_Name)' -and -not ($line -match '^Attribute\s+VB_')) {
+                                            $inCode = $true
+                                        }
+                                        
+                                        # Include Option, but skip VERSION, CLASS, BEGIN, END, other Attributes
+                                        if ($line -match '^\s*Option') {
+                                            $codeLines += $line
+                                            $inCode = $true
+                                            continue
+                                        }
+                                        
+                                        # Skip metadata lines
+                                        if ($line -match '^\s*(VERSION|Begin|End|Attribute(?!\s+VB_Name))') {
+                                            continue
+                                        }
+                                    }
+                                    
+                                    if ($inCode) {
+                                        $codeLines += $line
+                                    }
+                                }
+                                
+                                $content = $codeLines -join "`r`n"
+                                
+                                # Remove blank lines before VBA code starts
+                                $content = Remove-BlankLinesBeforeVBACode $content
+                                
+                                $content = $content -replace '\s+$', ''
+                                
+                                # Clear existing code in the Document Module
+                                $codeModule = $component.CodeModule
+                                if ($codeModule.CountOfLines -gt 0) {
+                                    $codeModule.DeleteLines(1, $codeModule.CountOfLines)
+                                }
+                                
+                                # Add new code to Document Module
+                                $codeModule.AddFromString($content)
+                            }
+                            catch {
+                                throw "FAILED TO UPDATE DOCUMENT MODULE: $componentName - $_"
+                            }
+                            break
+                        }
+                    }
+                }
+                else {
+                    # For non-Document modules, remove and reimport
+                    foreach ($component in $vbComponents) {
+                        if ($component.Name -eq $componentName) {
+                            Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
+                            $vbProject.VBComponents.Remove($component)
+                            break
+                        }
+                    }
+                    
+                    Write-Host -ForegroundColor Green "  - saving: $fileName"
+                    
+                    # Remove trailing whitespace and blank lines before import
+                    $content = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                    
+                    # Remove blank lines before VBA code starts
+                    $content = Remove-BlankLinesBeforeVBACode $content
+                    
+                    $content = $content -replace '\s+$', ''
+                    [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
+                    
+                    $vbProject.VBComponents.Import($filePath) | Out-Null
+                }
             }
         }
         catch {
