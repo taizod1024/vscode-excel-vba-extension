@@ -292,7 +292,7 @@ try {
             [void]$Sheet.ListObjects.Add(1, $tableRange, $null, 1)
             
             # Set table style
-            $Sheet.ListObjects(1).TableStyle = "TableStyleLight2"
+            $Sheet.ListObjects(1).TableStyle = "TableStyleLight1"
             
             # Freeze first row and first column
             try {
