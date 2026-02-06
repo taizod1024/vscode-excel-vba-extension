@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.7...v0.1.8) (2026-02-06)
+
+
+### Bug Fixes
+
+* enhance handling of Document Modules in Save-VBA.ps1 ([c5c35ca](https://github.com/taizod1024/vscode-excel-vba-extension/commit/c5c35ca418cb25d56ba8ec519f1e4ba1511fd69d))
+* refactor code extraction from Document Module to improve metadata handling ([4f87fb6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4f87fb656fa33601cd73de5e8052b09b4e40bbad))
+* streamline Document Module handling by optimizing component retrieval and updating logic ([06e9377](https://github.com/taizod1024/vscode-excel-vba-extension/commit/06e93770626dd3824576f2f8193bde6876594fd3))
+* update description in package.json to reflect CSV support ([1305b33](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1305b33c4dee5a69ef73e8fff3c7fb92855dfb71))
+* update error message for Excel instance retrieval ([3e9d669](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3e9d6690d7d3816a29e18b654116f8c7360ad546))
+
 ### [0.1.7](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.6...v0.1.7) (2026-02-04)
 
 ### [0.1.6](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.5...v0.1.6) (2026-02-04)
