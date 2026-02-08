@@ -53,10 +53,10 @@ try {
     
     Write-Host -ForegroundColor Green "- found VBA files to save: $($vbaFiles.Count)"
     
-    # Get list of saveed file names (without extension)
-    $saveedFileNames = @()
+    # Get list of saved file names (without extension)
+    $savedFileNames = @()
     foreach ($file in $vbaFiles) {
-        $saveedFileNames += [System.IO.Path]::GetFileNameWithoutExtension($file)
+        $savedFileNames += [System.IO.Path]::GetFileNameWithoutExtension($file)
     }
     
     # Remove components that are no longer in the save folder
@@ -69,7 +69,7 @@ try {
             continue
         }
         
-        if (-not ($saveedFileNames -contains $component.Name)) {
+        if (-not ($savedFileNames -contains $component.Name)) {
             try {
                 Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
                 $vbProject.VBComponents.Remove($component)
