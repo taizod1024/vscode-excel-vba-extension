@@ -69,16 +69,34 @@ try {
             continue
         }
         
-        if (-not ($savedFileNames -contains $component.Name)) {
-            try {
-                Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
-                $vbProject.VBComponents.Remove($component)
-            }
-            catch {
-                Write-Host -ForegroundColor Yellow "  - warning: failed to remove component '$($component.Name)': $_"
-            }
+        try {
+            Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
+            $vbProject.VBComponents.Remove($component)
+        }
+        catch {
+            Write-Host -ForegroundColor Yellow "  - warning: failed to remove component '$($component.Name)': $_"
         }
     }
+    
+    # Wait for deletion to complete
+    Write-Host -ForegroundColor Green "- waiting for component removal to complete"
+    Start-Sleep -Seconds 1
+    
+    # Verify no standard modules remain
+    Write-Host -ForegroundColor Green "- verifying standard modules removal"
+    $remainingStandardModules = @()
+    foreach ($comp in $vbProject.VBComponents) {
+        # Type 1 = Standard Module
+        if ($comp.Type -eq 1) {
+            $remainingStandardModules += $comp.Name
+        }
+    }
+    
+    if ($remainingStandardModules.Count -gt 0) {
+        throw "PLEASE RETRY SAVE VBA TO EXCEL BOOK"
+    }
+    
+    Write-Host -ForegroundColor Green "  - confirmed: all old standard modules removed"
     
     # Save VBA files
     Write-Host -ForegroundColor Green "- saving new/updated components"
