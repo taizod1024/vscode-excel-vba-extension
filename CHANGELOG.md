@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.12](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.11...v0.1.12) (2026-02-08)
+
+
+### Bug Fixes
+
+* correct spelling of 'saved' in Save-VBA.ps1 for consistency ([3a43624](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3a436249b5f11f1d122d4049a9bc53467c9d521a))
+* improve comments for clarity and enhance file handling in Save-VBA.ps1 ([06ef0c5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/06ef0c5adc8d16b316e9a6de0c27903d52209d32))
+* improve component removal logic and add verification for standard modules in Save-VBA.ps1 ([15ea7e1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/15ea7e1417f867a846e703f35a50453bf746f38d))
+
 ### [0.1.11](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.10...v0.1.11) (2026-02-06)
 
 
