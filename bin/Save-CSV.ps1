@@ -237,20 +237,19 @@ try {
             [object]$Sheet,
             [object]$CsvFile,
             [int]$CurrentIndex,
-            [int]$TotalCount,
-            [object]$ExcelApp
+            [int]$TotalCount
         )
         
         $sheetName = $CsvFile.Name
         Write-Host "Importing sheet: $sheetName"
         
         # Temporarily enable screen updating to show sheet selection
-        $ExcelApp.ScreenUpdating = $true
+        $excel.ScreenUpdating = $true
         $Sheet.Activate()
-        $ExcelApp.ScreenUpdating = $false
+        $excel.ScreenUpdating = $false
         
         # Update status bar
-        $ExcelApp.StatusBar = "Saving sheet ${CurrentIndex} of ${TotalCount}: $sheetName"
+        $excel.StatusBar = "Saving sheet ${CurrentIndex} of ${TotalCount}: $sheetName"
         
         # Read CSV file and populate sheet
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
@@ -277,8 +276,7 @@ try {
     # Function to convert range to table
     function Convert-RangeToTable {
         param(
-            [object]$Sheet,
-            [object]$ExcelApp
+            [object]$Sheet
         )
         
         # Find the last used cell
@@ -295,13 +293,9 @@ try {
             
             # Freeze first row and first column
             try {
-                # Select cell B2 first
+                $Sheet.Activate()
                 $Sheet.Range("B2").Select()
-                # Set split position
-                $ExcelApp.ActiveWindow.SplitRow = 1
-                $ExcelApp.ActiveWindow.SplitColumn = 1
-                # Freeze the panes
-                $ExcelApp.ActiveWindow.FreezePanes = $true
+                $excel.ActiveWindow.FreezePanes = $true
             }
             catch {
                 Write-Host -ForegroundColor Yellow "- Warning: Failed to set freeze panes"
@@ -320,23 +314,25 @@ try {
             $csvFile = $csvData[$existingSheetName]
             $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
-            # Clear existing data and reset freeze panes
-            $existingSheet.Cells.Clear() | Out-Null
-            
-            # Reset freeze panes
+            # Reset freeze panes before clearing
             try {
-                $excel.Windows(1).SplitRow = 0
-                $excel.Windows(1).SplitColumn = 0
+                $existingSheet.Activate()
+                $excel.ActiveWindow.FreezePanes = $false
+                $excel.ActiveWindow.SplitRow = 0
+                $excel.ActiveWindow.SplitColumn = 0
             }
             catch {
                 Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
             }
             
+            # Clear existing data
+            $existingSheet.Cells.Clear() | Out-Null
+            
             # Import the sheet data
-            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
+            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount | Out-Null
             
             # Convert range to table
-            Convert-RangeToTable -Sheet $existingSheet -ExcelApp $excel | Out-Null
+            Convert-RangeToTable -Sheet $existingSheet | Out-Null
         }
     }
     
@@ -351,18 +347,20 @@ try {
         
         # Reset freeze panes for new sheet
         try {
-            $excel.Windows(1).SplitRow = 0
-            $excel.Windows(1).SplitColumn = 0
+            $newSheet.Activate()
+            $excel.ActiveWindow.FreezePanes = $false
+            $excel.ActiveWindow.SplitRow = 0
+            $excel.ActiveWindow.SplitColumn = 0
         }
         catch {
             Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
         }
         
         # Import the sheet data
-        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount -ExcelApp $excel | Out-Null
+        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount | Out-Null
         
         # Convert range to table
-        Convert-RangeToTable -Sheet $newSheet -ExcelApp $excel | Out-Null
+        Convert-RangeToTable -Sheet $newSheet | Out-Null
     }
     
     # Clear status bar
