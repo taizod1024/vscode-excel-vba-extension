@@ -1,9 +1,9 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$ExcelFilePath,
+    [string]$excelFilePath,
     
     [Parameter(Mandatory = $true)]
-    [string]$CsvOutputPath
+    [string]$csvOutputPath
 )
 
 # Import common functions
@@ -11,19 +11,19 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host -ForegroundColor Green "- ExcelFilePath: $($ExcelFilePath)"
-Write-Host -ForegroundColor Green "- CsvOutputPath: $($CsvOutputPath)"
+Write-Host -ForegroundColor Green "- excelFilePath: $($excelFilePath)"
+Write-Host -ForegroundColor Green "- csvOutputPath: $($csvOutputPath)"
 
 # Get running Excel instance
 $excel = Get-ExcelInstance
 
 try {
     # Check if the file is a .url marker file
-    $isUrlFile = [System.IO.Path]::GetExtension($ExcelFilePath).ToLower() -eq ".url"
+    $isUrlFile = [System.IO.Path]::GetExtension($excelFilePath).ToLower() -eq ".url"
     
     if ($isUrlFile) {
         # For .url files, try to find the corresponding Excel file in the same directory as CsvOutputPath
-        $csvDir = Split-Path $CsvOutputPath -Parent
+        $csvDir = Split-Path $csvOutputPath -Parent
         $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvOutputPath)
         
         # Look for Excel files matching the CSV folder name (without _csv suffix)
@@ -47,7 +47,7 @@ try {
         $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
     }
     else {
-        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
         
         if (-not (Test-Path $fullPath)) {
             throw "EXCEL FILE NOT FOUND: $($fullPath)"
@@ -68,12 +68,12 @@ try {
     }
 
     # Clean output directory
-    if (Test-Path $CsvOutputPath) {
-        Remove-Item $CsvOutputPath -Recurse -Force
+    if (Test-Path $csvOutputPath) {
+        Remove-Item $csvOutputPath -Recurse -Force
     }
 
     # Create output directory
-    New-Item -ItemType Directory -Force -Path $CsvOutputPath | Out-Null
+    New-Item -ItemType Directory -Force -Path $csvOutputPath | Out-Null
     
     # Activate Excel window
     $shell = New-Object -ComObject WScript.Shell
@@ -203,7 +203,7 @@ try {
                     
                     # Save as UTF-8 CSV using ADODB.Stream
                     $csvFileName = $sheetName
-                    $csvFilePath = Join-Path $CsvOutputPath $csvFileName
+                    $csvFilePath = Join-Path $csvOutputPath $csvFileName
                     
                     $stream = New-Object -ComObject ADODB.Stream
                     $stream.Type = 2  # Text

@@ -1,9 +1,9 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$ExcelFilePath,
+    [string]$excelFilePath,
     
     [Parameter(Mandatory = $true)]
-    [string]$CsvInputPath
+    [string]$csvInputPath
 )
 
 # Import common functions
@@ -11,8 +11,8 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host -ForegroundColor Green "- ExcelFilePath: $($ExcelFilePath)"
-Write-Host -ForegroundColor Green "- CsvInputPath: $($CsvInputPath)"
+Write-Host -ForegroundColor Green "- excelFilePath: $($excelFilePath)"
+Write-Host -ForegroundColor Green "- csvInputPath: $($csvInputPath)"
 
 # Function to read and parse CSV file
 function Read-CsvFile {
@@ -131,16 +131,16 @@ $excel = Get-ExcelInstance
 
 try {
     # Check if CSV input path exists
-    if (-not (Test-Path $CsvInputPath)) {
-        throw "CSV FOLDER NOT FOUND: $($CsvInputPath)"
+    if (-not (Test-Path $csvInputPath)) {
+        throw "CSV FOLDER NOT FOUND: $($csvInputPath)"
     }
     
     # Check if the file is a .url marker file
-    $isUrlFile = [System.IO.Path]::GetExtension($ExcelFilePath).ToLower() -eq ".url"
+    $isUrlFile = [System.IO.Path]::GetExtension($excelFilePath).ToLower() -eq ".url"
     
     if ($isUrlFile) {
         # For .url files, try to find the corresponding Excel file in the same directory
-        $csvDir = Split-Path $CsvInputPath -Parent
+        $csvDir = Split-Path $csvInputPath -Parent
         $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvInputPath)
         
         # Look for Excel files matching the CSV folder name (without _csv suffix)
@@ -164,7 +164,7 @@ try {
         $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
     }
     else {
-        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
         
         if (-not (Test-Path $fullPath)) {
             throw "EXCEL FILE NOT FOUND: $($fullPath)"
@@ -185,7 +185,7 @@ try {
     }
     
     # Get all CSV files from input path
-    $csvFiles = Get-ChildItem -Path $CsvInputPath -Filter "*.csv" -File | Sort-Object -Property BaseName
+    $csvFiles = Get-ChildItem -Path $csvInputPath -Filter "*.csv" -File | Sort-Object -Property BaseName
 
     if ($csvFiles.Count -eq 0) {
         Write-Host "No CSV files found in: $CsvInputPath"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 param(
     [Parameter(Mandatory = $true)] [string] $bookPath,
-    [Parameter(Mandatory = $true)] [string] $tmpPath
+    [Parameter(Mandatory = $true)] [string] $customUIOutputPath
 )
 
 # Import common functions
@@ -15,7 +15,7 @@ try {
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- bookPath: $bookPath"
-    Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
+    Write-Host -ForegroundColor Green "- customUIOutputPath: $customUIOutputPath"
 
     # Check if macro file exists
     Write-Host -ForegroundColor Green "- checking if macro file exists"
@@ -42,12 +42,12 @@ try {
     }
 
     # Clean temporary directory
-    Write-Host -ForegroundColor Green "- cleaning tmpPath"
-    if (Test-Path $tmpPath) { 
-        Remove-Item $tmpPath -Recurse -Force
+    Write-Host -ForegroundColor Green "- cleaning customUIOutputPath"
+    if (Test-Path $customUIOutputPath) { 
+        Remove-Item $customUIOutputPath -Recurse -Force
     }
-    Write-Host -ForegroundColor Green "- creating tmpPath"
-    New-Item $tmpPath -ItemType Directory | Out-Null
+    Write-Host -ForegroundColor Green "- creating customUIOutputPath"
+    New-Item $customUIOutputPath -ItemType Directory | Out-Null
 
     # Extract customUI files from .xlam (ZIP format)
     Write-Host -ForegroundColor Green "- extracting customUI from Excel Add-in"
@@ -72,7 +72,7 @@ try {
                 
                 # Extract the file directly to tmpPath (not to a subfolder)
                 $fileName = $entry.Name
-                $outputPath = Join-Path $tmpPath $fileName
+                $outputPath = Join-Path $customUIOutputPath $fileName
                 [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $outputPath, $true)
                 Write-Host -ForegroundColor Cyan "  extracted: $($entry.FullName) to $outputPath"
             }

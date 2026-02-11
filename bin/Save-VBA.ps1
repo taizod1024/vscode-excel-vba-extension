@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 param(
     [Parameter(Mandatory = $true)] [string] $bookPath,
-    [Parameter(Mandatory = $true)] [string] $tmpPath
+    [Parameter(Mandatory = $true)] [string] $vbaSourcePath
 )
 
 # Import common functions
@@ -12,12 +12,12 @@ try {
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
+    Write-Host -ForegroundColor Green "- vbaSourcePath: $($vbaSourcePath)"
 
     # Check if save source path exists
     Write-Host -ForegroundColor Green "- checking save source folder"
-    if (-not (Test-Path $tmpPath)) {
-        throw "IMPORT SOURCE FOLDER NOT FOUND: $($tmpPath)"
+    if (-not (Test-Path $vbaSourcePath)) {
+        throw "IMPORT SOURCE FOLDER NOT FOUND: $($vbaSourcePath)"
     }
 
     # Get Excel instance
@@ -47,8 +47,8 @@ try {
     $vbProject = $result.VBProject
     $macro = $result.Workbook
     $isAddIn = $macroInfo.IsAddIn
-    if (Test-Path $tmpPath) {
-        $vbaFiles = Get-ChildItem -Path $tmpPath -Recurse -Include *.bas, *.cls, *.frm | ForEach-Object { $_.FullName }
+    if (Test-Path $vbaSourcePath) {
+        $vbaFiles = Get-ChildItem -Path $vbaSourcePath -Recurse -Include *.bas, *.cls, *.frm | ForEach-Object { $_.FullName }
     }
     
     Write-Host -ForegroundColor Green "- found VBA files to save: $($vbaFiles.Count)"

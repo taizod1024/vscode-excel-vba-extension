@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 param(
     [Parameter(Mandatory = $true)] [string] $bookPath,
-    [Parameter(Mandatory = $true)] [string] $tmpPath
+    [Parameter(Mandatory = $true)] [string] $vbaOutputPath
 )
 
 # Import common functions
@@ -11,7 +11,7 @@ try {
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
     Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
+    Write-Host -ForegroundColor Green "- vbaOutputPath: $($vbaOutputPath)"
 
     # Get Excel instance
     $excel = Get-ExcelInstance
@@ -38,12 +38,12 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
     }
     
     # Clean temporary directory
-    Write-Host -ForegroundColor Green "- cleaning tmpPath"
-    if (Test-Path $tmpPath) { 
-        Remove-PathToLongDirectory $tmpPath
+    Write-Host -ForegroundColor Green "- cleaning vbaOutputPath"
+    if (Test-Path $vbaOutputPath) { 
+        Remove-PathToLongDirectory $vbaOutputPath
     }
-    Write-Host -ForegroundColor Green "- creating tmpPath"
-    New-Item $tmpPath -ItemType Directory | Out-Null
+    Write-Host -ForegroundColor Green "- creating vbaOutputPath"
+    New-Item $vbaOutputPath -ItemType Directory | Out-Null
     
     # Load each component
     for ($i = 1; $i -le $componentCount; $i++) {
@@ -62,7 +62,7 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
             default { ".bas" }
         }
         
-        $filePath = Join-Path $tmpPath "$componentName$fileExt"
+        $filePath = Join-Path $vbaOutputPath "$componentName$fileExt"
         [void]$component.Export($filePath)
 
         # Remove trailing whitespace and blank lines before import
