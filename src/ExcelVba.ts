@@ -191,14 +191,14 @@ class ExcelVba {
 
     // init vscode
     context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.openExcel`, async (uri: vscode.Uri) => {
+      vscode.commands.registerCommand(`${this.appId}.openBook`, async (uri: vscode.Uri) => {
         this.extensionPath = context.extensionPath;
         try {
           const selectedPath = uri.fsPath;
           this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
           const macroPath = this.resolveVbaPath(selectedPath);
           this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
-          await this.openExcelAsync(macroPath);
+          await this.openBookAsync(macroPath);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -320,10 +320,10 @@ class ExcelVba {
     );
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.newExcel`, async () => {
+      vscode.commands.registerCommand(`${this.appId}.newBook`, async () => {
         this.extensionPath = context.extensionPath;
         try {
-          await this.newExcelAsync();
+          await this.newBookAsync();
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -605,7 +605,7 @@ class ExcelVba {
   }
 
   /** open Excel Book */
-  public async openExcelAsync(macroPath: string) {
+  public async openBookAsync(macroPath: string) {
     const commandName = "Open Excel Book";
 
     let fileToOpen = macroPath;
@@ -1109,7 +1109,7 @@ class ExcelVba {
   }
 
   /** create new Excel file */
-  public async newExcelAsync() {
+  public async newBookAsync() {
     const commandName = "New Excel Book";
     return vscode.window.withProgress(
       {

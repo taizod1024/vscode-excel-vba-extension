@@ -19,12 +19,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "excel-vba.newExcel",
+        "command": "excel-vba.newBook",
         "title": "New Excel Book",
         "icon": "$(empty-window)"
       },
       {
-        "command": "excel-vba.openExcel",
+        "command": "excel-vba.openBook",
         "title": "Open Excel Book",
         "icon": "$(window)"
       },
@@ -77,16 +77,16 @@
     "menus": {
       "file/newFile": [
         {
-          "command": "excel-vba.newExcel"
+          "command": "excel-vba.newBook"
         }
       ],
       "commandPalette": [
         {
-          "command": "excel-vba.newExcel",
+          "command": "excel-vba.newBook",
           "when": "true"
         },
         {
-          "command": "excel-vba.openExcel",
+          "command": "excel-vba.openBook",
           "when": "false"
         },
         {
@@ -128,12 +128,12 @@
       ],
       "editor/title": [
         {
-          "command": "excel-vba.newExcel",
+          "command": "excel-vba.newBook",
           "group": "navigation@1",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.openExcel",
+          "command": "excel-vba.openBook",
           "group": "navigation@2",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
