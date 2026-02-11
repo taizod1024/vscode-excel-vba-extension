@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.15...v0.1.16) (2026-02-11)
+
+
+### Features
+
+* add instructions to enable Excel add-in and content for proper functionality ([6b16f25](https://github.com/taizod1024/vscode-excel-vba-extension/commit/6b16f25a70c6508af5035084f9cfca6e36b6a8c4))
+* implement uninstall script to clean up Excel add-in files ([ec6f9de](https://github.com/taizod1024/vscode-excel-vba-extension/commit/ec6f9dec0feaa64a9da5cb62b2d459feaf11f510))
+
+
+### Bug Fixes
+
+* remove preuninstall script for add-in cleanup ([444ba2b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/444ba2bbfb452a43e875c846bc3ced8b06877f28))
+* remove unnecessary blank line in activate function ([3359135](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3359135e2ccf5cc37903cb9a7767f8c2b8f46976))
+
 ### [0.1.15](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.14...v0.1.15) (2026-02-11)
 
 
