@@ -21,7 +21,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
 
   // Prompt for file name
   const inputPrompt = await vscode.window.showInputBox({
-    prompt: "Enter new workbook name",
+    prompt: "Enter new book name",
     placeHolder: "Example: MyBook (no extension)",
     validateInput: (value: string) => {
       if (value.length === 0) {
