@@ -17,12 +17,7 @@ const os = require("os");
 
 function logToFile(message) {
   // Try multiple fallback paths for temp directory
-  const tempDirs = [
-    process.env.TEMP,
-    process.env.TMP,
-    process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, "Temp") : null,
-    os.tmpdir(),
-  ].filter(Boolean);
+  const tempDirs = [process.env.TEMP, process.env.TMP, process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, "Temp") : null, os.tmpdir()].filter(Boolean);
 
   for (const tempDir of tempDirs) {
     const logFile = path.join(tempDir, "excel-vba-uninstall.log");
@@ -37,7 +32,7 @@ function logToFile(message) {
 
 function removeAddin() {
   logToFile("[START] Uninstall script initiated");
-  
+
   try {
     const appData = process.env.APPDATA;
     if (!appData) {
