@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $macroPath,
-    [Parameter(Mandatory = $true)] [string] $tmpPath
+    [Parameter(Mandatory = $true)] [string] $bookPath,
+    [Parameter(Mandatory = $true)] [string] $customUIOutputPath
 )
 
 # Import common functions
@@ -14,47 +14,29 @@ try {
     
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- macroPath: $macroPath"
-    Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
+    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
+    Write-Host -ForegroundColor Green "- customUIOutputPath: $customUIOutputPath"
 
-    # Check if macro file exists
-    Write-Host -ForegroundColor Green "- checking if macro file exists"
-    if (-not (Test-Path $macroPath)) {
-        throw "MACRO FILE NOT FOUND: $macroPath"
-    }
-
-    # Get Excel instance and check if workbook is open
-    $excel = Get-ExcelInstance
-    $macroInfo = Get-BookInfo $macroPath
-    
-    # Try to find the workbook in open workbooks
-    $resolvedPath = $macroInfo.ResolvedPath
-    $workbookFound = $false
-    foreach ($wb in $excel.Workbooks) {
-        if ($wb.FullName -eq $resolvedPath) {
-            $workbookFound = $true
-            break
-        }
-    }
-    
-    if (-not $workbookFound) {
-        throw "EXCEL WORKBOOK NOT OPEN: $resolvedPath is not currently open in Excel"
+    # Check if book file exists
+    Write-Host -ForegroundColor Green "- checking if book file exists"
+    if (-not (Test-Path $bookPath)) {
+        throw "BOOK FILE NOT FOUND: $bookPath"
     }
 
     # Clean temporary directory
-    Write-Host -ForegroundColor Green "- cleaning tmpPath"
-    if (Test-Path $tmpPath) { 
-        Remove-Item $tmpPath -Recurse -Force
+    Write-Host -ForegroundColor Green "- cleaning customUIOutputPath"
+    if (Test-Path $customUIOutputPath) { 
+        Remove-Item $customUIOutputPath -Recurse -Force
     }
-    Write-Host -ForegroundColor Green "- creating tmpPath"
-    New-Item $tmpPath -ItemType Directory | Out-Null
+    Write-Host -ForegroundColor Green "- creating customUIOutputPath"
+    New-Item $customUIOutputPath -ItemType Directory | Out-Null
 
     # Extract customUI files from .xlam (ZIP format)
-    Write-Host -ForegroundColor Green "- extracting customUI from Excel Add-in"
+    Write-Host -ForegroundColor Green "- extracting customUI from Excel Book"
     
     # Copy the .xlam file to a temporary location for extraction
     $tempZipPath = Join-Path $env:TEMP "excel_xml_temp_$(Get-Random).zip"
-    Copy-Item $macroPath $tempZipPath
+    Copy-Item $bookPath $tempZipPath
     
     try {
         # Open the ZIP archive
@@ -72,7 +54,7 @@ try {
                 
                 # Extract the file directly to tmpPath (not to a subfolder)
                 $fileName = $entry.Name
-                $outputPath = Join-Path $tmpPath $fileName
+                $outputPath = Join-Path $customUIOutputPath $fileName
                 [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $outputPath, $true)
                 Write-Host -ForegroundColor Cyan "  extracted: $($entry.FullName) to $outputPath"
             }
@@ -81,7 +63,7 @@ try {
         $zipArchive.Dispose()
         
         if (-not $customUIFound) {
-            Write-Host -ForegroundColor Yellow "  no customUI files found in the Add-in"
+            Write-Host -ForegroundColor Yellow "  no customUI files found in Excel Book"
         }
     }
     finally {

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $macroPath,
+    [Parameter(Mandatory = $true)] [string] $bookPath,
     [Parameter(Mandatory = $true)] [string] $customUISourcePath
 )
 
@@ -14,7 +14,7 @@ try {
 
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
+    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
     Write-Host -ForegroundColor Green "- customUISourcePath: $($customUISourcePath)"
 
     # check if source path exists
@@ -49,7 +49,7 @@ try {
     try {
         # Copy the original macro to temp location
         $tempMacroPath = Join-Path $tempDir "macro.xlam"
-        Copy-Item $macroPath $tempMacroPath
+        Copy-Item $bookPath $tempMacroPath
         
         Write-Host -ForegroundColor Green "- opening Excel Add-in for modification"
         
@@ -110,9 +110,9 @@ try {
         }
         
         # Replace the original macro with the modified version
-        Write-Host -ForegroundColor Green "- saving changes to Excel Add-in"
-        Remove-Item $macroPath -Force
-        Move-Item $tempMacroPath $macroPath
+        Write-Host -ForegroundColor Green "- saving changes to Excel Book"
+        Remove-Item $bookPath -Force
+        Move-Item $tempMacroPath $bookPath
     }
     finally {
         # Clean up temporary directory
