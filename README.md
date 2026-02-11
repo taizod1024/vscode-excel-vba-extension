@@ -24,6 +24,7 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 | Feature                           | Description                                                                   |
 | --------------------------------- | ----------------------------------------------------------------------------- |
 | **New Excel Book**                | Create a new Excel file.                                                      |
+| **New Excel Book with CustomUI**  | Create a new Excel file with CustomUI template.                               |
 | **Open Excel Book**               | Open Excel files from Explorer View.                                          |
 | **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam).          |
 | **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                               |
@@ -60,6 +61,15 @@ Right-click a book file in Explorer View or click the icon in the editor title t
    - Note: Enter the name without the `.xlsx` extension
    - Example: `MyBook` (the file will be created as `MyBook.xlsx`)
 4. A new Excel file (.xlsx) is created and opened in Excel
+
+### New Excel Book with CustomUI
+
+1. Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
+2. Search for and select **"New Excel Book with CustomUI"**
+3. Enter the file name (supports Japanese and other characters)
+   - Note: Enter the name without the `.xlsm` extension
+   - Example: `MyMacro` (the file will be created as `MyMacro.xlsm`)
+4. A new Excel file (.xlsm) with CustomUI template is created and opened
 
 ### Open Excel File
 
@@ -177,6 +187,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | 機能                              | 説明                                                                                             |
 | --------------------------------- | ------------------------------------------------------------------------------------------------ |
 | **New Excel Book**                | 新しい Excel ファイルを作成する。                                                                |
+| **New Excel Book with CustomUI**  | CustomUI テンプレート付きの新しい Excel ファイルを作成する。                                     |
 | **Open Excel Book**               | エクスプローラービューから Excel ファイルを開く。                                                |
 | **Load VBA from Excel Book**      | ブックファイル(.xlsm, .xlam)から VBA ファイル(.bas, .cls, .frm)を読み込む。                      |
 | **Save VBA to Excel Book**        | VS Code で編集した VBA ファイルをブックファイルに保存する。                                      |
@@ -213,6 +224,15 @@ VS Code で Excel VBA を開発するための拡張機能です。
    - 注：`.xlsx` 拡張子を除いた名前を入力してください
    - 例：`MyBook` と入力すると `MyBook.xlsx` として作成されます
 4. 新しい Excel ファイル（.xlsx）が作成されて Excel で開く
+
+### CustomUI テンプレート付きの新規 Excel ファイルを作成する
+
+1. コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）を開く
+2. **"New Excel Book with CustomUI"** を検索して選択
+3. ファイル名を入力（日本語など各国語に対応）
+   - 注：`.xlsm` 拡張子を除いた名前を入力してください
+   - 例：`MyMacro` と入力すると `MyMacro.xlsm` として作成されます
+4. CustomUI テンプレート付きの新しい Excel ファイル（.xlsm）が作成されて開く
 
 ### Excel ファイルを開く
 
