@@ -1239,7 +1239,7 @@ class ExcelVba {
 
         // Copy template file from extension folder
         const templatePath = path.join(this.extensionPath, "excel", "bookWithCustomUI", "bookWithCustomUI.xlsm");
-        
+
         if (!fs.existsSync(templatePath)) {
           throw `Template file not found: ${templatePath}`;
         }
