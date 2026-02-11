@@ -30,3 +30,29 @@ export function getVbaFiles(dir: string, baseDir: string = ""): string[] {
 
   return files;
 }
+
+/** Copy addin to Excel AppData Add-ins folder */
+export function copyAddinToAppData(sourceAddinPath: string, channel: any): boolean {
+  try {
+    if (!fs.existsSync(sourceAddinPath)) {
+      channel.appendLine(`[WARNING] Addin source not found: ${sourceAddinPath}`);
+      return false;
+    }
+
+    const addinFolder = path.join(process.env.APPDATA || "", "Microsoft", "AddIns");
+
+    if (!fs.existsSync(addinFolder)) {
+      fs.mkdirSync(addinFolder, { recursive: true });
+    }
+
+    const fileName = path.basename(sourceAddinPath);
+    const destAddinPath = path.join(addinFolder, fileName);
+
+    fs.copyFileSync(sourceAddinPath, destAddinPath);
+    channel.appendLine(`[INFO] Addin copied to: ${destAddinPath}`);
+    return true;
+  } catch (error) {
+    channel.appendLine(`[ERROR] Failed to copy addin: ${error}`);
+    return false;
+  }
+}

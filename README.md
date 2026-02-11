@@ -17,7 +17,9 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
   - Version control for VBA files, Excel CSV, and CustomUI XML files
   - Apply generative AI to VBA files, Excel CSV, and CustomUI XML files
 
-![excel-vba](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba.png?raw=true)
+![excel-vba-extension](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension.png?raw=true)
+
+![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
 ## Features
 
@@ -180,7 +182,9 @@ VS Code で Excel VBA を開発するための拡張機能です。
   - VBA ファイル、Excelシート、CustomUI XMLファイルのバージョン管理
   - VBA ファイル、Excelシート、CustomUI XMLファイルへの生成AIの適用
 
-![excel-vba](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba.png?raw=true)
+![excel-vba-extension](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension.png?raw=true)
+
+![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
 ## 機能
 

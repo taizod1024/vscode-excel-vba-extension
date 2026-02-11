@@ -64,9 +64,9 @@ export async function newBookAsync(context: CommandContext) {
 
       context.channel.appendLine(`[SUCCESS] New workbook created`);
 
-      // Open the newly created file
-      const doc = await vscode.workspace.openTextDocument(filePath);
-      await vscode.window.showTextDocument(doc);
+      // Reveal file in Explorer
+      const fileUri = vscode.Uri.file(filePath);
+      await vscode.commands.executeCommand("revealInExplorer", fileUri);
     },
   );
 }

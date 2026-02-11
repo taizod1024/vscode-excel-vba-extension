@@ -3,10 +3,10 @@
         <tabs>
             <tab id="TabExcelVBA" label="ExcelVBA">
                 <group id="GroupExcelVBA" label="VSCode">
-                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="VSCodeで開く"
+                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
                         onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
-                        screentip="VSCodeで開く"
-                        supertip="VSCodeで開きます"
+                        screentip="Open in VSCode"
+                        supertip="Opens the workbook in VSCode"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
             </tab>

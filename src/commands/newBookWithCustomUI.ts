@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 const fs = require("fs");
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import child_process from "child_process";
 
 /** Create new Excel workbook with CustomUI template */
 export async function newBookWithCustomUIAsync(context: CommandContext) {
@@ -64,9 +65,17 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
 
       context.channel.appendLine(`[SUCCESS] New workbook created with Custom UI`);
 
-      // Open the newly created file
-      const doc = await vscode.workspace.openTextDocument(filePath);
-      await vscode.window.showTextDocument(doc);
+      // Reveal file in Explorer
+      const fileUri = vscode.Uri.file(filePath);
+      await vscode.commands.executeCommand("revealInExplorer", fileUri);
+
+      // Open the newly created file with Excel
+      try {
+        child_process.exec(`start "" "${filePath}"`);
+        context.channel.appendLine(`[INFO] Opening file with Excel...`);
+      } catch (error) {
+        context.channel.appendLine(`[WARNING] Could not open file with Excel: ${error}`);
+      }
     },
   );
 }

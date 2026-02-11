@@ -16,6 +16,7 @@ import { runSubAsync } from "./commands/runSub";
 import { newBookAsync } from "./commands/newBook";
 import { newBookWithCustomUIAsync } from "./commands/newBookWithCustomUI";
 import { createUrlShortcutAsync } from "./commands/createUrlShortcut";
+import { copyAddinToAppData } from "./utils/fileOperations";
 
 /** Excel VBA extension class */
 class ExcelVba {
@@ -23,7 +24,7 @@ class ExcelVba {
   public appId = "excel-vba";
 
   /** application name */
-  public appName = "Excel VBA";
+  public appName = "Excel VBA Extension";
 
   /** output channel */
   public channel: vscode.OutputChannel;
@@ -203,7 +204,19 @@ class ExcelVba {
       this.channel.appendLine(`[ERROR] Failed to activate: Windows directory not found`);
       return;
     }
+    this.channel.appendLine("");
     this.channel.appendLine(`${this.appName} extension activated`);
+    this.channel.appendLine(`[DEBUG] Extension Path: ${context.extensionPath}`);
+
+    // Copy Excel addin to AppData
+    // Always copy on activation to ensure addin is up-to-date
+    const addinPath = path.join(context.extensionPath, "excel", "addin", "excel-vba-addin.xlam");
+    this.channel.appendLine(`[DEBUG] Attempting to copy addin from: ${addinPath}`);
+    if (copyAddinToAppData(addinPath, this.channel)) {
+      this.channel.appendLine(`[DEBUG] Addin copied successfully`);
+    } else {
+      this.channel.appendLine(`[DEBUG] Addin copy failed`);
+    }
 
     // init vscode
     context.subscriptions.push(
@@ -475,12 +488,16 @@ class ExcelVba {
     // Write content to files
     fs.writeFileSync(originalFile, originalString, "utf-8");
     fs.writeFileSync(modifiedFile, modifiedString, "utf-8");
-
     // Open diff
     const originalUri = vscode.Uri.file(originalFile);
     const modifiedUri = vscode.Uri.file(modifiedFile);
 
     await vscode.commands.executeCommand("vscode.diff", originalUri, modifiedUri, `${label} (Workbook <-> Disk)`);
+  }
+
+  /** deactivate extension */
+  public deactivate() {
+    // Addin removal is handled by preuninstall script
   }
 }
 
