@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.13...v0.1.14) (2026-02-11)
+
+
+### Features
+
+* add new Excel VBA macro file for enhanced ([9daf099](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9daf09989cf97b1445eb3c08f5d50c2068d532bf))
+
+
+### Bug Fixes
+
+* correct log message and improve file existence check in Load-CustomUI.ps1 ([ccb77b8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/ccb77b890a7f707fe5586aa7fe7d67eaf2387ce3))
+* rename macroPath to bookPath for consistency across scripts ([02a6ccd](https://github.com/taizod1024/vscode-excel-vba-extension/commit/02a6ccd264d56f1fad74fed6b582389f0bf1c3ea))
+* standardize parameter naming for consistency across scripts ([3bc5939](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3bc5939d9dacecca1a3c826bd7b1280f23837951))
+* update log messages for clarity and consistency in Load-CustomUI.ps1, Save-CustomUI.ps1, and Save-VBA.ps1 ([07ccf49](https://github.com/taizod1024/vscode-excel-vba-extension/commit/07ccf49b2c4293e54fb0716934df5142a09c3074))
+
 ### [0.1.13](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.12...v0.1.13) (2026-02-09)
 
 
