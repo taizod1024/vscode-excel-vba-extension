@@ -61,7 +61,7 @@ Sub OpenVSCode()
     ' VS Code でフォルダを開く
     Set shell = CreateObject("WScript.Shell")
     command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & ActiveWorkbook.FullName & """"
-    shell.Run command, 1, False
+    shell.Run command, 0, False
     
     Exit Sub
     
