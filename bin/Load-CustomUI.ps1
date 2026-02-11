@@ -50,7 +50,7 @@ try {
     New-Item $customUIOutputPath -ItemType Directory | Out-Null
 
     # Extract customUI files from .xlam (ZIP format)
-    Write-Host -ForegroundColor Green "- extracting customUI from Excel Add-in"
+    Write-Host -ForegroundColor Green "- extracting customUI from Excel Book"
     
     # Copy the .xlam file to a temporary location for extraction
     $tempZipPath = Join-Path $env:TEMP "excel_xml_temp_$(Get-Random).zip"
@@ -81,7 +81,7 @@ try {
         $zipArchive.Dispose()
         
         if (-not $customUIFound) {
-            Write-Host -ForegroundColor Yellow "  no customUI files found in the Add-in"
+            Write-Host -ForegroundColor Yellow "  no customUI files found in Excel Book"
         }
     }
     finally {

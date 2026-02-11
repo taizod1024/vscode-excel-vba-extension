@@ -187,7 +187,7 @@ try {
     }
     
     # Save the workbook or add-in
-    Write-Host -ForegroundColor Green "- saving workbook/add-in"
+    Write-Host -ForegroundColor Green "- saving workbook"
     $vbe = $excel.VBE
     $vbe.MainWindow.Visible = $true
     $vbe.MainWindow.SetFocus()

@@ -110,7 +110,7 @@ try {
         }
         
         # Replace the original macro with the modified version
-        Write-Host -ForegroundColor Green "- saving changes to Excel Add-in"
+        Write-Host -ForegroundColor Green "- saving changes to Excel Book"
         Remove-Item $bookPath -Force
         Move-Item $tempMacroPath $bookPath
     }

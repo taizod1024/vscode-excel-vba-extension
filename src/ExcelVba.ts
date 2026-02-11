@@ -819,8 +819,7 @@ class ExcelVba {
       throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
     }
 
-    const fileType = ext === ".xlam" ? "Excel Add-in" : "Excel Workbook";
-    const commandName = `Load CustomUI from ${fileType}`;
+    const commandName = `Load CustomUI from Excel Book`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -905,8 +904,7 @@ class ExcelVba {
       throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
     }
 
-    const fileType = ext === ".xlam" ? "Excel Add-in" : "Excel Workbook";
-    const commandName = `Save CustomUI to ${fileType}`;
+    const commandName = `Save CustomUI to Excel Book`;
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,

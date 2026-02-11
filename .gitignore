@@ -1,7 +1,12 @@
-### libraries: no commit
+# libraries: no commit
 node_modules
-### build: no commit
+
+# build: no commit
 build
-### root: no commit
+
+# root: no commit
 *.vsix
 *.zip
+
+# ignore excel temporary file
+~$*
