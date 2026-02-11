@@ -169,17 +169,17 @@
         },
         {
           "command": "excel-vba.createUrlShortcut",
-          "group": "navigation@9",
+          "group": "1/excel-vba@1",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
-          "group": "navigation@10",
+          "group": "1/excel-vba@2",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "group": "navigation@11",
+          "group": "1/excel-vba@3",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         }
       ]
