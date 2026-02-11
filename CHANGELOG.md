@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.15](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.14...v0.1.15) (2026-02-11)
+
+
+### Features
+
+* add command to create new Excel book with CustomUI ([35b8ff6](https://github.com/taizod1024/vscode-excel-vba-extension/commit/35b8ff6b561dc48016e4269ca4cf0cc58dac1884))
+* Add commands for Excel workbook management and VBA operations ([d6c6cef](https://github.com/taizod1024/vscode-excel-vba-extension/commit/d6c6cef18591be9ac9e976b48a8e84e7d14715ef))
+* add documentation for creating new Excel book with CustomUI ([92b0cb2](https://github.com/taizod1024/vscode-excel-vba-extension/commit/92b0cb28bf84a2372cf3e324fffe5534909e21d6))
+* add sample ([e7a7e49](https://github.com/taizod1024/vscode-excel-vba-extension/commit/e7a7e49919c91db25121373557da342b796111e1))
+
+
+### Bug Fixes
+
+* remove unnecessary whitespace in template file path ([0bed303](https://github.com/taizod1024/vscode-excel-vba-extension/commit/0bed303a96becb770fb3f1baee728500dac59363))
+* simplify temp directory fallback paths in uninstall script ([e6195a1](https://github.com/taizod1024/vscode-excel-vba-extension/commit/e6195a10845f8bd4a24404b0247bdff123055baf))
+* streamline file name prompts and ensure correct extensions for new workbooks and shortcuts ([420a9eb](https://github.com/taizod1024/vscode-excel-vba-extension/commit/420a9eb7f399bc11f74d6aaa0a91dda7ef3a92bb))
+* update command groups for Excel VBA navigation commands ([f854e8b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/f854e8b9ef363e98eabf04e1ddd0606d9c8049c8))
+* update prompt text for new workbook name in input dialogs ([6718053](https://github.com/taizod1024/vscode-excel-vba-extension/commit/67180537b0586051eb0b0f8cc3aeef9193c3e108))
+
 ### [0.1.14](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.13...v0.1.14) (2026-02-11)
 
 
