@@ -51,6 +51,24 @@ Configure settings to allow the extension to access Excel VBA.
    - Check **Trust access to the VBA project object model**
 5. Click **OK** to save settings
 
+### Enable Add-in
+
+After installing the extension, you need to enable the `excel-vba-addin` in Excel:
+
+1. Open Excel
+2. Select **File** → **Options** → **Trust Center**
+3. Click **Trust Center Settings**
+4. Select **Trusted Add-in Catalogs** (or **Trusted Add-ins**)
+5. In the **Developer Tab** section:
+   - Go to **Developer** tab in the Ribbon
+   - Click **Excel Add-ins**
+   - Check the checkbox next to `excel-vba-addin` to enable it
+6. Click **OK** to save settings
+
+### Enable Content (If Prompted)
+
+When you open an Excel file (.xlsm, .xlam) after installing the extension, a **Enable Content** button may appear at the top of the window. If prompted, click the **Enable Content** button to allow the add-in to function properly.
+
 ## Usage
 
 Right-click a book file in Explorer View or click the icon in the editor title to run commands.
@@ -215,6 +233,24 @@ VS Code で Excel VBA を開発するための拡張機能です。
 4. **マクロのセキュリティ** セクションで以下を確認：
    - **VBA プロジェクトオブジェクトモデルへのアクセスを信頼する** にチェックを入れる
 5. **OK** をクリックして設定を保存
+
+### アドインを有効化する
+
+拡張機能をインストール後、Excel で `excel-vba-addin` を有効化する必要があります：
+
+1. Excel を開く
+2. **ファイル** → **オプション** → **セキュリティセンター（トラストセンター）** を選択
+3. **セキュリティセンターの設定（トラストセンターの設定）** をクリック
+4. **信頼できるアドイン カタログ**（または **信頼できるアドイン**）を選択
+5. **開発タブ** セクションで：
+   - リボンの **開発** タブをクリック
+   - **Excel アドイン** をクリック
+   - `excel-vba-addin` の横のチェックボックスをチェックして有効化
+6. **OK** をクリックして設定を保存
+
+### コンテンツの有効化（ダイアログが表示された場合）
+
+拡張機能をインストール後、Excel ファイル（.xlsm、.xlam）を開いたときに、ウィンドウの上部に**コンテンツの有効化**ボタンが表示される場合があります。表示された場合は、**コンテンツの有効化** ボタンをクリックして、アドインが正しく機能するようにしてください。
 
 ## 使い方
 
