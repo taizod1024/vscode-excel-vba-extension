@@ -33,10 +33,9 @@ export async function createUrlShortcutAsync(context: CommandContext) {
   const fileUrl = urlPrompt;
 
   // Prompt for file name
-  const defaultFileName = "CloudWorkbook.url";
   const namePrompt = await vscode.window.showInputBox({
     prompt: "Enter shortcut file name",
-    value: defaultFileName,
+    placeHolder: "Example: CloudWorkbook (no extension)",
     validateInput: (value: string) => {
       if (value.length === 0) {
         return "File name cannot be empty";
@@ -52,7 +51,7 @@ export async function createUrlShortcutAsync(context: CommandContext) {
     return; // User cancelled
   }
 
-  const fileName = namePrompt;
+  const fileName = `${namePrompt}.url`;
   const filePath = path.join(workspaceFolder, fileName);
 
   // Check if file already exists

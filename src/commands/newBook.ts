@@ -14,10 +14,9 @@ export async function newBookAsync(context: CommandContext) {
   const workspaceFolder = workspaceFolders[0].uri.fsPath;
 
   // Prompt for file name
-  const defaultFileName = "NewBook.xlsx";
   const inputPrompt = await vscode.window.showInputBox({
     prompt: "Enter new workbook name",
-    value: defaultFileName,
+    placeHolder: "Example: MyBook (no extension)",
     validateInput: (value: string) => {
       if (value.length === 0) {
         return "File name cannot be empty";
@@ -33,7 +32,7 @@ export async function newBookAsync(context: CommandContext) {
     return; // User cancelled
   }
 
-  const fileName = inputPrompt;
+  const fileName = `${inputPrompt}.xlsx`;
   const filePath = path.join(workspaceFolder, fileName);
 
   // Check if file already exists

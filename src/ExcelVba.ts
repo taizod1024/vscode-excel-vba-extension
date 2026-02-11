@@ -425,10 +425,7 @@ class ExcelVba {
   }
 
   /** compare directory contents */
-  public compareDirectories(
-    workbookFiles: Map<string, string>,
-    diskFiles: Map<string, string>,
-  ): Array<{ workbook: string; disk: string; name: string }> {
+  public compareDirectories(workbookFiles: Map<string, string>, diskFiles: Map<string, string>): Array<{ workbook: string; disk: string; name: string }> {
     const differences: Array<{ workbook: string; disk: string; name: string }> = [];
 
     // Check all files in workbook

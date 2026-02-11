@@ -13,22 +13,16 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
   const workspaceFolder = workspaceFolders[0].uri.fsPath;
 
   // Check if template file exists
-  const templatePath = path.join(
-    context.extensionPath,
-    "excel",
-    "bookWithCustomUI",
-    "bookWithCustomUI.xlsm",
-  );
+  const templatePath = path.join(context.extensionPath, "excel", "bookWithCustomUI", "bookWithCustomUI.xlsm");
 
   if (!fs.existsSync(templatePath)) {
     throw `Template file not found: ${templatePath}`;
   }
 
   // Prompt for file name
-  const defaultFileName = "NewBook.xlsm";
   const inputPrompt = await vscode.window.showInputBox({
     prompt: "Enter new workbook name",
-    value: defaultFileName,
+    placeHolder: "Example: MyBook (no extension)",
     validateInput: (value: string) => {
       if (value.length === 0) {
         return "File name cannot be empty";
@@ -44,7 +38,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
     return; // User cancelled
   }
 
-  const fileName = inputPrompt;
+  const fileName = `${inputPrompt}.xlsm`;
   const filePath = path.join(workspaceFolder, fileName);
 
   // Check if file already exists
