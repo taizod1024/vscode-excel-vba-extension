@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.17](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.16...v0.1.17) (2026-02-11)
+
+
+### Bug Fixes
+
+* change VS Code launch command to run in hidden mode ([e1cf568](https://github.com/taizod1024/vscode-excel-vba-extension/commit/e1cf56894ff2402601d9f334cb395679f7a4fa16))
+
 ### [0.1.16](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.15...v0.1.16) (2026-02-11)
 
 
