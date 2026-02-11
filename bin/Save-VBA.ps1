@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $macroPath,
+    [Parameter(Mandatory = $true)] [string] $bookPath,
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
@@ -11,8 +11,8 @@ try {
 
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
-    Write-Host -ForegroundColor Green "- saveSourcePath: $($tmpPath)"
+    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
+    Write-Host -ForegroundColor Green "- tmpPath: $($tmpPath)"
 
     # Check if save source path exists
     Write-Host -ForegroundColor Green "- checking save source folder"
@@ -42,7 +42,7 @@ try {
     $macro = $null
 
     # Get VB Project
-    $macroInfo = Get-BookInfo $macroPath
+    $macroInfo = Get-BookInfo $bookPath
     $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
     $vbProject = $result.VBProject
     $macro = $result.Workbook

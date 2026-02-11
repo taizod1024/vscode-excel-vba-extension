@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $macroPath,
+    [Parameter(Mandatory = $true)] [string] $bookPath,
     [Parameter(Mandatory = $true)] [string] $subName
 )
 
@@ -10,14 +10,14 @@ param(
 try {
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- macroPath: $($macroPath)"
+    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
     Write-Host -ForegroundColor Green "- subName: $($subName)"
 
     # Get Excel instance
     $excel = Get-ExcelInstance
     
     # Get VB Project
-    $macroInfo = Get-BookInfo $macroPath
+    $macroInfo = Get-BookInfo $bookPath
     $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
     $vbProject = $result.VBProject
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 param(
-    [Parameter(Mandatory = $true)] [string] $macroPath,
+    [Parameter(Mandatory = $true)] [string] $bookPath,
     [Parameter(Mandatory = $true)] [string] $tmpPath
 )
 
@@ -14,18 +14,18 @@ try {
     
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- macroPath: $macroPath"
+    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
     Write-Host -ForegroundColor Green "- tmpPath: $tmpPath"
 
     # Check if macro file exists
     Write-Host -ForegroundColor Green "- checking if macro file exists"
-    if (-not (Test-Path $macroPath)) {
-        throw "MACRO FILE NOT FOUND: $macroPath"
+    if (-not (Test-Path $bookPath)) {
+        throw "MACRO FILE NOT FOUND: $bookPath"
     }
 
     # Get Excel instance and check if workbook is open
     $excel = Get-ExcelInstance
-    $macroInfo = Get-BookInfo $macroPath
+    $macroInfo = Get-BookInfo $bookPath
     
     # Try to find the workbook in open workbooks
     $resolvedPath = $macroInfo.ResolvedPath
@@ -54,7 +54,7 @@ try {
     
     # Copy the .xlam file to a temporary location for extraction
     $tempZipPath = Join-Path $env:TEMP "excel_xml_temp_$(Get-Random).zip"
-    Copy-Item $macroPath $tempZipPath
+    Copy-Item $bookPath $tempZipPath
     
     try {
         # Open the ZIP archive
