@@ -1,0 +1,15 @@
+﻿<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+    <ribbon>
+        <tabs>
+            <tab id="TabExcelVBA" label="ExcelVBA">
+                <group id="GroupExcelVBA" label="VSCode">
+                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
+                        onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
+                        screentip="Open in VSCode"
+                        supertip="Opens the workbook in VSCode"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

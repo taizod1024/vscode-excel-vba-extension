@@ -19,12 +19,17 @@
   "contributes": {
     "commands": [
       {
-        "command": "excel-vba.newExcel",
+        "command": "excel-vba.newBook",
         "title": "New Excel Book",
         "icon": "$(empty-window)"
       },
       {
-        "command": "excel-vba.openExcel",
+        "command": "excel-vba.newBookWithCustomUI",
+        "title": "New Excel Book with CustomUI",
+        "icon": "$(empty-window)"
+      },
+      {
+        "command": "excel-vba.openBook",
         "title": "Open Excel Book",
         "icon": "$(window)"
       },
@@ -77,16 +82,16 @@
     "menus": {
       "file/newFile": [
         {
-          "command": "excel-vba.newExcel"
+          "command": "excel-vba.newBook"
         }
       ],
       "commandPalette": [
         {
-          "command": "excel-vba.newExcel",
+          "command": "excel-vba.newBook",
           "when": "true"
         },
         {
-          "command": "excel-vba.openExcel",
+          "command": "excel-vba.openBook",
           "when": "false"
         },
         {
@@ -128,58 +133,63 @@
       ],
       "editor/title": [
         {
-          "command": "excel-vba.newExcel",
+          "command": "excel-vba.newBook",
           "group": "navigation@1",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.openExcel",
-          "group": "navigation@2",
+          "command": "excel-vba.newBookWithCustomUI",
+          "group": "navigation@1.5",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.loadVba",
+          "command": "excel-vba.openBook",
           "group": "navigation@3",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.saveVba",
+          "command": "excel-vba.loadVba",
           "group": "navigation@4",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.runSub",
+          "command": "excel-vba.saveVba",
           "group": "navigation@5",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.runSub",
+          "group": "navigation@6",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|bas)$/i"
         },
         {
           "command": "excel-vba.compareVba",
-          "group": "navigation@6",
+          "group": "navigation@7",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.loadCsv",
-          "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
-        },
-        {
-          "command": "excel-vba.saveCsv",
           "group": "navigation@8",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.createUrlShortcut",
+          "command": "excel-vba.saveCsv",
           "group": "navigation@9",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
+          "command": "excel-vba.createUrlShortcut",
+          "group": "1/excel-vba@1",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
+        },
+        {
           "command": "excel-vba.loadCustomUI",
-          "group": "navigation@10",
+          "group": "1/excel-vba@2",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "group": "navigation@11",
+          "group": "1/excel-vba@3",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         }
       ]
@@ -202,6 +212,9 @@
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "test": "node ./build/test/runTest.js",
+    "postinstall": "powershell -NoProfile -ExecutionPolicy Bypass -Command \". $PSScriptRoot\\bin\\Install-Addin.ps1\"",
+    "preuninstall": "powershell -NoProfile -ExecutionPolicy Bypass -Command \". $PSScriptRoot\\bin\\Remove-Addin.ps1\"",
+    "vscode:uninstall": "node bin/uninstall.js",
     "release": "npm run release-premerge && npx standard-version && vsce publish && npm run release-postmerge",
     "release-premerge": "git switch main && git merge --no-ff develop --no-edit",
     "release-postmerge": "git push --follow-tags origin main && git push origin develop && git switch develop",
