@@ -332,6 +332,18 @@ class ExcelVba {
     );
 
     context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUI`, async () => {
+        this.extensionPath = context.extensionPath;
+        try {
+          await this.newBookWithCustomUIAsync();
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.createUrlShortcut`, async () => {
         this.extensionPath = context.extensionPath;
         try {
@@ -1172,6 +1184,76 @@ class ExcelVba {
         // Open the created file in the file explorer
         const fileUri = vscode.Uri.file(filePath);
         await vscode.commands.executeCommand("vscode.open", fileUri);
+      },
+    );
+  }
+
+  /** create new Excel book with CustomUI from template */
+  public async newBookWithCustomUIAsync() {
+    const commandName = "New Excel Book with CustomUI";
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: commandName,
+        cancellable: false,
+      },
+      async _progress => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) {
+          throw `No workspace folder found`;
+        }
+
+        // Get the first workspace folder
+        const workspaceFolder = workspaceFolders[0].uri.fsPath;
+
+        // Ask user for file name
+        const fileName = await vscode.window.showInputBox({
+          prompt: "Enter new Excel file name with CustomUI",
+          placeHolder: "Example: MyBook (no extension)",
+          validateInput: input => {
+            if (!input) {
+              return "File name cannot be empty";
+            }
+            if (/[/\\:*?"<>|]/.test(input)) {
+              return 'File name cannot contain: / \\ : * ? " < > |';
+            }
+            return "";
+          },
+        });
+
+        if (!fileName) {
+          throw `File creation cancelled`;
+        }
+
+        const filePath = path.join(workspaceFolder, `${fileName}.xlsm`);
+
+        // Check if file already exists
+        if (fs.existsSync(filePath)) {
+          throw `File already exists: ${fileName}.xlsm`;
+        }
+
+        this.channel.appendLine("");
+        this.channel.appendLine(`${commandName}`);
+        this.channel.appendLine(`- File: ${fileName}.xlsm`);
+        this.channel.appendLine(`- Path: ${filePath}`);
+
+        // Copy template file from extension folder
+        const templatePath = path.join(this.extensionPath, "excel", "bookWithCustomUI", "bookWithCustomUI.xlsm");
+        
+        if (!fs.existsSync(templatePath)) {
+          throw `Template file not found: ${templatePath}`;
+        }
+
+        try {
+          fs.copyFileSync(templatePath, filePath);
+          this.channel.appendLine(`[SUCCESS] Created new Excel file with CustomUI`);
+
+          // Open the created file in the file explorer
+          const fileUri = vscode.Uri.file(filePath);
+          await vscode.commands.executeCommand("vscode.open", fileUri);
+        } catch (error) {
+          throw `Failed to copy template file: ${error}`;
+        }
       },
     );
   }

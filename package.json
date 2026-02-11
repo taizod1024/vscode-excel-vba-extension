@@ -24,6 +24,11 @@
         "icon": "$(empty-window)"
       },
       {
+        "command": "excel-vba.newBookWithCustomUI",
+        "title": "New Excel Book with CustomUI",
+        "icon": "$(empty-window)"
+      },
+      {
         "command": "excel-vba.openBook",
         "title": "Open Excel Book",
         "icon": "$(window)"
@@ -133,38 +138,43 @@
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.openBook",
-          "group": "navigation@2",
+          "command": "excel-vba.newBookWithCustomUI",
+          "group": "navigation@1.5",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.loadVba",
+          "command": "excel-vba.openBook",
           "group": "navigation@3",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.saveVba",
+          "command": "excel-vba.loadVba",
           "group": "navigation@4",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.runSub",
+          "command": "excel-vba.saveVba",
           "group": "navigation@5",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.runSub",
+          "group": "navigation@6",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|bas)$/i"
         },
         {
           "command": "excel-vba.compareVba",
-          "group": "navigation@6",
+          "group": "navigation@7",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|bas|cls|frm)$/i"
         },
         {
           "command": "excel-vba.loadCsv",
-          "group": "navigation@7",
+          "group": "navigation@8",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
-          "group": "navigation@8",
+          "group": "navigation@9",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
