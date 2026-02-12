@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 const fs = require("fs");
 const path = require("path");
+import * as iconv from "iconv-lite";
 import { CommandContext } from "../utils/types";
 
 /** Create .url shortcut for cloud-based Excel files */
@@ -75,8 +76,9 @@ export async function createUrlShortcutAsync(context: CommandContext) {
       // Create .url shortcut file content
       const urlContent = `[InternetShortcut]\r\nURL=${fileUrl}\r\n`;
 
-      // Write file
-      fs.writeFileSync(filePath, urlContent, "utf8");
+      // Write file in SJIS encoding
+      const buffer = iconv.encode(urlContent, "shiftjis");
+      fs.writeFileSync(filePath, buffer);
 
       context.channel.appendLine(`[SUCCESS] URL shortcut created`);
 
