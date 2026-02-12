@@ -211,7 +211,8 @@
       "files.associations": {
         "*.bas": "vb",
         "*.cls": "vb",
-        "*.frm": "vb"
+        "*.frm": "vb",
+        "*.url": "url"
       }
     }
   },
