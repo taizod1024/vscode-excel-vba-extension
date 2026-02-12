@@ -86,6 +86,9 @@
       "file/newFile": [
         {
           "command": "excel-vba.newBook"
+        },
+        {
+          "command": "excel-vba.newBookWithCustomUI"
         }
       ],
       "commandPalette": [
