@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.21](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.20...v0.1.21) (2026-02-12)
+
+
+### Bug Fixes
+
+* simplify error message in Find-VBProject function for clarity ([2087790](https://github.com/taizod1024/vscode-excel-vba-extension/commit/2087790edae7425d394b4833ee3c52fb859942a6))
+
 ### [0.1.20](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.19...v0.1.20) (2026-02-12)
 
 ### [0.1.19](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.18...v0.1.19) (2026-02-12)
