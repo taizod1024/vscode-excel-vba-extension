@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.19](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.18...v0.1.19) (2026-02-12)
+
+
+### Features
+
+* add file encoding configuration for URL files ([45e925f](https://github.com/taizod1024/vscode-excel-vba-extension/commit/45e925f19d4edb99ac36e25c54e9cdfebe67ceb1))
+* add iconv-lite for SJIS encoding support in URL file handling ([5d24323](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5d243235a27765349366c1744323949f72568e9c))
+
+
+### Bug Fixes
+
+* update error messages for clarity in GetExtensionPath function and add URL file association ([5dd4558](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5dd45580365eccbfad230392ea80e78bfc1f5b10))
+
 ### [0.1.18](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.17...v0.1.18) (2026-02-12)
 
 
