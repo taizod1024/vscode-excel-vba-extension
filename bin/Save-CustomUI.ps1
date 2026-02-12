@@ -14,23 +14,23 @@ try {
 
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- customUISourcePath: $($customUISourcePath)"
+    Write-Host "- bookPath: $($bookPath)"
+    Write-Host "- customUISourcePath: $($customUISourcePath)"
 
     # check if source path exists
-    Write-Host -ForegroundColor Green "- checking custom UI source folder"
+    Write-Host "- checking custom UI source folder"
     if (-not (Test-Path $customUISourcePath)) {
         throw "CUSTOM UI SOURCE FOLDER NOT FOUND: $($customUISourcePath)"
     }
     
     # List contents of source folder for debugging
-    Write-Host -ForegroundColor Green "- contents of $customUISourcePath"
+    Write-Host "- contents of $customUISourcePath"
     $sourceContents = Get-ChildItem -Path $customUISourcePath
     if ($sourceContents.Count -gt 0) {
-        $sourceContents | ForEach-Object { Write-Host -ForegroundColor Cyan "  - $($_.Name)" }
+        $sourceContents | ForEach-Object { Write-Host "  - $($_.Name)" }
     }
     else {
-        Write-Host -ForegroundColor Yellow "  - (empty folder)"
+        Write-Host "  - (empty folder)"
     }
 
     # Get list of customUI files directly from source folder (customUI.xml, customUI14.xml, etc.)
@@ -40,7 +40,7 @@ try {
         throw "NO CUSTOM UI XML FILES FOUND in $($customUISourcePath). Expected: customUI.xml or customUI14.xml"
     }
 
-    Write-Host -ForegroundColor Green "- found $($customUIFiles.Count) customUI file(s)"
+    Write-Host "- found $($customUIFiles.Count) customUI file(s)"
 
     # Create a temporary directory for backup and work
     $tempDir = Join-Path $env:TEMP "excel_xml_work_$(Get-Random)"
@@ -51,7 +51,7 @@ try {
         $tempMacroPath = Join-Path $tempDir "macro.xlam"
         Copy-Item $bookPath $tempMacroPath
         
-        Write-Host -ForegroundColor Green "- opening Excel Add-in for modification"
+        Write-Host "- opening Excel Add-in for modification"
         
         # Open the ZIP archive for reading
         # ZipArchiveMode: 0=Read, 1=Create, 2=Update
@@ -59,14 +59,14 @@ try {
         
         try {
             # Remove existing customUI entries from the archive
-            Write-Host -ForegroundColor Green "- removing existing customUI entries"
+            Write-Host "- removing existing customUI entries"
             $entriesToRemove = @()
             
             foreach ($entry in $zipArchive.Entries) {
                 $entryName = $entry.FullName.ToLower()
                 if ($entryName -match "customui.*\.xml$" -and -not $entry.FullName.EndsWith("/")) {
                     $entriesToRemove += $entry
-                    Write-Host -ForegroundColor Cyan "  marked for removal: $($entry.FullName)"
+                    Write-Host "  marked for removal: $($entry.FullName)"
                 }
             }
             
@@ -76,7 +76,7 @@ try {
             }
             
             # Add new customUI files to the archive
-            Write-Host -ForegroundColor Green "- adding new customUI files"
+            Write-Host "- adding new customUI files"
             foreach ($file in $customUIFiles) {
                 $fileName = Split-Path $file -Leaf
                 $entryName = "customUI/$fileName"
@@ -97,7 +97,7 @@ try {
                 
                 try {
                     $fileStream.CopyTo($entryStream)
-                    Write-Host -ForegroundColor Cyan "  added: $entryName"
+                    Write-Host "  added: $entryName"
                 }
                 finally {
                     $entryStream.Close()
@@ -110,7 +110,7 @@ try {
         }
         
         # Replace the original macro with the modified version
-        Write-Host -ForegroundColor Green "- saving changes to Excel Book"
+        Write-Host "- saving changes to Excel Book"
         Remove-Item $bookPath -Force
         Move-Item $tempMacroPath $bookPath
     }
@@ -121,7 +121,7 @@ try {
         }
     }
 
-    Write-Host -ForegroundColor Green "- done"
+    Write-Host "- done"
     exit 0
 }
 catch {

@@ -11,8 +11,8 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host -ForegroundColor Green "- excelFilePath: $($excelFilePath)"
-Write-Host -ForegroundColor Green "- csvOutputPath: $($csvOutputPath)"
+Write-Host "- excelFilePath: $($excelFilePath)"
+Write-Host "- csvOutputPath: $($csvOutputPath)"
 
 # Get running Excel instance
 $excel = Get-ExcelInstance
