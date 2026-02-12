@@ -71,13 +71,10 @@ function Find-VBProject {
         $wbFullName = $wb.FullName
         Write-Host -ForegroundColor Cyan "    Workbook: $($wb.Name), FullName: $wbFullName"
         
-        # ファイル名だけで比較
-        $resolvedFileName = [System.IO.Path]::GetFileName($resolvedPath)
-        # .url 拡張子を除去
-        if ($resolvedFileName -match '\.url$') {
-            $resolvedFileName = $resolvedFileName -replace '\.url$', ''
-        }
-        if ($wb.Name -eq $resolvedFileName) {
+        # ファイル名だけで比較 (拡張子を除去)
+        $resolvedFileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($resolvedPath)
+        $wbNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($wb.Name)
+        if ($wbNameWithoutExt -eq $resolvedFileNameWithoutExt) {
             Write-Host -ForegroundColor Yellow "    MATCHED!"
             $vbProject = $wb.VBProject
             if ($null -ne $vbProject) {
