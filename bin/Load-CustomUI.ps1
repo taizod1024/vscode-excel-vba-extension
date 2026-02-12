@@ -20,7 +20,7 @@ try {
     # Check if book file exists
     Write-Host "- checking if book file exists"
     if (-not (Test-Path $bookPath)) {
-        throw "BOOK FILE NOT FOUND: $bookPath"
+        throw "Workbook file not found: $bookPath"
     }
 
     # Clean temporary directory

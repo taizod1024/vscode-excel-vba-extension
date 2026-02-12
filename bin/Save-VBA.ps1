@@ -17,7 +17,7 @@ try {
     # Check if save source path exists
     Write-Host "- checking save source folder"
     if (-not (Test-Path $vbaSourcePath)) {
-        throw "IMPORT SOURCE FOLDER NOT FOUND: $($vbaSourcePath)"
+        throw "VBA source folder not found: $vbaSourcePath"
     }
 
     # Get Excel instance
@@ -93,7 +93,7 @@ try {
     }
     
     if ($remainingStandardModules.Count -gt 0) {
-        throw "PLEASE RETRY SAVE VBA TO EXCEL BOOK"
+        throw "Failed to save VBA. Please retry."
     }
     
     Write-Host "  - confirmed: all old standard modules removed"
@@ -146,7 +146,7 @@ try {
                         $codeModule.AddFromString($content)
                     }
                     catch {
-                        throw "FAILED TO UPDATE DOCUMENT MODULE: $componentName - $_"
+                        throw "Failed to update module: $componentName - $_"
                     }
                 }
                 else {
@@ -178,10 +178,10 @@ try {
             }
             
             if ($logContent) {
-                throw "FAILED TO IMPORT FILE: $($file) - $logContent"
+                throw "Failed to import file: $file - $logContent"
             }
             else {
-                throw "FAILED TO IMPORT FILE: $($file) - $_"
+                throw "Failed to import file: $file - $_"
             }
         }
     }
@@ -218,7 +218,7 @@ try {
                     Write-Host "  - compilation executed"
                 }
                 else {
-                    throw "COMPILE BUTTON NOT FOUND"
+                    throw "Compile button not found."
                 }
             }
         }

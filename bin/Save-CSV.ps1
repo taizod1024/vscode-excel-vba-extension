@@ -132,7 +132,7 @@ $excel = Get-ExcelInstance
 try {
     # Check if CSV input path exists
     if (-not (Test-Path $csvInputPath)) {
-        throw "CSV FOLDER NOT FOUND: $($csvInputPath)"
+        throw "CSV folder not found: $csvInputPath"
     }
     
     # Check if the file is a .url marker file
@@ -153,11 +153,11 @@ try {
         }
         
         if ($possibleFiles.Count -eq 0) {
-            throw ".URL FILE DETECTED: Cannot find corresponding Excel file in $(Split-Path $CsvInputPath -Parent). Expected file: $($baseFileName).xlsx|.xlsm|.xlam"
+            throw "Excel file not found: $baseFileName"
         }
         
         if ($possibleFiles.Count -gt 1) {
-            throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
+            throw "Multiple Excel files found: $baseFileName. Please specify the exact file."
         }
         
         $bookPath = $possibleFiles[0]
@@ -167,7 +167,7 @@ try {
         $fullPath = [System.IO.Path]::GetFullPath($bookPath)
         
         if (-not (Test-Path $fullPath)) {
-            throw "EXCEL FILE NOT FOUND: $($fullPath)"
+            throw "Workbook file not found: $fullPath"
         }
     }
     
@@ -181,7 +181,7 @@ try {
     }
     
     if ($null -eq $workbook) {
-        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        throw "Workbook not open: $fullPath"
     }
     
     # Get all CSV files from input path

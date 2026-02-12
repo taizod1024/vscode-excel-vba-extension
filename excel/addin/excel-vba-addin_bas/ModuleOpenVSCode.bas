@@ -48,7 +48,7 @@ Sub OpenVSCode()
     
     ' アクティブなワークブックが存在するか確認
     If ActiveWorkbook Is Nothing Then
-        MsgBox "NO WORKBOOK", vbInformation
+        MsgBox "No workbook open.", vbInformation
         Exit Sub
     End If
     
@@ -59,7 +59,7 @@ Sub OpenVSCode()
     If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
         bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
         If bookPath = "" Then
-            MsgBox "RECENT FILE NOT FOUND: " & ActiveWorkbook.Name & ".url", vbExclamation
+            MsgBox "Recent file not found: " & ActiveWorkbook.Name & ".url", vbExclamation
             Exit Sub
         End If
     End If
@@ -68,7 +68,7 @@ Sub OpenVSCode()
     bookFolderPath = GetParentFolder(bookPath)
     
     If bookFolderPath = "" Then
-        MsgBox "WORKBOOK NOT SAVED", vbInformation
+        MsgBox "Workbook not saved.", vbInformation
         Exit Sub
     End If
     
@@ -80,7 +80,7 @@ Sub OpenVSCode()
     Exit Sub
     
 ErrorHandler:
-    MsgBox "VSCODE NOT OPEN: " & Err.description, vbExclamation
+    MsgBox "Failed to open VS Code: " & Err.description, vbExclamation
 End Sub
 
 ''' ================================================================================
@@ -101,7 +101,7 @@ Function GetExtensionPath() As String
     userProfile = Environ(ENV_USERPROFILE)
     
     If userProfile = "" Then
-        MsgBox ENV_USERPROFILE & " environment variable not found", vbExclamation
+        MsgBox "Environment variable not found: " & ENV_USERPROFILE, vbExclamation
         GetExtensionPath = ""
         Exit Function
     End If
@@ -112,7 +112,7 @@ Function GetExtensionPath() As String
     foundPath = FindExtensionFolder(extensionsPath)
     
     If foundPath = "" Then
-        MsgBox "VSCode extension folder not found:" & vbCrLf & _
+        MsgBox "Extension folder not found: " & vbCrLf & _
                extensionsPath & EXTENSION_PREFIX & "*", vbExclamation
         GetExtensionPath = ""
     Else
@@ -122,7 +122,7 @@ Function GetExtensionPath() As String
     Exit Function
     
 ErrorHandler:
-    MsgBox "Extension path retrieval error: " & Err.description, vbExclamation
+    MsgBox "Failed to retrieve extension path: " & Err.description, vbExclamation
     GetExtensionPath = ""
 End Function
 

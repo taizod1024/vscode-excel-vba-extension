@@ -20,7 +20,7 @@ try {
     # check if source path exists
     Write-Host "- checking custom UI source folder"
     if (-not (Test-Path $customUISourcePath)) {
-        throw "CUSTOM UI SOURCE FOLDER NOT FOUND: $($customUISourcePath)"
+        throw "Custom UI source folder not found: $customUISourcePath"
     }
     
     # List contents of source folder for debugging
@@ -37,7 +37,7 @@ try {
     $customUIFiles = Get-ChildItem -Path $customUISourcePath -Filter "customUI*.xml" | ForEach-Object { $_.FullName }
     
     if ($customUIFiles.Count -eq 0) {
-        throw "NO CUSTOM UI XML FILES FOUND in $($customUISourcePath). Expected: customUI.xml or customUI14.xml"
+        throw "Custom UI XML file not found: Expected customUI.xml or customUI14.xml"
     }
 
     Write-Host "- found $($customUIFiles.Count) customUI file(s)"

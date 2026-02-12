@@ -23,7 +23,7 @@ try {
     $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
     $workbook = $result.Workbook
     if ($null -eq $workbook) {
-        throw "NO OPENED WORKBOOK. Please Open Workbook."
+        throw "No workbook open."
     }
 
     # Clean output directory

@@ -62,7 +62,7 @@ try {
                         break
                     }
                     catch {
-                        throw "FAILED TO RUN SUB: $_"
+                        throw "Failed to run subroutine: $_"
                     }
                 }
             }

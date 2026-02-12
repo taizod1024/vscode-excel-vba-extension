@@ -20,7 +20,7 @@ function Get-ExcelInstance {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
     }
     catch {
-        throw "EXCEL NOT RUNNING. Please Open Excel first."
+        throw "Excel not running."
     }
     
     return $excel
@@ -32,9 +32,9 @@ function Get-BookInfo {
         [string]$bookPath
     )
     
-    Write-Host "- checking if book file exists"
+    Write-Host "- checking if workbook file exists"
     if (-not (Test-Path $bookPath)) {
-        throw "BOOK FILE NOT FOUND: $bookPath"
+        throw "Workbook file not found: $bookPath"
     }
     
     $resolvedPath = (Resolve-Path $bookPath).Path
@@ -93,12 +93,12 @@ function Find-VBProject {
         try {
             $vbe = $excel.VBE
             if ($null -eq $vbe) {
-                throw "Excel.VBE is null - VBA project object model access may not be enabled"
+                throw "VBA object model access not enabled."
             }
             
             $vbProjects = $vbe.VBProjects
             if ($null -eq $vbProjects) {
-                throw "Excel.VBE.VBProjects is null - VBA project object model access may not be enabled"
+                throw "VBA object model access not enabled."
             }
             
             $projectCount = 0
@@ -133,7 +133,7 @@ function Find-VBProject {
     }
     
     if ($null -eq $vbProject) {
-        throw "NO WORKBOOK. Please Open Workbook."
+        throw "No workbook open."
     }
     
     return @{
@@ -152,7 +152,7 @@ function Get-Workbook {
     
     Write-Host "- checking if Excel file exists"
     if (-not (Test-Path $bookPath)) {
-        throw "EXCEL FILE NOT FOUND: $($bookPath)"
+        throw "Book file not found: $bookPath"
     }
     
     # Check if the workbook is open in Excel
@@ -168,7 +168,7 @@ function Get-Workbook {
     }
     
     if ($null -eq $workbook) {
-        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        throw "Workbook not open: $fullPath"
     }
     
     return $workbook
