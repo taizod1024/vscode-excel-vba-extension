@@ -7,10 +7,10 @@ param(
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-Write-Host -ForegroundColor Yellow "Create-UrlShortcuts.ps1:"
+Write-Host "Create-UrlShortcuts.ps1:"
 
 try {
-    Write-Host -ForegroundColor Green "- workspacePath: $workspacePath"
+    Write-Host "- workspacePath: $workspacePath"
     
     # Get all open Excel workbooks
     $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
@@ -22,7 +22,7 @@ try {
         
         # Skip local files - only process OneDrive/SharePoint URLs
         if ($fileUrl -notmatch '^https?://') {
-            Write-Host -ForegroundColor Yellow "  - Skipping local file: $fileUrl"
+            Write-Host "  - Skipping local file: $fileUrl"
             continue
         }
         
@@ -43,18 +43,18 @@ URL=$fileUrl
         # Create .url file with Internet Shortcut format (UTF-8 encoding)
         $content | Out-File -LiteralPath $shortcutPath -Encoding UTF8 -Force
         
-        Write-Host -ForegroundColor Green "  - Created: $shortcutPath"
+        Write-Host "  - Created: $shortcutPath"
         $workbookCount++
     }
     
     if ($workbookCount -eq 0) {
-        Write-Host -ForegroundColor Yellow "[INFO] No OneDrive/SharePoint workbooks found"
+        Write-Host "[INFO] No OneDrive/SharePoint workbooks found"
     }
     else {
-        Write-Host -ForegroundColor Green "[SUCCESS] Internet Shortcut files created for $workbookCount workbook(s)"
+        Write-Host "[SUCCESS] Internet Shortcut files created for $workbookCount workbook(s)"
     }
 }
 catch {
-    Write-Host -ForegroundColor Red "[ERROR] $_"
+    Write-Host "[ERROR] $_"
     exit 1
 }

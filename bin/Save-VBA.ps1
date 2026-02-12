@@ -11,11 +11,11 @@ try {
 
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- vbaSourcePath: $($vbaSourcePath)"
+    Write-Host "- bookPath: $($bookPath)"
+    Write-Host "- vbaSourcePath: $($vbaSourcePath)"
 
     # Check if save source path exists
-    Write-Host -ForegroundColor Green "- checking save source folder"
+    Write-Host "- checking save source folder"
     if (-not (Test-Path $vbaSourcePath)) {
         throw "IMPORT SOURCE FOLDER NOT FOUND: $($vbaSourcePath)"
     }
@@ -28,7 +28,7 @@ try {
         $vbe = $excel.VBE
         if ($null -ne $vbe) {
             $vbeCaption = $vbe.MainWindow.Caption
-            Write-Host -ForegroundColor Cyan "- VBE caption: $vbeCaption"
+            Write-Host "- VBE caption: $vbeCaption"
             
             # Try to activate VBE window using WScript.Shell
             $shell = New-Object -ComObject WScript.Shell
@@ -36,7 +36,7 @@ try {
         }
     }
     catch {
-        Write-Host -ForegroundColor Yellow "- Warning: Could not activate VBE window: $_"
+        Write-Host "- Warning: Could not activate VBE window: $_"
     }
     
     $macro = $null
@@ -51,7 +51,7 @@ try {
         $vbaFiles = Get-ChildItem -Path $vbaSourcePath -Recurse -Include *.bas, *.cls, *.frm | ForEach-Object { $_.FullName }
     }
     
-    Write-Host -ForegroundColor Green "- found VBA files to save: $($vbaFiles.Count)"
+    Write-Host "- found VBA files to save: $($vbaFiles.Count)"
     
     # Get list of saved file names (without extension)
     $savedFileNames = @()
@@ -60,7 +60,7 @@ try {
     }
     
     # Remove components that are no longer in the save folder
-    Write-Host -ForegroundColor Green "- removing deleted components"
+    Write-Host "- removing deleted components"
     $vbComponents = @($vbProject.VBComponents)  # Snapshot before deletion
     foreach ($component in $vbComponents) {
         # Skip Document modules (they can't be removed)
@@ -70,20 +70,20 @@ try {
         }
         
         try {
-            Write-Host -ForegroundColor Green "  - removing component: $($component.Name)"
+            Write-Host "  - removing component: $($component.Name)"
             $vbProject.VBComponents.Remove($component)
         }
         catch {
-            Write-Host -ForegroundColor Yellow "  - warning: failed to remove component '$($component.Name)': $_"
+            Write-Host "  - warning: failed to remove component '$($component.Name)': $_"
         }
     }
     
     # Wait for deletion to complete
-    Write-Host -ForegroundColor Green "- waiting for component removal to complete"
+    Write-Host "- waiting for component removal to complete"
     Start-Sleep -Seconds 1
     
     # Verify no standard modules remain
-    Write-Host -ForegroundColor Green "- verifying standard modules removal"
+    Write-Host "- verifying standard modules removal"
     $remainingStandardModules = @()
     foreach ($comp in $vbProject.VBComponents) {
         # Type 1 = Standard Module
@@ -96,10 +96,10 @@ try {
         throw "PLEASE RETRY SAVE VBA TO EXCEL BOOK"
     }
     
-    Write-Host -ForegroundColor Green "  - confirmed: all old standard modules removed"
+    Write-Host "  - confirmed: all old standard modules removed"
     
     # Save VBA files
-    Write-Host -ForegroundColor Green "- saving new/updated components"
+    Write-Host "- saving new/updated components"
     $vbComponents = @($vbProject.VBComponents)  # Refresh after deletion
     foreach ($file in $vbaFiles) {
         try {
@@ -125,7 +125,7 @@ try {
                 
                 # For Document Modules, clear existing code and import new code
                 if ($isDocumentModule -and $null -ne $component) {
-                    Write-Host -ForegroundColor Green "  - updating Document Module: $componentName"
+                    Write-Host "  - updating Document Module: $componentName"
                     try {
                         # Read file content using Shift-JIS encoding
                         $content = [System.IO.File]::ReadAllText($file, [System.Text.Encoding]::GetEncoding('shift_jis'))
@@ -152,11 +152,11 @@ try {
                 else {
                     # For non-Document modules, remove and reimport
                     if ($null -ne $component) {
-                        Write-Host -ForegroundColor Green "  - removing existing component: $componentName"
+                        Write-Host "  - removing existing component: $componentName"
                         $vbProject.VBComponents.Remove($component)
                     }
                     
-                    Write-Host -ForegroundColor Green "  - saving: $componentName"
+                    Write-Host "  - saving: $componentName"
                     
                     # Remove blank lines before VBA code starts and trim trailing whitespace
                     $content = [System.IO.File]::ReadAllText($file, [System.Text.Encoding]::GetEncoding('shift_jis'))
@@ -187,24 +187,24 @@ try {
     }
     
     # Save the workbook or add-in
-    Write-Host -ForegroundColor Green "- saving workbook"
+    Write-Host "- saving workbook"
     $vbe = $excel.VBE
     $vbe.MainWindow.Visible = $true
     $vbe.MainWindow.SetFocus()
     if ($null -ne $macro) {
         # For workbooks, save through the workbook object
-        Write-Host -ForegroundColor Green "  - saving workbook"
+        Write-Host "  - saving workbook"
         $macro.Save()
     }
     elseif ($isAddIn -and $null -ne $vbProject) {
         # For add-ins (.xlam), VBA components are stored in the Excel runtime
         # The file cannot be saved directly from VBProject
-        Write-Host -ForegroundColor Yellow "  - Opening VB Editor for you to save manually..."
+        Write-Host "  - Opening VB Editor for you to save manually..."
         $vbProject.Activate
     }
     
     # Compile VBA project
-    Write-Host -ForegroundColor Green "- compiling VBA project"
+    Write-Host "- compiling VBA project"
     try {
         if ($null -ne $vbProject) {
             $vbe = $excel.VBE
@@ -215,7 +215,7 @@ try {
                 $compileButton = $objVBECommandBar.FindControl(1, 578)
                 if ($null -ne $compileButton) {
                     $compileButton.Execute()
-                    Write-Host -ForegroundColor Green "  - compilation executed"
+                    Write-Host "  - compilation executed"
                 }
                 else {
                     throw "COMPILE BUTTON NOT FOUND"
@@ -224,10 +224,10 @@ try {
         }
     }
     catch {
-        Write-Host -ForegroundColor Yellow "  - warning: compilation encountered an issue: $_"
+        Write-Host "  - warning: compilation encountered an issue: $_"
     }
 
-    Write-Host -ForegroundColor Green "- done"
+    Write-Host "- done"
     exit 0
 }
 catch {

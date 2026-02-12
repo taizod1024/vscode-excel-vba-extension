@@ -10,8 +10,8 @@ param(
 try {
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- subName: $($subName)"
+    Write-Host "- bookPath: $($bookPath)"
+    Write-Host "- subName: $($subName)"
 
     # Get Excel instance
     $excel = Get-ExcelInstance
@@ -22,7 +22,7 @@ try {
     $vbProject = $result.VBProject
 
     # Run the Sub
-    Write-Host -ForegroundColor Green "- running Sub: $subName"
+    Write-Host "- running Sub: $subName"
     
     # Build the module reference
     # Try to find the sub in any module
@@ -34,7 +34,7 @@ try {
         $shell.AppActivate($excel.Caption) | Out-Null
     }
     catch {
-        Write-Host -ForegroundColor Yellow "- Warning: Could not activate window: $_"
+        Write-Host "- Warning: Could not activate window: $_"
     }
     
     try {
@@ -45,7 +45,7 @@ try {
     }
     catch {
         # If direct run fails, try to find the module and run it
-        Write-Host -ForegroundColor Yellow "- Direct run failed, searching in modules..."
+        Write-Host "- Direct run failed, searching in modules..."
         
         foreach ($vbModule in $vbProject.VBComponents) {
             $moduleCode = $vbModule.CodeModule
@@ -55,7 +55,7 @@ try {
             for ($i = 1; $i -le $linesCount; $i++) {
                 $line = $moduleCode.Lines($i, 1)
                 if ($line -match "^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+$subName\s*(?:\(|$)") {
-                    Write-Host -ForegroundColor Cyan "  found in module: $($vbModule.Name)"
+                    Write-Host "  found in module: $($vbModule.Name)"
                     try {
                         $excel.Run("$($vbModule.Name).$subName")
                         $subFound = $true
@@ -77,7 +77,7 @@ try {
         throw "SUB NOT FOUND: $subName"
     }
 
-    Write-Host -ForegroundColor Green "[SUCCESS] Sub executed: $subName"
+    Write-Host "[SUCCESS] Sub executed: $subName"
 }
 catch {
     [Console]::Error.WriteLine("$($_)")

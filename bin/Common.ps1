@@ -10,7 +10,7 @@ function Initialize-Script {
     $ErrorActionPreference = "Stop"
     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     
-    Write-Host -ForegroundColor Yellow "${scriptName}:"
+    Write-Host "${scriptName}:"
 }
 
 # Get the active Excel instance
@@ -32,7 +32,7 @@ function Get-BookInfo {
         [string]$bookPath
     )
     
-    Write-Host -ForegroundColor Green "- checking if book file exists"
+    Write-Host "- checking if book file exists"
     if (-not (Test-Path $bookPath)) {
         throw "BOOK FILE NOT FOUND: $bookPath"
     }
@@ -58,27 +58,24 @@ function Find-VBProject {
     
     $vbProject = $null
     
-    Write-Host -ForegroundColor Green "- checking if workbook/add-in is open in Excel"
-    Write-Host -ForegroundColor Cyan "  resolvedPath: $resolvedPath"
-    Write-Host -ForegroundColor Cyan "  file extension: $(if ($isAddIn) { '.xlam' } else { 'other' })"
+    Write-Host "- checking if workbook/add-in is open in Excel"
+    Write-Host "  resolvedPath: $resolvedPath"
+    Write-Host "  file extension: $(if ($isAddIn) { '.xlam' } else { 'other' })"
     
     # First try to search through Excel.Workbooks (works for both workbooks and add-ins)
-    Write-Host -ForegroundColor Cyan "  searching Excel.Workbooks:"
+    Write-Host "  searching Excel.Workbooks:"
     $workbookCount = $excel.Workbooks.Count
-    Write-Host -ForegroundColor Cyan "  total workbooks found: $workbookCount"
+    Write-Host "  total workbooks found: $workbookCount"
     
     foreach ($wb in $excel.Workbooks) {
         $wbFullName = $wb.FullName
-        Write-Host -ForegroundColor Cyan "    Workbook: $($wb.Name), FullName: $wbFullName"
+        Write-Host "    Workbook: $($wb.Name), FullName: $wbFullName"
         
-        # ファイル名だけで比較
-        $resolvedFileName = [System.IO.Path]::GetFileName($resolvedPath)
-        # .url 拡張子を除去
-        if ($resolvedFileName -match '\.url$') {
-            $resolvedFileName = $resolvedFileName -replace '\.url$', ''
-        }
-        if ($wb.Name -eq $resolvedFileName) {
-            Write-Host -ForegroundColor Yellow "    MATCHED!"
+        # ファイル名だけで比較 (拡張子を除去)
+        $resolvedFileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($resolvedPath)
+        $wbNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($wb.Name)
+        if ($wbNameWithoutExt -eq $resolvedFileNameWithoutExt) {
+            Write-Host "    MATCHED!"
             $vbProject = $wb.VBProject
             if ($null -ne $vbProject) {
                 return @{
@@ -92,7 +89,7 @@ function Find-VBProject {
     
     # If not found and it's an add-in, try VBE.VBProjects
     if ($null -eq $vbProject -and $isAddIn) {
-        Write-Host -ForegroundColor Cyan "  not found in Workbooks, searching VBE.VBProjects (add-in):"
+        Write-Host "  not found in Workbooks, searching VBE.VBProjects (add-in):"
         try {
             $vbe = $excel.VBE
             if ($null -eq $vbe) {
@@ -109,10 +106,10 @@ function Find-VBProject {
                 $projectCount++
                 $projectFileName = $vbProj.FileName
                 $projectName = $vbProj.Name
-                Write-Host -ForegroundColor Cyan "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+                Write-Host "    [$projectCount] Name: $projectName, FileName: $projectFileName"
                 
                 if ($projectFileName -eq $resolvedPath) {
-                    Write-Host -ForegroundColor Yellow "    MATCHED!"
+                    Write-Host "    MATCHED!"
                     return @{
                         VBProject = $vbProj
                         Workbook  = $null
@@ -120,17 +117,17 @@ function Find-VBProject {
                     }
                 }
             }
-            Write-Host -ForegroundColor Cyan "  total projects found: $projectCount"
+            Write-Host "  total projects found: $projectCount"
         }
         catch {
-            Write-Host -ForegroundColor Red "  error accessing VBE.VBProjects: $_"
-            Write-Host -ForegroundColor Red "  "
-            Write-Host -ForegroundColor Red "  SOLUTION:"
-            Write-Host -ForegroundColor Red "  1. Open Excel and go to: File > Options > Trust Center > Trust Center Settings..."
-            Write-Host -ForegroundColor Red "  2. Click 'Macro Settings'"
-            Write-Host -ForegroundColor Red "  3. Check the checkbox: 'Trust access to the VBA project object model'"
-            Write-Host -ForegroundColor Red "  4. Click OK and close Excel completely"
-            Write-Host -ForegroundColor Red "  5. Re-open the add-in and try again"
+            Write-Host "  error accessing VBE.VBProjects: $_"
+            Write-Host "  "
+            Write-Host "  SOLUTION:"
+            Write-Host "  1. Open Excel and go to: File > Options > Trust Center > Trust Center Settings..."
+            Write-Host "  2. Click 'Macro Settings'"
+            Write-Host "  3. Check the checkbox: 'Trust access to the VBA project object model'"
+            Write-Host "  4. Click OK and close Excel completely"
+            Write-Host "  5. Re-open the add-in and try again"
             throw $_
         }
     }
@@ -153,14 +150,14 @@ function Get-Workbook {
         [string]$excelFilePath
     )
     
-    Write-Host -ForegroundColor Green "- checking if Excel file exists"
+    Write-Host "- checking if Excel file exists"
     if (-not (Test-Path $excelFilePath)) {
         throw "EXCEL FILE NOT FOUND: $($excelFilePath)"
     }
     
     # Check if the workbook is open in Excel
     $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
-    Write-Host -ForegroundColor Green "- checking if workbook is open in Excel"
+    Write-Host "- checking if workbook is open in Excel"
     
     $workbook = $null
     foreach ($openWorkbook in $excel.Workbooks) {

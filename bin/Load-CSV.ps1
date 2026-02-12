@@ -11,60 +11,19 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host -ForegroundColor Green "- excelFilePath: $($excelFilePath)"
-Write-Host -ForegroundColor Green "- csvOutputPath: $($csvOutputPath)"
+Write-Host "- excelFilePath: $($excelFilePath)"
+Write-Host "- csvOutputPath: $($csvOutputPath)"
 
 # Get running Excel instance
 $excel = Get-ExcelInstance
 
 try {
-    # Check if the file is a .url marker file
-    $isUrlFile = [System.IO.Path]::GetExtension($excelFilePath).ToLower() -eq ".url"
-    
-    if ($isUrlFile) {
-        # For .url files, try to find the corresponding Excel file in the same directory as CsvOutputPath
-        $csvDir = Split-Path $csvOutputPath -Parent
-        $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvOutputPath)
-        
-        # Look for Excel files matching the CSV folder name (without _csv suffix)
-        $possibleFiles = @()
-        foreach ($ext in @(".xlsm", ".xlsx", ".xlam")) {
-            $possiblePath = Join-Path $csvDir ($baseFileName + $ext)
-            if (Test-Path $possiblePath) {
-                $possibleFiles += $possiblePath
-            }
-        }
-        
-        if ($possibleFiles.Count -eq 0) {
-            throw ".URL FILE DETECTED: Cannot find corresponding Excel file in $(Split-Path $CsvOutputPath -Parent). Expected file: $($baseFileName).xlsx|.xlsm|.xlam"
-        }
-        
-        if ($possibleFiles.Count -gt 1) {
-            throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
-        }
-        
-        $ExcelFilePath = $possibleFiles[0]
-        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
-    }
-    else {
-        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
-        
-        if (-not (Test-Path $fullPath)) {
-            throw "EXCEL FILE NOT FOUND: $($fullPath)"
-        }
-    }
-    
-    # Find the workbook in open workbooks
-    $workbook = $null
-    foreach ($openWorkbook in $excel.Workbooks) {
-        if ($openWorkbook.FullName -eq $fullPath) {
-            $workbook = $openWorkbook
-            break
-        }
-    }
-    
+    # Get workbook info and find the workbook
+    $macroInfo = Get-BookInfo $excelFilePath
+    $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
+    $workbook = $result.Workbook
     if ($null -eq $workbook) {
-        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        throw "NO OPENED WORKBOOK. Please Open Workbook."
     }
 
     # Clean output directory
