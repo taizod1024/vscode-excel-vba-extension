@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$excelFilePath,
+    [string]$bookPath,
     
     [Parameter(Mandatory = $true)]
     [string]$csvOutputPath
@@ -11,7 +11,7 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host "- excelFilePath: $($excelFilePath)"
+Write-Host "- bookPath: $($bookPath)"
 Write-Host "- csvOutputPath: $($csvOutputPath)"
 
 # Get running Excel instance
@@ -19,7 +19,7 @@ $excel = Get-ExcelInstance
 
 try {
     # Get workbook info and find the workbook
-    $macroInfo = Get-BookInfo $excelFilePath
+    $macroInfo = Get-BookInfo $bookPath
     $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
     $workbook = $result.Workbook
     if ($null -eq $workbook) {

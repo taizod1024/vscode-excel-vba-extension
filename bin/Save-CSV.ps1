@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$excelFilePath,
+    [string]$bookPath,
     
     [Parameter(Mandatory = $true)]
     [string]$csvInputPath
@@ -11,7 +11,7 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host "- excelFilePath: $($excelFilePath)"
+Write-Host "- bookPath: $($bookPath)"
 Write-Host "- csvInputPath: $($csvInputPath)"
 
 # Function to read and parse CSV file
@@ -136,7 +136,7 @@ try {
     }
     
     # Check if the file is a .url marker file
-    $isUrlFile = [System.IO.Path]::GetExtension($excelFilePath).ToLower() -eq ".url"
+    $isUrlFile = [System.IO.Path]::GetExtension($bookPath).ToLower() -eq ".url"
     
     if ($isUrlFile) {
         # For .url files, try to find the corresponding Excel file in the same directory
@@ -160,11 +160,11 @@ try {
             throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
         }
         
-        $excelFilePath = $possibleFiles[0]
-        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
+        $bookPath = $possibleFiles[0]
+        $fullPath = [System.IO.Path]::GetFullPath($bookPath)
     }
     else {
-        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
+        $fullPath = [System.IO.Path]::GetFullPath($bookPath)
         
         if (-not (Test-Path $fullPath)) {
             throw "EXCEL FILE NOT FOUND: $($fullPath)"

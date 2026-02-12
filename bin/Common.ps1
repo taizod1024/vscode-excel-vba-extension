@@ -147,16 +147,16 @@ function Find-VBProject {
 function Get-Workbook {
     param(
         [object]$excel,
-        [string]$excelFilePath
+        [string]$bookPath
     )
     
     Write-Host "- checking if Excel file exists"
-    if (-not (Test-Path $excelFilePath)) {
-        throw "EXCEL FILE NOT FOUND: $($excelFilePath)"
+    if (-not (Test-Path $bookPath)) {
+        throw "EXCEL FILE NOT FOUND: $($bookPath)"
     }
     
     # Check if the workbook is open in Excel
-    $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
+    $fullPath = [System.IO.Path]::GetFullPath($bookPath)
     Write-Host "- checking if workbook is open in Excel"
     
     $workbook = $null
