@@ -46,7 +46,7 @@ Sub OpenVSCode()
     
     ' アクティブなワークブックが存在するか確認
     If ActiveWorkbook Is Nothing Then
-        MsgBox "ワークブックがありません。", vbInformation
+        MsgBox "NO WORKBOOK", vbInformation
         Exit Sub
     End If
     
@@ -54,7 +54,7 @@ Sub OpenVSCode()
     workbookFolderPath = GetParentFolder(ActiveWorkbook.FullName)
     
     If workbookFolderPath = "" Then
-        MsgBox "ワークブックが保存されていません。", vbInformation
+        MsgBox "WORKBOOK NOT SAVED", vbInformation
         Exit Sub
     End If
     
@@ -66,7 +66,7 @@ Sub OpenVSCode()
     Exit Sub
     
 ErrorHandler:
-    MsgBox "VS Code 起動エラー: " & Err.description, vbExclamation
+    MsgBox "VSCODE NOT OPEN: " & Err.description, vbExclamation
 End Sub
 
 ''' ================================================================================
