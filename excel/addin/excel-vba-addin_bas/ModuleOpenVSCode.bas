@@ -101,7 +101,7 @@ Function GetExtensionPath() As String
     userProfile = Environ(ENV_USERPROFILE)
     
     If userProfile = "" Then
-        MsgBox ENV_USERPROFILE & " 環境変数が取得できません", vbExclamation
+        MsgBox ENV_USERPROFILE & " environment variable not found", vbExclamation
         GetExtensionPath = ""
         Exit Function
     End If
@@ -112,7 +112,7 @@ Function GetExtensionPath() As String
     foundPath = FindExtensionFolder(extensionsPath)
     
     If foundPath = "" Then
-        MsgBox "VSCode拡張機能フォルダが見つかりません:" & vbCrLf & _
+        MsgBox "VSCode extension folder not found:" & vbCrLf & _
                extensionsPath & EXTENSION_PREFIX & "*", vbExclamation
         GetExtensionPath = ""
     Else
@@ -122,7 +122,7 @@ Function GetExtensionPath() As String
     Exit Function
     
 ErrorHandler:
-    MsgBox "拡張機能パス取得エラー: " & Err.Description, vbExclamation
+    MsgBox "Extension path retrieval error: " & Err.description, vbExclamation
     GetExtensionPath = ""
 End Function
 
