@@ -41,7 +41,7 @@ End Sub
 Sub OpenVSCode()
     Dim shell As Object
     Dim command As String
-    Dim workbookFolderPath As String
+    Dim bookFolderPath As String
     Dim bookPath As String
     
     On Error GoTo ErrorHandler
@@ -65,16 +65,16 @@ Sub OpenVSCode()
     End If
     
     ' ワークブックのパスからフォルダを取得
-    workbookFolderPath = GetParentFolder(bookPath)
+    bookFolderPath = GetParentFolder(bookPath)
     
-    If workbookFolderPath = "" Then
+    If bookFolderPath = "" Then
         MsgBox "WORKBOOK NOT SAVED", vbInformation
         Exit Sub
     End If
     
     ' VS Code でフォルダを開く
     Set shell = CreateObject("WScript.Shell")
-    command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & bookPath & """"
+    command = VSCODE_COMMAND & """" & bookFolderPath & """" & " """ & bookPath & """"
     shell.Run command, 0, False
     
     Exit Sub
