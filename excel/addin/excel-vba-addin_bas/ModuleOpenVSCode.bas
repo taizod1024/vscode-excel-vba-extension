@@ -34,6 +34,7 @@ End Sub
 ''' ================================================================================
 ''' サブルーチン: OpenVSCode
 ''' 説明: VS Codeを起動（アクティブなワークブックのフォルダで）
+''' 説明: Webから開いている場合はRecentフォルダから対応するファイルを探す
 ''' パラメータ: なし
 ''' 戻り値: なし
 ''' ================================================================================
@@ -41,6 +42,7 @@ Sub OpenVSCode()
     Dim shell As Object
     Dim command As String
     Dim workbookFolderPath As String
+    Dim workbookPath As String
     
     On Error GoTo ErrorHandler
     
@@ -50,8 +52,20 @@ Sub OpenVSCode()
         Exit Sub
     End If
     
+    ' ActiveWorkbook.FullName の値を取得
+    workbookPath = ActiveWorkbook.FullName
+    
+    ' Webから開いている場合（URLの場合）は、Recentフォルダから.urlを探す
+    If Left(workbookPath, 7) = "http://" Or Left(workbookPath, 8) = "https://" Then
+        workbookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
+        If workbookPath = "" Then
+            MsgBox "RECENT FILE NOT FOUND: " & ActiveWorkbook.Name & ".url", vbExclamation
+            Exit Sub
+        End If
+    End If
+    
     ' ワークブックのパスからフォルダを取得
-    workbookFolderPath = GetParentFolder(ActiveWorkbook.FullName)
+    workbookFolderPath = GetParentFolder(workbookPath)
     
     If workbookFolderPath = "" Then
         MsgBox "WORKBOOK NOT SAVED", vbInformation
@@ -60,7 +74,7 @@ Sub OpenVSCode()
     
     ' VS Code でフォルダを開く
     Set shell = CreateObject("WScript.Shell")
-    command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & ActiveWorkbook.FullName & """"
+    command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & workbookPath & """"
     shell.Run command, 0, False
     
     Exit Sub
@@ -155,6 +169,58 @@ Private Function FindExtensionFolder(extensionsPath As String) As String
     
 ErrorHandler:
     FindExtensionFolder = ""
+End Function
+
+''' ================================================================================
+''' 関数: GetRecentFilePath
+''' 説明: %APPDATA%\Microsoft\Office\Recentフォルダからファイルを検索
+''' パラメータ:
+'''   fileName As String - 検索するファイル名
+''' 戻り値: String - 見つかったファイルのパス、見つからない場合は空文字列
+''' ================================================================================
+Private Function GetRecentFilePath(fileName As String) As String
+    Dim shell As Object
+    Dim userAppDataPath As String
+    Dim recentPath As String
+    Dim fileSystemObj As Object
+    Dim recentFolder As Object
+    Dim file As Object
+    Dim foundPath As String
+    
+    On Error GoTo ErrorHandler
+    
+    ' APPDATAフォルダのパスを取得
+    Set shell = CreateObject("WScript.Shell")
+    userAppDataPath = shell.ExpandEnvironmentStrings("%APPDATA%")
+    
+    ' Recentフォルダのパスを構築
+    recentPath = userAppDataPath & "\Microsoft\Office\Recent"
+    
+    Set fileSystemObj = CreateObject("Scripting.FileSystemObject")
+    
+    ' Recentフォルダが存在するか確認
+    If Not fileSystemObj.FolderExists(recentPath) Then
+        GetRecentFilePath = ""
+        Exit Function
+    End If
+    
+    Set recentFolder = fileSystemObj.GetFolder(recentPath)
+    
+    ' ファイルを列挙して同じ名前のファイルを検索
+    For Each file In recentFolder.Files
+        If LCase(file.Name) = LCase(fileName) Then
+            GetRecentFilePath = file.Path
+            Exit Function
+        End If
+    Next file
+    
+    ' 見つからなかった場合
+    GetRecentFilePath = ""
+    
+    Exit Function
+    
+ErrorHandler:
+    GetRecentFilePath = ""
 End Function
 
 ''' ================================================================================
