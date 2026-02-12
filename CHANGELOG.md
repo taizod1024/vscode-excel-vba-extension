@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.17...v0.1.18) (2026-02-12)
+
+
+### Features
+
+* add new command for creating a workbook with custom UI ([590098e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/590098ebd063bb0b1940e9eb72d3a2ae5db815da))
+* enhance OpenVSCode functionality to handle recent files and URL paths ([faf7130](https://github.com/taizod1024/vscode-excel-vba-extension/commit/faf7130abeb9003f8f24ced1adb92d0b73aa654e))
+
+
+### Bug Fixes
+
+* update error messages in OpenVSCode for clarity ([68d8c8a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/68d8c8a18d29dc9a85c7d9fb1e478c9acb6dec81))
+
 ### [0.1.17](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.16...v0.1.17) (2026-02-11)
 
 
