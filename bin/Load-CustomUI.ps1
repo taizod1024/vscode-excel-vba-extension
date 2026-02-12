@@ -14,25 +14,25 @@ try {
     
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- bookPath: $bookPath"
-    Write-Host -ForegroundColor Green "- customUIOutputPath: $customUIOutputPath"
+    Write-Host "- bookPath: $bookPath"
+    Write-Host "- customUIOutputPath: $customUIOutputPath"
 
     # Check if book file exists
-    Write-Host -ForegroundColor Green "- checking if book file exists"
+    Write-Host "- checking if book file exists"
     if (-not (Test-Path $bookPath)) {
-        throw "BOOK FILE NOT FOUND: $bookPath"
+        throw "Workbook file not found: $bookPath"
     }
 
     # Clean temporary directory
-    Write-Host -ForegroundColor Green "- cleaning customUIOutputPath"
+    Write-Host "- cleaning customUIOutputPath"
     if (Test-Path $customUIOutputPath) { 
         Remove-Item $customUIOutputPath -Recurse -Force
     }
-    Write-Host -ForegroundColor Green "- creating customUIOutputPath"
+    Write-Host "- creating customUIOutputPath"
     New-Item $customUIOutputPath -ItemType Directory | Out-Null
 
     # Extract customUI files from .xlam (ZIP format)
-    Write-Host -ForegroundColor Green "- extracting customUI from Excel Book"
+    Write-Host "- extracting customUI from Excel Book"
     
     # Copy the .xlam file to a temporary location for extraction
     $tempZipPath = Join-Path $env:TEMP "excel_xml_temp_$(Get-Random).zip"
@@ -56,14 +56,14 @@ try {
                 $fileName = $entry.Name
                 $outputPath = Join-Path $customUIOutputPath $fileName
                 [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $outputPath, $true)
-                Write-Host -ForegroundColor Cyan "  extracted: $($entry.FullName) to $outputPath"
+                Write-Host "  extracted: $($entry.FullName) to $outputPath"
             }
         }
         
         $zipArchive.Dispose()
         
         if (-not $customUIFound) {
-            Write-Host -ForegroundColor Yellow "  no customUI files found in Excel Book"
+            Write-Host "  no customUI files found in Excel Book"
         }
     }
     finally {
@@ -73,7 +73,7 @@ try {
         }
     }
 
-    Write-Host -ForegroundColor Green "- done"
+    Write-Host "- done"
     exit 0
 }
 catch {

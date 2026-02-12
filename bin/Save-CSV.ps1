@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$excelFilePath,
+    [string]$bookPath,
     
     [Parameter(Mandatory = $true)]
     [string]$csvInputPath
@@ -11,8 +11,8 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host -ForegroundColor Green "- excelFilePath: $($excelFilePath)"
-Write-Host -ForegroundColor Green "- csvInputPath: $($csvInputPath)"
+Write-Host "- bookPath: $($bookPath)"
+Write-Host "- csvInputPath: $($csvInputPath)"
 
 # Function to read and parse CSV file
 function Read-CsvFile {
@@ -132,11 +132,11 @@ $excel = Get-ExcelInstance
 try {
     # Check if CSV input path exists
     if (-not (Test-Path $csvInputPath)) {
-        throw "CSV FOLDER NOT FOUND: $($csvInputPath)"
+        throw "CSV folder not found: $csvInputPath"
     }
     
     # Check if the file is a .url marker file
-    $isUrlFile = [System.IO.Path]::GetExtension($excelFilePath).ToLower() -eq ".url"
+    $isUrlFile = [System.IO.Path]::GetExtension($bookPath).ToLower() -eq ".url"
     
     if ($isUrlFile) {
         # For .url files, try to find the corresponding Excel file in the same directory
@@ -153,21 +153,21 @@ try {
         }
         
         if ($possibleFiles.Count -eq 0) {
-            throw ".URL FILE DETECTED: Cannot find corresponding Excel file in $(Split-Path $CsvInputPath -Parent). Expected file: $($baseFileName).xlsx|.xlsm|.xlam"
+            throw "Excel file not found: $baseFileName"
         }
         
         if ($possibleFiles.Count -gt 1) {
-            throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
+            throw "Multiple Excel files found: $baseFileName. Please specify the exact file."
         }
         
-        $ExcelFilePath = $possibleFiles[0]
-        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        $bookPath = $possibleFiles[0]
+        $fullPath = [System.IO.Path]::GetFullPath($bookPath)
     }
     else {
-        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
+        $fullPath = [System.IO.Path]::GetFullPath($bookPath)
         
         if (-not (Test-Path $fullPath)) {
-            throw "EXCEL FILE NOT FOUND: $($fullPath)"
+            throw "Workbook file not found: $fullPath"
         }
     }
     
@@ -181,7 +181,7 @@ try {
     }
     
     if ($null -eq $workbook) {
-        throw "EXCEL WORKBOOK NOT OPEN: $($fullPath) is not currently open in Excel"
+        throw "Workbook not open: $fullPath"
     }
     
     # Get all CSV files from input path
@@ -298,7 +298,7 @@ try {
                 $excel.ActiveWindow.FreezePanes = $true
             }
             catch {
-                Write-Host -ForegroundColor Yellow "- Warning: Failed to set freeze panes"
+                Write-Host "- Warning: Failed to set freeze panes"
             }
             
             Write-Host "Converted to table: $($Sheet.Name)"
@@ -322,7 +322,7 @@ try {
                 $excel.ActiveWindow.SplitColumn = 0
             }
             catch {
-                Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+                Write-Host "- Warning: Failed to reset freeze panes"
             }
             
             # Clear existing data
@@ -353,7 +353,7 @@ try {
             $excel.ActiveWindow.SplitColumn = 0
         }
         catch {
-            Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+            Write-Host "- Warning: Failed to reset freeze panes"
         }
         
         # Import the sheet data

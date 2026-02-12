@@ -10,8 +10,8 @@ param(
 try {
     # Initialize
     Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-    Write-Host -ForegroundColor Green "- bookPath: $($bookPath)"
-    Write-Host -ForegroundColor Green "- vbaOutputPath: $($vbaOutputPath)"
+    Write-Host "- bookPath: $($bookPath)"
+    Write-Host "- vbaOutputPath: $($vbaOutputPath)"
 
     # Get Excel instance
     $excel = Get-ExcelInstance
@@ -22,10 +22,10 @@ try {
     $vbProject = $result.VBProject
     
     # Access VB Project
-    Write-Host -ForegroundColor Green "- accessing VB Project"
-    Write-Host -ForegroundColor Green "- project name: $($vbProject.Name)"
+    Write-Host "- accessing VB Project"
+    Write-Host "- project name: $($vbProject.Name)"
     $componentCount = $vbProject.VBComponents.Count
-    Write-Host -ForegroundColor Green "- found $componentCount component(s)"
+    Write-Host "- found $componentCount component(s)"
     
     if ($componentCount -eq 0) {
         throw @"
@@ -38,11 +38,11 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
     }
     
     # Clean temporary directory
-    Write-Host -ForegroundColor Green "- cleaning vbaOutputPath"
+    Write-Host "- cleaning vbaOutputPath"
     if (Test-Path $vbaOutputPath) { 
         Remove-PathToLongDirectory $vbaOutputPath
     }
-    Write-Host -ForegroundColor Green "- creating vbaOutputPath"
+    Write-Host "- creating vbaOutputPath"
     New-Item $vbaOutputPath -ItemType Directory | Out-Null
     
     # Load each component
@@ -51,7 +51,7 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         $componentName = $component.Name
         $componentType = $component.Type
         
-        Write-Host -ForegroundColor Green "- loading component [$i/$componentCount] $componentName"
+        Write-Host "- loading component [$i/$componentCount] $componentName"
         
         # Determine file extension based on component type
         $fileExt = switch ($componentType) {
@@ -74,10 +74,10 @@ NO VB COMPONENTS FOUND, ENABLE VBA PROJECT OBJECT MODEL ACCESS:
         $content = $content -replace '\s+$', ''
         [System.IO.File]::WriteAllText($filePath, $content, [System.Text.Encoding]::GetEncoding('shift_jis'))
         
-        Write-Host -ForegroundColor Cyan "  loaded to $filePath"
+        Write-Host "  loaded to $filePath"
     }
     
-    Write-Host -ForegroundColor Green "- done"
+    Write-Host "- done"
     exit 0
 }
 catch {

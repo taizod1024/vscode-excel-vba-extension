@@ -41,46 +41,46 @@ End Sub
 Sub OpenVSCode()
     Dim shell As Object
     Dim command As String
-    Dim workbookFolderPath As String
-    Dim workbookPath As String
+    Dim bookFolderPath As String
+    Dim bookPath As String
     
     On Error GoTo ErrorHandler
     
     ' アクティブなワークブックが存在するか確認
     If ActiveWorkbook Is Nothing Then
-        MsgBox "NO WORKBOOK", vbInformation
+        MsgBox "No workbook open.", vbInformation
         Exit Sub
     End If
     
     ' ActiveWorkbook.FullName の値を取得
-    workbookPath = ActiveWorkbook.FullName
+    bookPath = ActiveWorkbook.FullName
     
     ' Webから開いている場合（URLの場合）は、Recentフォルダから.urlを探す
-    If Left(workbookPath, 7) = "http://" Or Left(workbookPath, 8) = "https://" Then
-        workbookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
-        If workbookPath = "" Then
-            MsgBox "RECENT FILE NOT FOUND: " & ActiveWorkbook.Name & ".url", vbExclamation
+    If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
+        bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
+        If bookPath = "" Then
+            MsgBox "Recent file not found: " & ActiveWorkbook.Name & ".url", vbExclamation
             Exit Sub
         End If
     End If
     
     ' ワークブックのパスからフォルダを取得
-    workbookFolderPath = GetParentFolder(workbookPath)
+    bookFolderPath = GetParentFolder(bookPath)
     
-    If workbookFolderPath = "" Then
-        MsgBox "WORKBOOK NOT SAVED", vbInformation
+    If bookFolderPath = "" Then
+        MsgBox "Workbook not saved.", vbInformation
         Exit Sub
     End If
     
     ' VS Code でフォルダを開く
     Set shell = CreateObject("WScript.Shell")
-    command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & workbookPath & """"
+    command = VSCODE_COMMAND & """" & bookFolderPath & """" & " """ & bookPath & """"
     shell.Run command, 0, False
     
     Exit Sub
     
 ErrorHandler:
-    MsgBox "VSCODE NOT OPEN: " & Err.description, vbExclamation
+    MsgBox "Failed to open VS Code: " & Err.description, vbExclamation
 End Sub
 
 ''' ================================================================================
@@ -101,7 +101,7 @@ Function GetExtensionPath() As String
     userProfile = Environ(ENV_USERPROFILE)
     
     If userProfile = "" Then
-        MsgBox ENV_USERPROFILE & " environment variable not found", vbExclamation
+        MsgBox "Environment variable not found: " & ENV_USERPROFILE, vbExclamation
         GetExtensionPath = ""
         Exit Function
     End If
@@ -112,7 +112,7 @@ Function GetExtensionPath() As String
     foundPath = FindExtensionFolder(extensionsPath)
     
     If foundPath = "" Then
-        MsgBox "VSCode extension folder not found:" & vbCrLf & _
+        MsgBox "Extension folder not found: " & vbCrLf & _
                extensionsPath & EXTENSION_PREFIX & "*", vbExclamation
         GetExtensionPath = ""
     Else
@@ -122,7 +122,7 @@ Function GetExtensionPath() As String
     Exit Function
     
 ErrorHandler:
-    MsgBox "Extension path retrieval error: " & Err.description, vbExclamation
+    MsgBox "Failed to retrieve extension path: " & Err.description, vbExclamation
     GetExtensionPath = ""
 End Function
 
