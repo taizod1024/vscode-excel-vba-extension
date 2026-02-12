@@ -11,8 +11,8 @@ param(
 
 # Initialize
 Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
-Write-Host -ForegroundColor Green "- excelFilePath: $($excelFilePath)"
-Write-Host -ForegroundColor Green "- csvInputPath: $($csvInputPath)"
+Write-Host "- excelFilePath: $($excelFilePath)"
+Write-Host "- csvInputPath: $($csvInputPath)"
 
 # Function to read and parse CSV file
 function Read-CsvFile {
@@ -298,7 +298,7 @@ try {
                 $excel.ActiveWindow.FreezePanes = $true
             }
             catch {
-                Write-Host -ForegroundColor Yellow "- Warning: Failed to set freeze panes"
+                Write-Host "- Warning: Failed to set freeze panes"
             }
             
             Write-Host "Converted to table: $($Sheet.Name)"
@@ -322,7 +322,7 @@ try {
                 $excel.ActiveWindow.SplitColumn = 0
             }
             catch {
-                Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+                Write-Host "- Warning: Failed to reset freeze panes"
             }
             
             # Clear existing data
@@ -353,7 +353,7 @@ try {
             $excel.ActiveWindow.SplitColumn = 0
         }
         catch {
-            Write-Host -ForegroundColor Yellow "- Warning: Failed to reset freeze panes"
+            Write-Host "- Warning: Failed to reset freeze panes"
         }
         
         # Import the sheet data
