@@ -205,6 +205,9 @@
       "[vb]": {
         "files.encoding": "shiftjis"
       },
+      "[url]": {
+        "files.encoding": "shiftjis"
+      },
       "files.associations": {
         "*.bas": "vb",
         "*.cls": "vb",
