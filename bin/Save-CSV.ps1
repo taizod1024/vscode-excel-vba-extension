@@ -160,8 +160,8 @@ try {
             throw ".URL FILE DETECTED: Found multiple Excel files matching $($baseFileName). Please specify the exact file path."
         }
         
-        $ExcelFilePath = $possibleFiles[0]
-        $fullPath = [System.IO.Path]::GetFullPath($ExcelFilePath)
+        $excelFilePath = $possibleFiles[0]
+        $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
     }
     else {
         $fullPath = [System.IO.Path]::GetFullPath($excelFilePath)
