@@ -42,7 +42,7 @@ Sub OpenVSCode()
     Dim shell As Object
     Dim command As String
     Dim workbookFolderPath As String
-    Dim workbookPath As String
+    Dim bookPath As String
     
     On Error GoTo ErrorHandler
     
@@ -53,19 +53,19 @@ Sub OpenVSCode()
     End If
     
     ' ActiveWorkbook.FullName の値を取得
-    workbookPath = ActiveWorkbook.FullName
+    bookPath = ActiveWorkbook.FullName
     
     ' Webから開いている場合（URLの場合）は、Recentフォルダから.urlを探す
-    If Left(workbookPath, 7) = "http://" Or Left(workbookPath, 8) = "https://" Then
-        workbookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
-        If workbookPath = "" Then
+    If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
+        bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
+        If bookPath = "" Then
             MsgBox "RECENT FILE NOT FOUND: " & ActiveWorkbook.Name & ".url", vbExclamation
             Exit Sub
         End If
     End If
     
     ' ワークブックのパスからフォルダを取得
-    workbookFolderPath = GetParentFolder(workbookPath)
+    workbookFolderPath = GetParentFolder(bookPath)
     
     If workbookFolderPath = "" Then
         MsgBox "WORKBOOK NOT SAVED", vbInformation
@@ -74,7 +74,7 @@ Sub OpenVSCode()
     
     ' VS Code でフォルダを開く
     Set shell = CreateObject("WScript.Shell")
-    command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & workbookPath & """"
+    command = VSCODE_COMMAND & """" & workbookFolderPath & """" & " """ & bookPath & """"
     shell.Run command, 0, False
     
     Exit Sub
