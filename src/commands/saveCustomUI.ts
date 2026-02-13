@@ -16,7 +16,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
   if (urlExt === ".url") {
     actualPathForExtension = bookPath.slice(0, -4); // Remove .url
   }
-  
+
   const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
   const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
   let excelFileName = path.basename(actualPathForExtension);
@@ -36,7 +36,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
   if (hasUrl) {
     checkPath = bookPath.slice(0, -4); // Remove .url
   }
-  
+
   const extForValidation = path.extname(checkPath).toLowerCase();
 
   // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)

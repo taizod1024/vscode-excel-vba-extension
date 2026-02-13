@@ -13,7 +13,7 @@ export async function runSubAsync(bookPath: string, context: CommandContext) {
   if (urlExt === ".url") {
     actualPathForExtension = bookPath.slice(0, -4); // Remove .url
   }
-  
+
   const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
   const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
   let excelFileName = path.basename(actualPathForExtension);

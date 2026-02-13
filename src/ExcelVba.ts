@@ -90,12 +90,12 @@ class ExcelVba {
       // Check if parent folder is csv (format: aaa_xlsm/csv or aaa.xlsm.url/csv or aaa_xlsx/csv)
       if (parentName === "csv") {
         let prevParentName = path.basename(path.dirname(parentDir));
-        
+
         // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
         if (prevParentName.endsWith(".url")) {
           prevParentName = prevParentName.slice(0, -4); // Remove .url
         }
-        
+
         const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
         if (match) {
           const baseName = match[1];
@@ -150,7 +150,7 @@ class ExcelVba {
 
       // Check if parent folder is bas/csv/png (format: aaa_xlsm/bas or aaa.xlsm.url/bas or aaa_xlsx/bas)
       let prevParentName = path.basename(path.dirname(parentDir));
-      
+
       // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
       if (prevParentName.endsWith(".url")) {
         prevParentName = prevParentName.slice(0, -4); // Remove .url
@@ -210,12 +210,12 @@ class ExcelVba {
 
       // Check if parent folder is xml (format: aaa_xlam/xml or aaa_xlsm/xml or aaa.xlam.url/xml)
       let prevParentName = path.basename(path.dirname(parentDir));
-      
+
       // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
       if (prevParentName.endsWith(".url")) {
         prevParentName = prevParentName.slice(0, -4); // Remove .url
       }
-      
+
       const match = prevParentName.match(/^(.+?)_(xlam|xlsm)$/i);
       if (match) {
         const baseName = match[1];
@@ -269,12 +269,12 @@ class ExcelVba {
 
       // Check if parent folder is png (format: aaa_xlsx/png or aaa.xlsx.url/png)
       let prevParentName = path.basename(path.dirname(parentDir));
-      
+
       // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
       if (prevParentName.endsWith(".url")) {
         prevParentName = prevParentName.slice(0, -4); // Remove .url
       }
-      
+
       const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
       if (match) {
         const baseName = match[1];
