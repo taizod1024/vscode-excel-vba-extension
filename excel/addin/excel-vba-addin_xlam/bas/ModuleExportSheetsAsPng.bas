@@ -63,8 +63,8 @@ Sub ExportSheetsAsPng()
         Exit Sub
     End If
     
-    ' Export-SheetAsImage.ps1 のパスを構築
-    scriptPath = extensionPath & "\bin\Export-SheetAsImage.ps1"
+    ' Export-SheetAsPng.ps1 のパスを構築
+    scriptPath = extensionPath & "\bin\Export-SheetAsPng.ps1"
     
     ' PowerShell コマンドを実行（別プロセスで）
     ' 出力フォルダを {bookfolder}/{bookname}_{ext}/png とする

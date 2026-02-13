@@ -83,7 +83,7 @@ bin/
   Save-CSV.ps1
   Save-CustomUI.ps1
   Save-VBA.ps1
-  Export-SheetAsImage.ps1  Open-SheetFromPng.ps1```
+  Export-SheetAsPng.ps1  Open-SheetFromPng.ps1```
 
 ## 共通仕様
 

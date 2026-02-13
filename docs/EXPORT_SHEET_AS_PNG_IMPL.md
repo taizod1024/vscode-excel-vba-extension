@@ -4,7 +4,7 @@
 
 ```
 src/commands/exportSheetAsImage.ts    # メイン処理（TypeScript）
-bin/Export-SheetAsImage.ps1           # PowerShell スクリプト
+bin/Export-SheetAsPng.ps1           # PowerShell スクリプト
 ```
 
 ## 実装詳細
@@ -43,7 +43,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
 }
 ```
 
-### 2. PowerShell 部分 (bin/Export-SheetAsImage.ps1)
+### 2. PowerShell 部分 (bin/Export-SheetAsPng.ps1)
 
 #### 処理ステップ
 
@@ -196,7 +196,7 @@ $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
 
 ```
 build/main.js                          # ビルド済みメイン（自動生成）
-bin/Export-SheetAsImage.ps1            # PowerShell スクリプト
+bin/Export-SheetAsPng.ps1            # PowerShell スクリプト
 package.json                           # コマンド定義
 ```
 
