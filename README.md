@@ -44,7 +44,8 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 | **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
 | **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
 | **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                |
-| **Export Sheet as PNG**           | Export sheets with print area as PNG images.                                  |
+| **Export Sheets as PNG**          | Export sheets with print area as PNG images.                                  |
+| **Open Sheet from PNG**           | Open the original Excel sheet from a PNG image file.                          |
 
 ## Setup
 
@@ -240,7 +241,8 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Create URL Shortcut**           | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
 | **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポートする。                  |
 | **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存する。                                         |
-| **Export Sheet as PNG**           | 印刷範囲をシートから PNG 画像にエクスポートする。                                                |
+| **Export Sheets as PNG**          | 印刷範囲をシートから PNG 画像にエクスポートする。                                                |
+| **Open Sheet from PNG**           | PNG 画像ファイルから元の Excel シートを開く。                                                    |
 
 ## 準備
 
@@ -369,19 +371,27 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
 - 処理時は Excel で開いているアクティブなワークブックが使用される（ローカルファイルのコピーは不要）
 - これにより、クラウドホストファイルのシームレスなバージョン管理と編集が可能になる
 
-### シートを PNG 画像にエクスポートする
+### シートを PNG 画像にエクスポートする（複数可）
 
 1. Excel で、`.png` で終わる名前のシートを作成（例：`Dashboard.png`）
 2. 各シートにエクスポートしたい範囲として印刷範囲を設定
 3. 画像にグリッド線やページ番号を含めたくない場合は、シートで非表示に設定
 4. VS Code のエクスプローラービューでブックファイルを選択
-5. エディタのタイトルから「Export Sheet as PNG」を選択
+5. エディタのタイトルから「Export Sheets as PNG」を選択
 6. ブックファイルと同じ名前のフォルダが作成される
    - 例 : `MyBook.xlsm` → `MyBook_xlsm/png` フォルダ
    - `.png` で終わるすべてのシートの PNG 画像が作成される
    - ファイル名はシート名と同じになります（例：`Dashboard.png`）
 
-## 注意事項
+### PNG から Sheet を開く
+
+1. VS Code のエクスプローラービューで PNG ファイルを選択（Export Sheet as PNG で作成したファイル）
+2. 右クリックして「Open Sheet from PNG」を選択
+3. 元の Excel ブックが開かれて、PNG ファイル名に対応するシートが自動的に選択される
+   - 例：`Dashboard.png` ファイル → Excel の `Dashboard.png` というシートが選択される
+4. PNG をクリックするだけで、元のデータの編集が可能に
+
+
 
 - **全般**
   - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
@@ -397,3 +407,7 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
   - VBAファイルはVS Codeで新規追加することができます。
   - CSVファイルはVS Codeで新規追加することができます。
   - CustomUI XMLファイルは新規追加することはできません。事前にブックファイルに登録されている必要があります。
+- **PNG ファイル**
+  - PNG ファイル名がシート名と完全に一致する必要があります。
+  - PNG ファイルは `{name}_拡張子/png/` フォルダ内に存在する必要があります。
+  - 対応する Excel ファイルが同じ親ディレクトリ内に存在する必要があります。

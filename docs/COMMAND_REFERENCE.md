@@ -310,7 +310,7 @@
 
 ---
 
-### 13. Export Sheet as PNG
+### 13. Export Sheets as PNG
 
 **コマンド ID**: `excel-vba.exportSheetAsPng`
 
@@ -333,6 +333,34 @@
 
 ---
 
+### 14. Open Sheet from PNG
+
+**コマンド ID**: `excel-vba.openSheetFromPng`
+
+**実行方法**
+- PNG ファイルを右クリック → Open Sheet from PNG
+- エディタタイトルアイコン
+
+**対象ファイル**
+- `.png`（Export Sheet as PNG で作成した PNG ファイル）
+
+**前提条件**
+- PNG ファイルが `{name}_拡張子/png/` フォルダ内に存在
+- PNG ファイル名をシート名として使用（例: `aaa.png` → シート名 `aaa.png`）
+- 対応する Excel ファイルが同じディレクトリまたは親ディレクトリに存在
+
+**動作**
+- PNG ファイル名からシート名を抽出
+- フォルダ構造から対応する Excel ファイルを特定
+- Excel でファイルを開く
+- 指定されたシート名のシートをアクティベート
+
+**処理時間**: 1-3 秒
+
+**参照**: [OPEN_SHEET_FROM_PNG_SPEC.md](./OPEN_SHEET_FROM_PNG_SPEC.md)
+
+---
+
 ## コマンド早見表
 
 | # | コマンド ID | 説明 | キー |
@@ -349,7 +377,8 @@
 | 10 | createUrlShortcut | URL ショートカット作成 | − |
 | 11 | loadCustomUI | CustomUI 抽出 | − |
 | 12 | saveCustomUI | CustomUI 保存 | − |
-| 13 | exportSheetAsPng | PNG エクスポート | − |
+| 13 | exportSheetAsPng | PNG エクスポート（複数） | − |
+| 14 | openSheetFromPng | PNG から Sheet を開く | − |
 
 ---
 

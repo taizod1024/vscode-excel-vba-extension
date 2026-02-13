@@ -1,4 +1,4 @@
-# Export Sheet as PNG 機能仕様書
+# Export Sheets as PNG 機能仕様書
 
 ## 概要
 

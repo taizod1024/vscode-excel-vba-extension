@@ -83,7 +83,7 @@
       },
       {
         "command": "excel-vba.exportSheetAsPng",
-        "title": "Export Sheet as PNG",
+        "title": "Export Sheets as PNG",
         "icon": "$(file-media)"
       },
       {

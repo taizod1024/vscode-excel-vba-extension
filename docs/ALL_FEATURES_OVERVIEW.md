@@ -20,7 +20,8 @@ Excel VBA Extension は VS Code から Excel VBA、CSV、CustomUI を開発・�
 | 10  | Create URL Shortcut           | クラウドホストの Excel ファイル用 URL ショートカットを作成 |
 | 11  | Load CustomUI from Excel Book | Excel ブックから CustomUI XML をエクスポート               |
 | 12  | Save CustomUI to Excel Book   | VS Code の CustomUI XML を Excel ブックに保存              |
-| 13  | Export Sheet as PNG           | シートを PNG 画像としてエクスポート                        |
+| 13  | Export Sheets as PNG          | シートを PNG 画像としてエクスポート                        |
+| 14  | Open Sheet from PNG           | PNG ファイルから元の Excel シートを開く                    |
 
 ## アーキテクチャ
 
@@ -54,6 +55,7 @@ src/
     newBook.ts
     newBookWithCustomUI.ts
     openBook.ts
+    openSheetFromPng.ts
     runSub.ts
     saveCsv.ts
     saveCustomUI.ts
@@ -81,8 +83,7 @@ bin/
   Save-CSV.ps1
   Save-CustomUI.ps1
   Save-VBA.ps1
-  Export-SheetAsImage.ps1
-```
+  Export-SheetAsImage.ps1  Open-SheetFromPng.ps1```
 
 ## 共通仕様
 
