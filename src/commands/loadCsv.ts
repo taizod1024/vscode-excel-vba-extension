@@ -17,16 +17,16 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      
+
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const csvDir = path.join(bookDir, `${bookFileName}.csv`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
-      
+
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Output: `${bookFileName}.csv`
+        file: bookFileName,
+        output: `${bookFileName}.csv`,
       });
 
       // exec command
@@ -36,7 +36,7 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to load CSV.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to load CSV.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }

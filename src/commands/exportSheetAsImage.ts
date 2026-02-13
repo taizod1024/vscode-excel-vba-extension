@@ -24,8 +24,8 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Output: `${bookFileName}.png`
+        file: bookFileName,
+        output: `${bookFileName}.png`
       });
 
       // exec command

@@ -26,8 +26,8 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Save-VBA.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Source: `${bookFileName}.bas`
+        file: bookFileName,
+        source: `${bookFileName}.bas`
       });
 
       // Check if save source folder exists

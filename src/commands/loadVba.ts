@@ -25,7 +25,7 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Load-VBA.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName
+        file: bookFileName
       });
 
       // exec command

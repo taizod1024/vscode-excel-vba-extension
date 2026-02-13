@@ -16,16 +16,16 @@ export async function saveCsvAsync(bookPath: string, context: CommandContext) {
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      
+
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const csvDir = path.join(bookDir, `${bookFileName}.csv`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-CSV.ps1`;
-      
+
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Source: `${bookFileName}.csv`
+        file: bookFileName,
+        source: `${bookFileName}.csv`,
       });
 
       // Check if CSV directory exists
@@ -42,7 +42,7 @@ export async function saveCsvAsync(bookPath: string, context: CommandContext) {
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to save CSV.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save CSV.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }

@@ -32,7 +32,7 @@ export async function loadCustomUIAsync(bookPath: string, context: CommandContex
       const scriptPath = `${context.extensionPath}\\bin\\Load-CustomUI.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName
+        file: bookFileName
       });
 
       // exec command

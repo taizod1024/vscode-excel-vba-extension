@@ -52,7 +52,7 @@ export async function newBookAsync(context: CommandContext) {
       const logger = new Logger(context.channel);
       const scriptPath = `${context.extensionPath}\\bin\\New-Excel.ps1`;
       logger.logCommandStart(commandName, {
-        Path: filePath,
+        path: filePath,
       });
 
       // exec command
