@@ -80,6 +80,11 @@
         "command": "excel-vba.saveCustomUI",
         "title": "Save CustomUI to Excel Book (Close Excel first)",
         "icon": "$(arrow-circle-down)"
+      },
+      {
+        "command": "excel-vba.exportSheetAsImage",
+        "title": "Export Sheet as Image",
+        "icon": "$(file-media)"
       }
     ],
     "menus": {
@@ -135,6 +140,10 @@
         {
           "command": "excel-vba.saveCustomUI",
           "when": "false"
+        },
+        {
+          "command": "excel-vba.exportSheetAsImage",
+          "when": "false"
         }
       ],
       "editor/title": [
@@ -172,6 +181,11 @@
           "command": "excel-vba.saveCsv",
           "group": "navigation@7",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
+        },
+        {
+          "command": "excel-vba.exportSheetAsImage",
+          "group": "navigation@8",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam)$/i"
         },
         {
           "command": "excel-vba.newBook",

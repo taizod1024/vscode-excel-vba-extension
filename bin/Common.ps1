@@ -26,6 +26,21 @@ function Get-ExcelInstance {
     return $excel
 }
 
+# Get Excel instance or create new one if not running
+function Get-OrCreate-ExcelInstance {
+    $excel = $null
+    try {
+        $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+        Write-Host "- using existing Excel instance"
+    }
+    catch {
+        $excel = New-Object -ComObject Excel.Application
+        Write-Host "- created new Excel instance"
+    }
+    
+    return $excel
+}
+
 # Resolve macro file path and determine file type
 function Get-BookInfo {
     param(

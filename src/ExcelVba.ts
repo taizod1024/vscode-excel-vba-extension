@@ -16,6 +16,7 @@ import { runSubAsync } from "./commands/runSub";
 import { newBookAsync } from "./commands/newBook";
 import { newBookWithCustomUIAsync } from "./commands/newBookWithCustomUI";
 import { createUrlShortcutAsync } from "./commands/createUrlShortcut";
+import { exportSheetAsImageAsync } from "./commands/exportSheetAsImage";
 import { copyAddinToAppData } from "./utils/fileOperations";
 
 /** Excel VBA extension class */
@@ -369,6 +370,19 @@ class ExcelVba {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
           await createUrlShortcutAsync(commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.exportSheetAsImage`, async (uri: vscode.Uri) => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        try {
+          const macroPath = this.resolveVbaPath(uri.fsPath);
+          await exportSheetAsImageAsync(macroPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
