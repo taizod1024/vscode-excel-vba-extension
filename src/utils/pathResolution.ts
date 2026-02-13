@@ -2,7 +2,7 @@ import * as fs from "fs";
 const path = require("path");
 
 /** Resolve VBA path from selected file */
-export function resolveVbaPath(selectedPath: string): string {
+export function resolveBookPath(selectedPath: string): string {
   let resolvedPath = selectedPath;
 
   // Handle temporary Excel files (~$filename.xlsx)

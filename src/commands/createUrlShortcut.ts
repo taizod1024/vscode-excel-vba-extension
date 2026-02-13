@@ -32,7 +32,6 @@ export async function createUrlShortcutAsync(context: CommandContext) {
       // Output result
       if (result.stdout) logger.logRaw(result.stdout);
       if (result.exitCode !== 0) {
-        logger.logError(result.stderr);
         throw "Failed to create URL shortcut.";
       }
     },

@@ -35,12 +35,14 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
-      const csvDir = path.join(bookDir, `${bookFileName}.csv`);
+      const fileNameWithoutExt = path.parse(bookPath).name;
+      const excelExt = path.extname(bookPath).slice(1);
+      const csvDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "csv");
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        output: `${bookFileName}.csv`
+        output: `${fileNameWithoutExt}_${excelExt}/csv`
       });
 
       // exec command
@@ -51,11 +53,16 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to load CSV.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 
-      logger.logSuccess(`CSV extracted (${path.basename(csvDir)} folder)`);
+      logger.logSuccess(`CSV extracted (${path.basename(path.dirname(csvDir))}/csv folder)`);
+
+      // Create parent folder if it doesn't exist
+      const parentDir = path.dirname(csvDir);
+      if (!fs.existsSync(parentDir)) {
+        fs.mkdirSync(parentDir, { recursive: true });
+      }
 
       // Close all diff editors
       await closeAllDiffEditors(context.channel);

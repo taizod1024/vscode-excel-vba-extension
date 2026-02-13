@@ -114,15 +114,22 @@ bin/
 ### 出力フォルダ命名規則
 
 ```
-{ブック名}_{種類}
+{ブック名の拡張子前}_{拡張子}/{サブフォルダ}
 ```
 
-| 種類 | フォルダ名 | 内容 |
+| 種類 | フォルダ名パターン | 内容 |
 |------|----------|------|
-| VBA | `{name}.bas` | .bas, .cls, .frm ファイル |
-| CSV | `{name}.csv` | .csv ファイル |
-| CustomUI | `{name}.xml` | customUI.xml, customUI14.xml |
-| PNG | `{name}_png` | .png 画像ファイル |
+| VBA | `{name}_{ext}/bas` | .bas, .cls, .frm ファイル |
+| CSV | `{name}_{ext}/csv` | .csv ファイル |
+| CustomUI | `{name}_{ext}/xml` | customUI.xml, customUI14.xml |
+| PNG | `{name}_{ext}/png` | .png 画像ファイル |
+
+**例:**
+```
+book.xlsx → book_xlsx/bas, book_xlsx/csv, book_xlsx/png
+book.xlsm → book_xlsm/bas, book_xlsm/csv, book_xlsm/png
+addin.xlam → addin_xlam/xml
+```
 
 ## ドキュメント構成
 

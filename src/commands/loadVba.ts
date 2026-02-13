@@ -35,6 +35,9 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
+      const fileNameWithoutExt = path.parse(bookPath).name;
+      const excelExt = path.extname(bookPath).slice(1);
+      const basDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "bas");
       const tmpPath = path.join(bookDir, `${bookFileName}.bas~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-VBA.ps1`;
 
@@ -50,17 +53,23 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "No book open.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 
       // Organize loaded files
-      const newFolderName = `${bookFileName}.bas`;
-      const newPath = path.join(bookDir, newFolderName);
+      const parentFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const parentPath = path.join(bookDir, parentFolderName);
+      const newFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const newPath = path.join(bookDir, newFolderName, "bas");
 
       // Remove existing folder if it exists
       if (fs.existsSync(newPath)) {
         fs.rmSync(newPath, { recursive: true, force: true });
+      }
+
+      // Create parent folder if needed
+      if (!fs.existsSync(parentPath)) {
+        fs.mkdirSync(parentPath, { recursive: true });
       }
 
       // Move tmpPath to new location

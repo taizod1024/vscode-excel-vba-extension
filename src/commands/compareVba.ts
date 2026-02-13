@@ -40,10 +40,12 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
       // If VBA component file, find the parent Excel workbook to get the correct folder name
       if (vbaComponentExtensions.includes(bookExtension)) {
         const folderName = path.basename(bookDir);
-        const match = folderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
+        const match = folderName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
         if (match) {
           const parentDir = path.dirname(bookDir);
-          const baseFileName = match[1];
+          const baseName = match[1];
+          const excelExtension = match[2];
+          const baseFileName = `${baseName}.${excelExtension}`;
 
           const excelPath = path.join(parentDir, baseFileName);
           if (fs.existsSync(excelPath)) {
@@ -53,8 +55,10 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
         }
       }
 
-      const currentFolderName = `${referenceFileName}.bas`;
-      const currentPath = path.join(bookDir, currentFolderName);
+      const fileNameWithoutExt = path.parse(referenceFileName).name;
+      const excelExt = path.extname(referenceFileName).slice(1);
+      const currentFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const currentPath = path.join(bookDir, currentFolderName, "bas");
       const tmpPath = path.join(bookDir, `${referenceFileName}.bas~`);
 
       logger.logCommandStart(commandName, {
@@ -64,9 +68,7 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
       logger.logInfo("Loading from Excel...");
 
       if (!fs.existsSync(currentPath)) {
-        const errorMsg = `VBA folder not found`;
-        logger.logError(errorMsg + ` (expected: ${currentFolderName})`);
-        throw errorMsg;
+        throw `VBA folder not found`;
       }
 
       // Load to temporary folder
@@ -76,7 +78,6 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to compare VBA.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 

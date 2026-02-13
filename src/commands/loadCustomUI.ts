@@ -42,6 +42,8 @@ export async function loadCustomUIAsync(bookPath: string, context: CommandContex
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
+      const fileNameWithoutExt = path.parse(bookPath).name;
+      const excelExt = path.extname(bookPath).slice(1);
       const tmpPath = path.join(bookDir, `${bookFileName}.xml~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-CustomUI.ps1`;
 
@@ -57,17 +59,23 @@ export async function loadCustomUIAsync(bookPath: string, context: CommandContex
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to load CustomUI.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 
       // Organize loaded files
-      const newFolderName = `${bookFileName}.xml`;
-      const newPath = path.join(bookDir, newFolderName);
+      const parentFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const parentPath = path.join(bookDir, parentFolderName);
+      const newFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const newPath = path.join(bookDir, newFolderName, "xml");
 
       // Remove existing folder if it exists
       if (fs.existsSync(newPath)) {
         fs.rmSync(newPath, { recursive: true, force: true });
+      }
+
+      // Create parent folder if needed
+      if (!fs.existsSync(parentPath)) {
+        fs.mkdirSync(parentPath, { recursive: true });
       }
 
       // Move tmpPath to new location

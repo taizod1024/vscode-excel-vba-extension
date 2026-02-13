@@ -42,19 +42,19 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
-      const saveSourcePath = path.join(bookDir, `${bookFileName}.xml`);
+      const fileNameWithoutExt = path.parse(bookPath).name;
+      const excelExt = path.extname(bookPath).slice(1);
+      const saveSourcePath = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "xml");
       const scriptPath = `${context.extensionPath}\\bin\\Save-CustomUI.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        source: `${bookFileName}.xml`
+        source: `${fileNameWithoutExt}_${excelExt}/xml`
       });
 
       // Check if save source folder exists
       if (!fs.existsSync(saveSourcePath)) {
-        const errorMsg = `CustomUI folder not found`;
-        logger.logError(errorMsg + ` (expected: ${bookFileName}.xml)`);
-        throw errorMsg;
+        throw `CustomUI folder not found`;
       }
 
       // exec command
@@ -65,7 +65,6 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save CustomUI.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 

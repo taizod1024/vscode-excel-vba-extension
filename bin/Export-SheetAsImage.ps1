@@ -69,12 +69,27 @@ try {
                 $printArea = $sheet.PageSetup.PrintArea
                 Write-Host "    - Print area: $printArea"
 
-                if ([string]::IsNullOrEmpty($printArea)) {
-                    throw "Sheet '$sheetName' has no print area defined."
+                # Determine what range to export
+                $rangeToExport = $null
+                if (-not [string]::IsNullOrEmpty($printArea)) {
+                    # Use print area if defined
+                    $rangeToExport = $sheet.Range($printArea)
+                    Write-Host "    - Using print area"
+                } else {
+                    # Use UsedRange if print area is not defined
+                    $usedRange = $sheet.UsedRange
+                    if ($null -ne $usedRange) {
+                        $rangeToExport = $usedRange
+                        Write-Host "    - Using UsedRange"
+                    }
+                }
+
+                if ($null -eq $rangeToExport) {
+                    throw "Sheet '$sheetName' has no print area or used range."
                 }
 
                 # Get the range and copy to clipboard
-                $range = $sheet.Range($printArea)
+                $range = $rangeToExport
                 $range.Copy() | Out-Null
                 Write-Host "    - Copied to clipboard"
 

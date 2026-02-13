@@ -34,12 +34,14 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
-      const imageDir = path.join(bookDir, `${bookFileName}.png`);
+      const fileNameWithoutExt = path.parse(bookPath).name;
+      const excelExt = path.extname(bookPath).slice(1);
+      const imageDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "png");
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        output: `${bookFileName}.png`
+        output: `${fileNameWithoutExt}_${excelExt}/png`
       });
 
       // exec command
@@ -50,7 +52,6 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to export sheet as PNG.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 

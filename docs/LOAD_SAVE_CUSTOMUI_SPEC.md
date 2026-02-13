@@ -38,10 +38,12 @@ Excel アドイン（.xlam）に含まれる CustomUI XML をエクスポート�
 
 **出力フォルダ**
 ```
-{アドイン名}.xml/
+{アドイン名}_拡張子/xml/
   ├── customUI.xml
   └── customUI14.xml（ある場合）
 ```
+
+例: `addin.xlam` → `addin_xlam/xml/`
 
 **ファイル形式**
 - 形式: XML
@@ -137,10 +139,12 @@ VS Code で編集した CustomUI XML をアドインに保存します。
 
 **入力ファイル**
 ```
-{アドイン名}.xml/
+{アドイン名}_拡張子/xml/
   ├── customUI.xml
   └── customUI14.xml（ある場合）
 ```
+
+例: `addin.xlam` → `addin_xlam/xml/`
 
 ### 処理フロー
 

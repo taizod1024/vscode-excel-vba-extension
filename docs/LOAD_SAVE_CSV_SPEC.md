@@ -29,12 +29,14 @@ Excel ブック内で名前が「.csv」で終わるシートを CSV ファイ�
 
 **出力フォルダ**
 ```
-{ブック名}.csv/
+{ブック名}_拡張子/csv/
   ├── data.csv
   ├── output.csv
   ├── 2024.csv
   └── ...
 ```
+
+例: `book.xlsx` → `book_xlsx/csv/`
 
 **ファイル形式**
 - 形式: CSV（RFC 4180）
@@ -115,11 +117,13 @@ VS Code で編集した CSV ファイルを Excel シートに保存します。
 
 **入力ファイル**
 ```
-{ブック名}.csv/
+{ブック名}_拡張子/csv/
   ├── data.csv
   ├── output.csv
   └── ...
 ```
+
+例: `book.xlsx` → `book_xlsx/csv/`
 
 ### 処理フロー
 

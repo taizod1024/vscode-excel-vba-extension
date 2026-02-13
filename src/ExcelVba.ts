@@ -36,8 +36,8 @@ class ExcelVba {
   /** constructor */
   constructor() {}
 
-  /** resolve VBA path from selected file */
-  public resolveVbaPath(selectedPath: string): string {
+  /** resolve book (Excel file) path from selected file (handles .xlsx, .xlsm, .xlam, .bas, .csv, .xml files) */
+  public resolveBookPath(selectedPath: string): string {
     let resolvedPath = selectedPath;
 
     // Handle temporary Excel files (~$filename.xlsx)
@@ -82,46 +82,49 @@ class ExcelVba {
       return resolvedPath;
     }
 
-    // If .csv is selected, find the parent .CSV folder and the corresponding Excel file
+    // If .csv is selected, find the parent folder and the corresponding Excel file
     if (ext === ".csv") {
       const parentDir = path.dirname(resolvedPath);
-      let parentName = path.basename(parentDir);
+      const parentName = path.basename(parentDir);
 
-      // Check if parent folder is .csv (format: aaa.xlsx.csv)
-      const match = parentName.match(/^(.+\.(xlsm|xlsx|xlam))\.csv$/i);
-      if (match) {
-        const excelFileName = match[1];
-        const parentParentDir = path.dirname(parentDir);
+      // Check if parent folder is csv (format: aaa_xlsm/csv)
+      if (parentName === "csv") {
+        const prevParentName = path.basename(path.dirname(parentDir));
+        const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
+        if (match) {
+          const baseName = match[1];
+          const excelExt = match[2];
+          const excelFileName = `${baseName}.${excelExt}`;
+          const parentParentDir = path.dirname(path.dirname(parentDir));
 
-        // Try to find the exact file first
-        const filePath = path.join(parentParentDir, excelFileName);
-        if (fs.existsSync(filePath)) {
-          return filePath;
-        }
+          // Try to find the exact file first
+          const filePath = path.join(parentParentDir, excelFileName);
+          if (fs.existsSync(filePath)) {
+            return filePath;
+          }
 
-        // Also check for .url with the full filename
-        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
-        if (fs.existsSync(urlPath)) {
-          return urlPath;
+          // Also check for .url with the full filename
+          const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+          if (fs.existsSync(urlPath)) {
+            return urlPath;
+          }
         }
       }
     }
 
-    // If .bas, .cls, .frm is selected, find the parent .bas folder
+    // If .bas, .cls, .frm is selected, find the parent folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
       const parentDir = path.dirname(resolvedPath);
-      let parentName = path.basename(parentDir);
+      const parentName = path.basename(parentDir);
 
-      // Remove trailing ~ from parent folder name
-      if (parentName.endsWith("~")) {
-        parentName = parentName.slice(0, -1);
-      }
-
-      // Check if parent folder is .bas (format: aaa.xlsx.bas)
-      const match = parentName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
+      // Check if parent folder is bas (format: aaa_xlsx/bas)
+      const prevParentName = path.basename(path.dirname(parentDir));
+      const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
       if (match) {
-        const excelFileName = match[1];
-        const parentParentDir = path.dirname(parentDir);
+        const baseName = match[1];
+        const excelExt = match[2];
+        const excelFileName = `${baseName}.${excelExt}`;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
 
         // Try to find the exact file first
         const filePath = path.join(parentParentDir, excelFileName);
@@ -137,21 +140,47 @@ class ExcelVba {
       }
     }
 
-    // If .xml is selected in a _xml folder, find the parent .xlam or .xlsm file
+    // If .xml is selected in a xml folder, find the parent Excel file
     if (ext === ".xml") {
       const parentDir = path.dirname(resolvedPath);
-      let parentName = path.basename(parentDir);
+      const parentName = path.basename(parentDir);
 
-      // Remove trailing ~ from parent folder name
-      if (parentName.endsWith("~")) {
-        parentName = parentName.slice(0, -1);
-      }
-
-      // Check if parent folder is .xml (format: aaa.xlam.xml or aaa.xlsm.xml)
-      const match = parentName.match(/^(.+\.(xlam|xlsm))\.xml$/i);
+      // Check if parent folder is xml (format: aaa_xlam/xml or aaa_xlsm/xml)
+      const prevParentName = path.basename(path.dirname(parentDir));
+      const match = prevParentName.match(/^(.+?)_(xlam|xlsm)$/i);
       if (match) {
-        const excelFileName = match[1];
-        const parentParentDir = path.dirname(parentDir);
+        const baseName = match[1];
+        const excelExt = match[2];
+        const excelFileName = `${baseName}.${excelExt}`;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+      }
+    }
+
+    // If .png is selected, find the parent folder and the corresponding Excel file
+    if (ext === ".png") {
+      const parentDir = path.dirname(resolvedPath);
+      const parentName = path.basename(parentDir);
+
+      // Check if parent folder is png (format: aaa_xlsx/png)
+      const prevParentName = path.basename(path.dirname(parentDir));
+      const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
+      if (match) {
+        const baseName = match[1];
+        const excelExt = match[2];
+        const excelFileName = `${baseName}.${excelExt}`;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
 
         // Try to find the exact file first
         const filePath = path.join(parentParentDir, excelFileName);
@@ -199,7 +228,7 @@ class ExcelVba {
         try {
           const selectedPath = uri.fsPath;
           this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
-          const bookPath = this.resolveVbaPath(selectedPath);
+          const bookPath = this.resolveBookPath(selectedPath);
           this.channel.appendLine(`[DEBUG] Resolved path: ${bookPath}`);
           await openBookAsync(bookPath, commandContext);
         } catch (reason) {
@@ -214,7 +243,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await loadVbaAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -228,7 +257,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await saveVbaAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -242,7 +271,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.compareVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await compareVbaAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -256,7 +285,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await loadCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -270,7 +299,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -284,7 +313,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.runSub`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await saveVbaAsync(bookPath, commandContext);
           await runSubAsync(bookPath, commandContext);
         } catch (reason) {
@@ -299,7 +328,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await loadCsvAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -313,7 +342,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCsvAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);
@@ -363,7 +392,7 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.exportSheetAsPng`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const bookPath = this.resolveVbaPath(uri.fsPath);
+          const bookPath = this.resolveBookPath(uri.fsPath);
           await exportSheetAsPngAsync(bookPath, commandContext);
         } catch (reason) {
           const bookName = require("path").basename(uri.fsPath);

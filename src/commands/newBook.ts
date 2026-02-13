@@ -61,7 +61,6 @@ export async function newBookAsync(context: CommandContext) {
       // output result
       if (result.stdout) logger.logRaw(result.stdout);
       if (result.exitCode !== 0) {
-        logger.logError(result.stderr);
         throw "Failed to create new workbook.";
       }
 

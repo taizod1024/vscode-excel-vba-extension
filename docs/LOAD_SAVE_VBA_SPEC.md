@@ -27,7 +27,7 @@ Excel ブックに含まれる VBA コード全体を VS Code で編集可能な
 
 **出力フォルダ**
 ```
-{ブック名}.bas/
+{ブック名}_拡張子/bas/
   ├── StandardModule1.bas
   ├── StandardModule2.bas
   ├── ClassModule1.cls
@@ -35,6 +35,8 @@ Excel ブックに含まれる VBA コード全体を VS Code で編集可能な
   ├── Sheet1.cls               # Sheet モジュール
   └── ThisWorkbook.cls
 ```
+
+例: `book.xlsx` → `book_xlsx/bas/`
 
 **ファイル形式**
 - 拡張子: .bas（標準モジュール）、.cls（クラス）、.frm（ユーザーフォーム）
@@ -94,12 +96,14 @@ VS Code で編集した VBA ファイルを Excel ブックに保存します。
 
 **入力ファイル**
 ```
-{ブック名}.bas/
+{ブック名}_拡張子/bas/
   ├── Module1.bas
   ├── Class1.cls
   ├── Form1.frm
   └── ...
 ```
+
+例: `book.xlsx` → `book_xlsx/bas/`
 
 ### 処理フロー
 

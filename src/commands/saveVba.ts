@@ -36,19 +36,19 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
-      const saveSourcePath = path.join(bookDir, `${bookFileName}.bas`);
+      const fileNameWithoutExt = path.parse(bookPath).name;
+      const excelExt = path.extname(bookPath).slice(1);
+      const saveSourcePath = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "bas");
       const scriptPath = `${context.extensionPath}\\bin\\Save-VBA.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        source: `${bookFileName}.bas`
+        source: `${fileNameWithoutExt}_${excelExt}/bas`
       });
 
       // Check if save source folder exists
       if (!fs.existsSync(saveSourcePath)) {
-        const errorMsg = `VBA folder not found: ${bookFileName}.bas`;
-        logger.logError(errorMsg);
-        throw errorMsg;
+        throw `VBA folder not found: ${fileNameWithoutExt}_${excelExt}/bas`;
       }
 
       // Validate VB_Name attribute matches file names
@@ -62,7 +62,6 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save VBA.";
-        logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 
