@@ -51,7 +51,7 @@ class ExcelVba {
     const ext = path.extname(resolvedPath).toLowerCase();
 
     // If .url file is selected, treat it as a marker for cloud-based files
-    // Use the corresponding local Excel file if it exists
+    // Use the corresponding local Excel file if it exists, otherwise return the .url path itself
     if (ext === ".url") {
       const dir = path.dirname(resolvedPath);
       const fileNameWithoutExt = path.parse(resolvedPath).name;
@@ -73,7 +73,7 @@ class ExcelVba {
       }
 
       // If local file doesn't exist, return the .url path itself
-      // This will allow CSV/BAS/XML operations to use the corresponding folders
+      // PowerShell will handle it as a cloud-based file
       return resolvedPath;
     }
 
@@ -87,9 +87,15 @@ class ExcelVba {
       const parentDir = path.dirname(resolvedPath);
       const parentName = path.basename(parentDir);
 
-      // Check if parent folder is csv (format: aaa_xlsm/csv)
+      // Check if parent folder is csv (format: aaa_xlsm/csv or aaa.xlsm.url/csv or aaa_xlsx/csv)
       if (parentName === "csv") {
-        const prevParentName = path.basename(path.dirname(parentDir));
+        let prevParentName = path.basename(path.dirname(parentDir));
+        
+        // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+        if (prevParentName.endsWith(".url")) {
+          prevParentName = prevParentName.slice(0, -4); // Remove .url
+        }
+        
         const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
         if (match) {
           const baseName = match[1];
@@ -108,6 +114,31 @@ class ExcelVba {
           if (fs.existsSync(urlPath)) {
             return urlPath;
           }
+
+          // For cloud-based files, return the Excel file name without .url
+          return filePath;
+        }
+
+        // Also check for direct Excel file name pattern: aaa.xlsx
+        const match2 = prevParentName.match(/^(.+?)\.(xlsm|xlsx|xlam)$/i);
+        if (match2) {
+          const excelFileName = prevParentName;
+          const parentParentDir = path.dirname(path.dirname(parentDir));
+
+          // Try to find the exact file first
+          const filePath = path.join(parentParentDir, excelFileName);
+          if (fs.existsSync(filePath)) {
+            return filePath;
+          }
+
+          // Also check for .url with the full filename
+          const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+          if (fs.existsSync(urlPath)) {
+            return urlPath;
+          }
+
+          // For cloud-based files, return the file name as is
+          return filePath;
         }
       }
     }
@@ -117,8 +148,14 @@ class ExcelVba {
       const parentDir = path.dirname(resolvedPath);
       const parentName = path.basename(parentDir);
 
-      // Check if parent folder is bas (format: aaa_xlsx/bas)
-      const prevParentName = path.basename(path.dirname(parentDir));
+      // Check if parent folder is bas/csv/png (format: aaa_xlsm/bas or aaa.xlsm.url/bas or aaa_xlsx/bas)
+      let prevParentName = path.basename(path.dirname(parentDir));
+      
+      // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+      if (prevParentName.endsWith(".url")) {
+        prevParentName = prevParentName.slice(0, -4); // Remove .url
+      }
+
       const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
       if (match) {
         const baseName = match[1];
@@ -137,6 +174,32 @@ class ExcelVba {
         if (fs.existsSync(urlPath)) {
           return urlPath;
         }
+
+        // For cloud-based files, return the Excel file name without .url
+        // PowerShell will search for it by name in Excel
+        return filePath;
+      }
+
+      // Also check for direct Excel file name pattern: aaa.xlsx
+      const match2 = prevParentName.match(/^(.+?)\.(xlsm|xlsx|xlam)$/i);
+      if (match2) {
+        const excelFileName = prevParentName;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the file name as is
+        return filePath;
       }
     }
 
@@ -145,8 +208,14 @@ class ExcelVba {
       const parentDir = path.dirname(resolvedPath);
       const parentName = path.basename(parentDir);
 
-      // Check if parent folder is xml (format: aaa_xlam/xml or aaa_xlsm/xml)
-      const prevParentName = path.basename(path.dirname(parentDir));
+      // Check if parent folder is xml (format: aaa_xlam/xml or aaa_xlsm/xml or aaa.xlam.url/xml)
+      let prevParentName = path.basename(path.dirname(parentDir));
+      
+      // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+      if (prevParentName.endsWith(".url")) {
+        prevParentName = prevParentName.slice(0, -4); // Remove .url
+      }
+      
       const match = prevParentName.match(/^(.+?)_(xlam|xlsm)$/i);
       if (match) {
         const baseName = match[1];
@@ -165,6 +234,31 @@ class ExcelVba {
         if (fs.existsSync(urlPath)) {
           return urlPath;
         }
+
+        // For cloud-based files, return the Excel file name without .url
+        return filePath;
+      }
+
+      // Also check for direct Excel file name pattern: aaa.xlam or aaa.xlsm
+      const match2 = prevParentName.match(/^(.+?)\.(xlam|xlsm)$/i);
+      if (match2) {
+        const excelFileName = prevParentName;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the file name as is
+        return filePath;
       }
     }
 
@@ -173,8 +267,14 @@ class ExcelVba {
       const parentDir = path.dirname(resolvedPath);
       const parentName = path.basename(parentDir);
 
-      // Check if parent folder is png (format: aaa_xlsx/png)
-      const prevParentName = path.basename(path.dirname(parentDir));
+      // Check if parent folder is png (format: aaa_xlsx/png or aaa.xlsx.url/png)
+      let prevParentName = path.basename(path.dirname(parentDir));
+      
+      // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+      if (prevParentName.endsWith(".url")) {
+        prevParentName = prevParentName.slice(0, -4); // Remove .url
+      }
+      
       const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
       if (match) {
         const baseName = match[1];
@@ -193,6 +293,31 @@ class ExcelVba {
         if (fs.existsSync(urlPath)) {
           return urlPath;
         }
+
+        // For cloud-based files, return the Excel file name without .url
+        return filePath;
+      }
+
+      // Also check for direct Excel file name pattern: aaa.xlsx
+      const match2 = prevParentName.match(/^(.+?)\.(xlsm|xlsx|xlam)$/i);
+      if (match2) {
+        const excelFileName = prevParentName;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the file name as is
+        return filePath;
       }
     }
 

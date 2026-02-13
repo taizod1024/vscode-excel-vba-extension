@@ -6,21 +6,21 @@ Excel VBA Extension は VS Code から Excel VBA、CSV、CustomUI を開発・�
 
 ## 機能一覧
 
-| # | 機能 | 説明 |
-|----|------|------|
-| 1 | New Excel Book | 新しい Excel ファイル（.xlsx）を作成 |
-| 2 | New Excel Book with CustomUI | CustomUI テンプレート付きの Excel ファイル（.xlsm）を作成 |
-| 3 | Open Excel Book | Excel ファイルを Excel で開く |
-| 4 | Load VBA from Excel Book | Excel ブックから VBA ファイルを抽出 |
-| 5 | Save VBA to Excel Book | VS Code の VBA ファイルを Excel ブックに保存 |
-| 6 | Compare VBA with Excel Book | VS Code と Excel ブックのコード差分を表示 |
-| 7 | Run VBA Sub at Cursor | カーソル位置の Sub プロシージャを Excel で実行 |
-| 8 | Load CSV from Excel Book | Excel シートを CSV ファイルとしてエクスポート |
-| 9 | Save CSV to Excel Book | CSV ファイルを Excel シートに保存 |
-| 10 | Create URL Shortcut | クラウドホストの Excel ファイル用 URL ショートカットを作成 |
-| 11 | Load CustomUI from Excel Book | Excel ブックから CustomUI XML をエクスポート |
-| 12 | Save CustomUI to Excel Book | VS Code の CustomUI XML を Excel ブックに保存 |
-| 13 | Export Sheet as PNG | シートを PNG 画像としてエクスポート |
+| #   | 機能                          | 説明                                                       |
+| --- | ----------------------------- | ---------------------------------------------------------- |
+| 1   | New Excel Book                | 新しい Excel ファイル（.xlsx）を作成                       |
+| 2   | New Excel Book with CustomUI  | CustomUI テンプレート付きの Excel ファイル（.xlsm）を作成  |
+| 3   | Open Excel Book               | Excel ファイルを Excel で開く                              |
+| 4   | Load VBA from Excel Book      | Excel ブックから VBA ファイルを抽出                        |
+| 5   | Save VBA to Excel Book        | VS Code の VBA ファイルを Excel ブックに保存               |
+| 6   | Compare VBA with Excel Book   | VS Code と Excel ブックのコード差分を表示                  |
+| 7   | Run VBA Sub at Cursor         | カーソル位置の Sub プロシージャを Excel で実行             |
+| 8   | Load CSV from Excel Book      | Excel シートを CSV ファイルとしてエクスポート              |
+| 9   | Save CSV to Excel Book        | CSV ファイルを Excel シートに保存                          |
+| 10  | Create URL Shortcut           | クラウドホストの Excel ファイル用 URL ショートカットを作成 |
+| 11  | Load CustomUI from Excel Book | Excel ブックから CustomUI XML をエクスポート               |
+| 12  | Save CustomUI to Excel Book   | VS Code の CustomUI XML を Excel ブックに保存              |
+| 13  | Export Sheet as PNG           | シートを PNG 画像としてエクスポート                        |
 
 ## アーキテクチャ
 
@@ -117,14 +117,15 @@ bin/
 {ブック名の拡張子前}_{拡張子}/{サブフォルダ}
 ```
 
-| 種類 | フォルダ名パターン | 内容 |
-|------|----------|------|
-| VBA | `{name}_{ext}/bas` | .bas, .cls, .frm ファイル |
-| CSV | `{name}_{ext}/csv` | .csv ファイル |
+| 種類     | フォルダ名パターン | 内容                         |
+| -------- | ------------------ | ---------------------------- |
+| VBA      | `{name}_{ext}/bas` | .bas, .cls, .frm ファイル    |
+| CSV      | `{name}_{ext}/csv` | .csv ファイル                |
 | CustomUI | `{name}_{ext}/xml` | customUI.xml, customUI14.xml |
-| PNG | `{name}_{ext}/png` | .png 画像ファイル |
+| PNG      | `{name}_{ext}/png` | .png 画像ファイル            |
 
 **例:**
+
 ```
 book.xlsx → book_xlsx/bas, book_xlsx/csv, book_xlsx/png
 book.xlsm → book_xlsm/bas, book_xlsm/csv, book_xlsm/png

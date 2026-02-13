@@ -11,13 +11,20 @@ const commandName = "Compare VBA with Excel Book";
 
 export async function compareVbaAsync(bookPath: string, context: CommandContext) {
   // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
-  const fileExtension = path.parse(bookPath).ext.replace(".", "");
+  // Also handle .url files (OneDrive/cloud files)
+  let actualPathForExtension = bookPath;
+  const urlExt = path.extname(bookPath).toLowerCase();
+  if (urlExt === ".url") {
+    actualPathForExtension = bookPath.slice(0, -4); // Remove .url
+  }
+  
+  const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
   const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-  let excelFileName = path.basename(bookPath);
+  let excelFileName = path.basename(actualPathForExtension);
 
   if (vbaComponentExtensions.includes(fileExtension)) {
     // VBA component file selected - extract Excel name from parent folder
-    const parentFolderName = path.basename(path.dirname(bookPath));
+    const parentFolderName = path.basename(path.dirname(actualPathForExtension));
     const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
     if (match) {
       excelFileName = match[1];
@@ -32,10 +39,16 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      const bookExtension = path.parse(bookPath).ext.replace(".", "");
+      // Remove .url extension if present
+      let actualBookPath = bookPath;
+      const ext = path.extname(bookPath).toLowerCase();
+      if (ext === ".url") {
+        actualBookPath = bookPath.slice(0, -4); // Remove .url
+      }
+      const bookExtension = path.parse(actualBookPath).ext.replace(".", "");
       const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-      let bookDir = path.dirname(bookPath);
-      let referenceFileName = path.basename(bookPath);
+      let bookDir = path.dirname(actualBookPath);
+      let referenceFileName = path.basename(actualBookPath);
 
       // If VBA component file, find the parent Excel workbook to get the correct folder name
       if (vbaComponentExtensions.includes(bookExtension)) {

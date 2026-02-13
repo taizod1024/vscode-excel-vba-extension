@@ -9,13 +9,20 @@ const commandName = "Export Sheet as PNG";
 
 export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
   // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
-  const fileExtension = path.parse(bookPath).ext.replace(".", "");
+  // Also handle .url files (OneDrive/cloud files)
+  let actualPathForExtension = bookPath;
+  const urlExt = path.extname(bookPath).toLowerCase();
+  if (urlExt === ".url") {
+    actualPathForExtension = bookPath.slice(0, -4); // Remove .url
+  }
+  
+  const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
   const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-  let excelFileName = path.basename(bookPath);
+  let excelFileName = path.basename(actualPathForExtension);
 
   if (vbaComponentExtensions.includes(fileExtension)) {
     // VBA component file selected - extract Excel name from parent folder
-    const parentFolderName = path.basename(path.dirname(bookPath));
+    const parentFolderName = path.basename(path.dirname(actualPathForExtension));
     const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
     if (match) {
       excelFileName = match[1];
@@ -32,16 +39,21 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       const logger = new Logger(context.channel);
 
       // setup command
+      let actualBookPath = bookPath;
+      const ext = path.extname(bookPath).toLowerCase();
+      if (ext === ".url") {
+        actualBookPath = bookPath.slice(0, -4); // Remove .url
+      }
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
-      const fileNameWithoutExt = path.parse(bookPath).name;
-      const excelExt = path.extname(bookPath).slice(1);
+      const fileNameWithoutExt = path.parse(actualBookPath).name;
+      const excelExt = path.extname(actualBookPath).slice(1);
       const imageDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "png");
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        output: `${fileNameWithoutExt}_${excelExt}/png`
+        output: `${fileNameWithoutExt}_${excelExt}/png`,
       });
 
       // exec command
@@ -57,6 +69,6 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
 
       logger.logSuccess("Sheets exported as images");
       vscode.window.showInformationMessage(`[${bookFileName}] Sheets exported as PNG.`);
-    }
+    },
   );
 }

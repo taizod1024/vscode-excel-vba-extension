@@ -143,32 +143,27 @@ try {
     $isUrlFile = [System.IO.Path]::GetExtension($bookPath).ToLower() -eq ".url"
     
     if ($isUrlFile) {
-        # For .url files, try to find the corresponding Excel file in the same directory
-        $csvDir = Split-Path $csvInputPath -Parent
-        $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvInputPath)
+        # For .url files, extract the filename and use Find-VBProject to locate the workbook
+        # bookPath format: /path/to/file.xlsx.url
+        $fileNameWithUrl = [System.IO.Path]::GetFileName($bookPath)
+        $fileName = [System.IO.Path]::GetFileNameWithoutExtension($fileNameWithUrl)  # removes .url
         
-        # Look for Excel files matching the CSV folder name (without _csv suffix)
-        $possibleFiles = @()
-        foreach ($ext in @(".xlsm", ".xlsx", ".xlam")) {
-            $possiblePath = Join-Path $csvDir ($baseFileName + $ext)
-            if (Test-Path $possiblePath) {
-                $possibleFiles += $possiblePath
-            }
+        # Convert folder name (from csvInputPath) to Excel file name (あああ_xlsx -> あああ.xlsx)
+        $csvDir = Split-Path $csvInputPath -Parent           # /path/to/あああ_xlsx
+        $folderName = Split-Path $csvDir -Leaf                # あああ_xlsx
+        
+        # Match the folder name pattern
+        $match = $folderName -imatch '^(.+?)_(xlsm|xlsx|xlam)$'
+        if (-not $match) {
+            throw "Invalid folder name format: $folderName"
         }
         
-        if ($possibleFiles.Count -eq 0) {
-            throw "Excel file not found: $baseFileName"
-        }
-        
-        if ($possibleFiles.Count -gt 1) {
-            throw "Multiple Excel files found: $baseFileName. Please specify the exact file."
-        }
-        
-        $bookPath = $possibleFiles[0]
-        $fullPath = [System.IO.Path]::GetFullPath($bookPath)
+        $expectedFileName = "$($matches[1]).$($matches[2])"
+        $fullPath = ""
     }
     else {
         $fullPath = [System.IO.Path]::GetFullPath($bookPath)
+        $expectedFileName = [System.IO.Path]::GetFileNameWithoutExtension($bookPath)
         
         if (-not (Test-Path $fullPath)) {
             throw "Workbook file not found: $fullPath"
@@ -178,14 +173,33 @@ try {
     # Find the workbook in open workbooks
     $workbook = $null
     foreach ($openWorkbook in $excel.Workbooks) {
-        if ($openWorkbook.FullName -eq $fullPath) {
-            $workbook = $openWorkbook
-            break
+        $openBookFullName = $openWorkbook.FullName
+        $openBookName = $openWorkbook.Name
+        
+        if ($isUrlFile) {
+            # For .url files, match by filename (without extension)
+            $openBookBaseName = [System.IO.Path]::GetFileNameWithoutExtension($openBookName)
+            if ($openBookBaseName -ieq [System.IO.Path]::GetFileNameWithoutExtension($expectedFileName)) {
+                $workbook = $openWorkbook
+                break
+            }
+        }
+        else {
+            # For regular files, match by full path
+            if ($openBookFullName -eq $fullPath) {
+                $workbook = $openWorkbook
+                break
+            }
         }
     }
     
     if ($null -eq $workbook) {
-        throw "Workbook not open: $fullPath"
+        if ($isUrlFile) {
+            throw "Workbook not open: $expectedFileName"
+        }
+        else {
+            throw "Workbook not open: $fullPath"
+        }
     }
     
     # Get all CSV files from input path

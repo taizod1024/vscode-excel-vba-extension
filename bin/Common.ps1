@@ -48,12 +48,24 @@ function Get-BookInfo {
     )
     
     Write-Host "- checking if workbook file exists"
+    
+    $fileExtension = [System.IO.Path]::GetExtension($bookPath).ToLower()
+    
+    # If .url file (cloud-based), skip file existence check and use the path as is
+    if ($fileExtension -eq ".url") {
+        return @{
+            ResolvedPath  = $bookPath
+            FileExtension = $fileExtension
+            IsAddIn       = $false
+        }
+    }
+    
+    # For local files, check existence
     if (-not (Test-Path $bookPath)) {
         throw "Workbook file not found: $bookPath"
     }
     
     $resolvedPath = (Resolve-Path $bookPath).Path
-    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
     $isAddIn = ($fileExtension -eq ".xlam")
     
     return @{
@@ -75,6 +87,14 @@ function Find-VBProject {
     
     Write-Host "- checking if workbook/add-in is open in Excel"
     $searchKeyFileName = [System.IO.Path]::GetFileNameWithoutExtension($resolvedPath)
+    
+    # If the file is a .url file (cloud-based), remove the Excel extension (.xlsx/.xlsm/.xlam)
+    # Example: "あああ.xlsx.url" -> GetFileNameWithoutExtension -> "あああ.xlsx" -> further remove ".xlsx" -> "あああ"
+    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
+    if ($fileExtension -eq ".url") {
+        $searchKeyFileName = $searchKeyFileName -ireplace '\.(xlsm|xlsx|xlam)$', ''
+    }
+    
     Write-Host "  Target: $resolvedPath"
     Write-Host "  Search key (filename without ext): '$searchKeyFileName'"
     Write-Host "  File type: $(if ($isAddIn) { 'Add-in (.xlam)' } else { 'Workbook' })"

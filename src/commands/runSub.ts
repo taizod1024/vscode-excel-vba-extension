@@ -7,13 +7,20 @@ import { execPowerShell } from "../utils/execPowerShell";
 /** Run VBA Sub command */
 export async function runSubAsync(bookPath: string, context: CommandContext) {
   // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
-  const fileExtension = path.parse(bookPath).ext.replace(".", "");
+  // Also handle .url files (OneDrive/cloud files)
+  let actualPathForExtension = bookPath;
+  const urlExt = path.extname(bookPath).toLowerCase();
+  if (urlExt === ".url") {
+    actualPathForExtension = bookPath.slice(0, -4); // Remove .url
+  }
+  
+  const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
   const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-  let excelFileName = path.basename(bookPath);
+  let excelFileName = path.basename(actualPathForExtension);
 
   if (vbaComponentExtensions.includes(fileExtension)) {
     // VBA component file selected - extract Excel name from parent folder
-    const parentFolderName = path.basename(path.dirname(bookPath));
+    const parentFolderName = path.basename(path.dirname(actualPathForExtension));
     const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
     if (match) {
       excelFileName = match[1];
@@ -42,7 +49,7 @@ export async function runSubAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Run-Sub.ps1`;
       logger.logCommandStart(commandName, {
         file: path.basename(bookPath),
-        sub: subName
+        sub: subName,
       });
 
       // exec command

@@ -16,9 +16,11 @@ Excel のリボンをカスタマイズする CustomUI XML ファイルを VS Co
 Excel のリボン（メニューバー）をカスタマイズする機能。タブ、グループ、ボタンなどの部品をXML で定義します。
 
 **対応バージョン**
+
 - Excel 2007 以降
 
 **XML ファイル**
+
 - `customUI.xml` - Office 2007-2009
 - `customUI14.xml` - Office 2010 以降（推奨）
 
@@ -31,12 +33,14 @@ Excel アドイン（.xlam）に含まれる CustomUI XML をエクスポート�
 ### 入力仕様
 
 **対象ファイル**
+
 - Excel アドイン: .xlam
 - Excel マクロブック: .xlsm（CustomUI 含む場合）
 
 ### 出力仕様
 
 **出力フォルダ**
+
 ```
 {アドイン名}_拡張子/xml/
   ├── customUI.xml
@@ -46,6 +50,7 @@ Excel アドイン（.xlam）に含まれる CustomUI XML をエクスポート�
 例: `addin.xlam` → `addin_xlam/xml/`
 
 **ファイル形式**
+
 - 形式: XML
 - 文字エンコーディング: UTF-8
 - 改行コード: LF（Unix 形式）
@@ -118,12 +123,13 @@ MyAddin.xlam
 **メイン処理**: `src/commands/loadCustomUI.ts`
 
 ```typescript
-export async function loadCustomUIAsync(bookPath: string, context: CommandContext)
+export async function loadCustomUIAsync(bookPath: string, context: CommandContext);
 ```
 
 **PowerShell**: `bin/Load-CustomUI.ps1`
 
 処理内容：
+
 1. ZIP ファイルとしてアドインを開く
 2. customUI.xml を検索・抽出
 3. customUI14.xml を検索・抽出
@@ -138,6 +144,7 @@ VS Code で編集した CustomUI XML をアドインに保存します。
 ### 入力仕様
 
 **入力ファイル**
+
 ```
 {アドイン名}_拡張子/xml/
   ├── customUI.xml
@@ -179,12 +186,13 @@ VS Code で編集した CustomUI XML をアドインに保存します。
 **メイン処理**: `src/commands/saveCustomUI.ts`
 
 ```typescript
-export async function saveCustomUIAsync(bookPath: string, context: CommandContext)
+export async function saveCustomUIAsync(bookPath: string, context: CommandContext);
 ```
 
 **PowerShell**: `bin/Save-CustomUI.ps1`
 
 処理内容：
+
 1. アドインのロック確認
 2. ZIP ファイルとして開く
 3. customUI パーツを更新
@@ -197,10 +205,12 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
 VS Code で CustomUI XML を編集する際に以下をご利用ください：
 
 **推奨拡張機能**
+
 - XML Tools
 - schemastore (スキーマ自動取得)
 
 **IntelliSense**
+
 - Office Open XML スキーマに基づく補完
 
 ## コールバックハンドラ
@@ -245,12 +255,12 @@ CustomUI でボタンにイメージを設定：
 
 ## エラーハンドリング
 
-| エラー条件 | メッセージ | 対応 |
-|---------|---------|------|
-| XML 構文エラー | "XML parse error" | XML を修正 |
-| 属性不正 | "Unknown attribute" | 属性名を確認 |
-| Excel がロック | "File is locked" | Excel を閉じる |
-| ZIP エラー | "Invalid archive" | アドインを修復 |
+| エラー条件     | メッセージ          | 対応           |
+| -------------- | ------------------- | -------------- |
+| XML 構文エラー | "XML parse error"   | XML を修正     |
+| 属性不正       | "Unknown attribute" | 属性名を確認   |
+| Excel がロック | "File is locked"    | Excel を閉じる |
+| ZIP エラー     | "Invalid archive"   | アドインを修復 |
 
 ## サンプルコード
 
@@ -281,9 +291,9 @@ End Sub
 
 ## パフォーマンス
 
-| 操作 | 処理時間 |
-|------|--------|
-| Load CustomUI | < 1 秒 |
+| 操作          | 処理時間             |
+| ------------- | -------------------- |
+| Load CustomUI | < 1 秒               |
 | Save CustomUI | 1-3 秒（ZIP 再構築） |
 
 ## 制限事項

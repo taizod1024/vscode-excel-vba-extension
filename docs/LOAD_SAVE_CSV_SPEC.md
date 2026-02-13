@@ -18,16 +18,19 @@ Excel ブック内で名前が「.csv」で終わるシートを CSV ファイ�
 ### 入力仕様
 
 **対象ファイル**
+
 - Excel ブック: .xlsm, .xlam, .xlsx
 - URL ショートカット: .url（クラウドホスト）
 
 **対象シート**
+
 - シート名が「.csv」で終わるシート
 - 例: `data.csv`, `output.csv`, `2024.csv`
 
 ### 出力仕様
 
 **出力フォルダ**
+
 ```
 {ブック名}_拡張子/csv/
   ├── data.csv
@@ -39,6 +42,7 @@ Excel ブック内で名前が「.csv」で終わるシートを CSV ファイ�
 例: `book.xlsx` → `book_xlsx/csv/`
 
 **ファイル形式**
+
 - 形式: CSV（RFC 4180）
 - 文字エンコーディング: UTF-8（BOM なし）
 - 改行コード: LF（Unix 形式）
@@ -68,6 +72,7 @@ for each sheet in book.sheets:
 ### CSV 変換ロジック
 
 **セル値の処理**
+
 - テキスト値: そのまま出力
 - 数値: 文字列に変換
 - 論理値: TRUE/FALSE
@@ -75,12 +80,14 @@ for each sheet in book.sheets:
 - 空白セル: 空の値
 
 **カンマ含む値**
+
 ```
 値に「,」を含む場合:
   "value, with, comma"
 ```
 
 **ダブルクォート含む値**
+
 ```
 値に「"」を含む場合:
   "value ""with"" quote"
@@ -91,12 +98,13 @@ for each sheet in book.sheets:
 **メイン処理**: `src/commands/loadCsv.ts`
 
 ```typescript
-export async function loadCsvAsync(bookPath: string, context: CommandContext)
+export async function loadCsvAsync(bookPath: string, context: CommandContext);
 ```
 
 **PowerShell**: `bin/Load-CSV.ps1`
 
 処理内容：
+
 1. VB プロジェクト検索
 2. 全シート列挙
 3. シート名が「.csv」で終わるものを抽出
@@ -116,6 +124,7 @@ VS Code で編集した CSV ファイルを Excel シートに保存します。
 ### 入力仕様
 
 **入力ファイル**
+
 ```
 {ブック名}_拡張子/csv/
   ├── data.csv
@@ -160,10 +169,10 @@ for each csv file in {name}.csv:
 
 ### エラー時の動作
 
-| エラー条件 | 対応 |
-|---------|------|
-| CSV パースエラー | エラー通知、処理中止 |
-| シート作成失敗 | エラー通知、処理中止 |
+| エラー条件       | 対応                   |
+| ---------------- | ---------------------- |
+| CSV パースエラー | エラー通知、処理中止   |
+| シート作成失敗   | エラー通知、処理中止   |
 | セル書き込み失敗 | 部分的に処理、警告表示 |
 
 ### 実装詳細
@@ -171,12 +180,13 @@ for each csv file in {name}.csv:
 **メイン処理**: `src/commands/saveCsv.ts`
 
 ```typescript
-export async function saveCsvAsync(bookPath: string, context: CommandContext)
+export async function saveCsvAsync(bookPath: string, context: CommandContext);
 ```
 
 **PowerShell**: `bin/Save-CSV.ps1`
 
 処理内容：
+
 1. VB プロジェクト検索
 2. CSV フォルダの存在確認
 3. 既存シート削除
@@ -214,12 +224,12 @@ Excel のセル型を考慮して出力：
 
 ## パフォーマンス
 
-| 操作 | シートサイズ | 処理時間 |
-|------|----------|--------|
-| Load CSV | 10K セル | < 1 秒 |
-| Load CSV | 100K セル | 1-3 秒 |
-| Save CSV | 10K セル | < 1 秒 |
-| Save CSV | 100K セル | 1-3 秒 |
+| 操作     | シートサイズ | 処理時間 |
+| -------- | ------------ | -------- |
+| Load CSV | 10K セル     | < 1 秒   |
+| Load CSV | 100K セル    | 1-3 秒   |
+| Save CSV | 10K セル     | < 1 秒   |
+| Save CSV | 100K セル    | 1-3 秒   |
 
 ## 制限事項
 

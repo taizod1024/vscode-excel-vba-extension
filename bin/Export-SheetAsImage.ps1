@@ -75,7 +75,8 @@ try {
                     # Use print area if defined
                     $rangeToExport = $sheet.Range($printArea)
                     Write-Host "    - Using print area"
-                } else {
+                }
+                else {
                     # Use UsedRange if print area is not defined
                     $usedRange = $sheet.UsedRange
                     if ($null -ne $usedRange) {
@@ -105,7 +106,8 @@ try {
                     $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
                     $image.Dispose()
                     Write-Host "    - Saved to: $outputFile"
-                } else {
+                }
+                else {
                     throw "Failed to get image from clipboard"
                 }
             }
@@ -118,7 +120,8 @@ try {
         $excel.Interactive = $true
     }
 
-} catch {
+}
+catch {
     Write-Host "ERROR: $_"
     exit 1
 }
