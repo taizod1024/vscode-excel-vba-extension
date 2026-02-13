@@ -58,7 +58,7 @@ Excel ブック内で名前が「.csv」で終わるシートを CSV ファイ�
 ### シート検索ロジック
 
 ```
-for each sheet in workbook.sheets:
+for each sheet in book.sheets:
   if sheet.name ends with ".csv":
     export sheet
 ```
@@ -89,7 +89,7 @@ for each sheet in workbook.sheets:
 **メイン処理**: `src/commands/loadCsv.ts`
 
 ```typescript
-export async function loadCsvAsync(macroPath: string, context: CommandContext)
+export async function loadCsvAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: `bin/Load-CSV.ps1`
@@ -115,7 +115,7 @@ VS Code で編集した CSV ファイルを Excel シートに保存します。
 
 **入力ファイル**
 ```
-{ブック名}_csv/
+{ブック名}.csv/
   ├── data.csv
   ├── output.csv
   └── ...
@@ -167,7 +167,7 @@ for each csv file in {name}.csv:
 **メイン処理**: `src/commands/saveCsv.ts`
 
 ```typescript
-export async function saveCsvAsync(macroPath: string, context: CommandContext)
+export async function saveCsvAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: `bin/Save-CSV.ps1`

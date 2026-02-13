@@ -86,10 +86,10 @@ URL=https://...
 Workspace/
   ├── 設計書.url          (https://...設計書.xlsx)
   ├── 企画.url            (https://...企画.xlsm)
-  ├── 設計書_bas/         (.url から自動作成)
-  ├── 設計書_csv/
-  ├── 設計書_xml/
-  └── 企画_bas/
+  ├── 設計書.bas/         (.url から自動作成)
+  ├── 設計書.csv/
+  ├── 設計書.xml/
+  └── 企画.bas/
 ```
 
 ### .url ファイルの内容
@@ -112,7 +112,7 @@ test.xlsx を右クリック → Load VBA
   ↓
 test.xlsx を直接使用
   ↓
-test_bas フォルダ作成
+test.bas フォルダ作成
 ```
 
 **URL ショートカット選択**
@@ -124,7 +124,7 @@ test.xlsx を検索（同じフォルダ）
   ↓
 見つからない場合、test.url が示す Excel を使用
   ↓
-test_bas フォルダ作成
+test.bas フォルダ作成
 ```
 
 ### VBA/CSV/CustomUI ファイルの自動検出
@@ -197,7 +197,7 @@ test.xlsx → Excel.exe test.xlsx
 **VBA / CSV / XML ファイル**
 
 ```
-test_bas/Module1.bas を選択
+test.bas/Module1.bas を選択
   ↓
 test.xlsx を検出
   ↓
@@ -219,7 +219,7 @@ test.xlsx をローカルで検索
 **メイン処理**: `src/commands/openBook.ts`
 
 ```typescript
-export async function openBookAsync(macroPath: string, context: CommandContext)
+export async function openBookAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: bin/Open-Book.ps1 相当
@@ -237,7 +237,7 @@ export async function openBookAsync(macroPath: string, context: CommandContext)
 ```
 入力: Module1.bas
   ↓
-親フォルダ: test_bas
+親フォルダ: test.bas
   ↓
 対応ファイル: test.xlsx, test.xlsm, test.xlam
   ↓
@@ -249,9 +249,9 @@ export async function openBookAsync(macroPath: string, context: CommandContext)
 | 入力ファイル | 検出ロジック | 開くファイル |
 |---------|----------|----------|
 | test.xlsx | 直接 | test.xlsx |
-| test_bas/*.bas | 親フォルダ「_bas」→ test.xlsx | test.xlsx |
-| test_csv/*.csv | 親フォルダ「_csv」→ test.xlsx | test.xlsx |
-| test_xml/*.xml | 親フォルダ「_xml」→ test.xlam | test.xlam |
+| test.bas/*.bas | 親フォルダ「.bas」→ test.xlsx | test.xlsx |
+| test.csv/*.csv | 親フォルダ「.csv」→ test.xlsx | test.xlsx |
+| test.xml/*.xml | 親フォルダ「.xml」→ test.xlam | test.xlam |
 | test.url | ショートカット → test.xlsx |test.xlsx |
 
 ## エラーハンドリング

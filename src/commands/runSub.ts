@@ -1,18 +1,19 @@
 import * as vscode from "vscode";
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 
 /** Run VBA Sub command */
-export async function runSubAsync(macroPath: string, context: CommandContext) {
+export async function runSubAsync(bookPath: string, context: CommandContext) {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
-    throw "No editor is active. Please open a VBA file.";
+    throw "No active editor";
   }
 
   const subName = extractSubNameAtCursor(editor);
   if (!subName) {
-    throw "Could not find Sub or Function declaration at cursor position.";
+    throw "No Sub/Function at cursor";
   }
 
   const commandName = `Run VBA Sub: ${subName}`;
@@ -23,22 +24,25 @@ export async function runSubAsync(macroPath: string, context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
       const scriptPath = `${context.extensionPath}\\bin\\Run-Sub.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Sub: ${subName}`);
+      logger.logCommandStart(commandName, {
+        File: path.basename(bookPath),
+        Sub: subName
+      });
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, subName]);
+      const result = execPowerShell(scriptPath, [bookPath, subName]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
-      context.channel.appendLine(`[SUCCESS] Sub executed`);
+      logger.logSuccess("Sub executed");
     },
   );
 }

@@ -116,7 +116,7 @@ MyAddin.xlam
 **メイン処理**: `src/commands/loadCustomUI.ts`
 
 ```typescript
-export async function loadCustomUIAsync(macroPath: string, context: CommandContext)
+export async function loadCustomUIAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: `bin/Load-CustomUI.ps1`
@@ -175,7 +175,7 @@ VS Code で編集した CustomUI XML をアドインに保存します。
 **メイン処理**: `src/commands/saveCustomUI.ts`
 
 ```typescript
-export async function saveCustomUIAsync(macroPath: string, context: CommandContext)
+export async function saveCustomUIAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: `bin/Save-CustomUI.ps1`

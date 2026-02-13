@@ -80,7 +80,7 @@ Excel ブックの指定シートの印刷範囲を PNG 画像にエクスポー
 | エラー条件 | メッセージ | 対応 |
 |---------|---------|------|
 | Excel が起動していない | "Excel not running." | Excel を起動して、処理対象のファイルを開きます |
-| ブックが開かれていない | "No workbook open." | Excel でブックを開きます |
+| ブックが開かれていない | "No book open." | Excel でブックを開きます |
 | 印刷範囲が未設定 | "Sheet '{name}' has no print area defined." | Excel で印刷範囲を設定します |
 | クリップボード取得失敗 | "Failed to get image from clipboard" | 処理をやり直します |
 
@@ -113,8 +113,8 @@ Export Sheet as PNG
 - Output: Export-SheetAsPng.ps1:
   - bookPath: C:\path\to\test.xlsx
   - imageOutputPath: C:\path\to\test.xlsx.png
-  - checking if workbook file exists
-  - checking if workbook/add-in is open in Excel
+  - checking if book file exists
+  - checking if book/add-in is open in Excel
   - Total sheets: 2
   - Sheets ending with .png: 1
   - Exporting: aaa.png

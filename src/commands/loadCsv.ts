@@ -2,12 +2,13 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { closeAllDiffEditors } from "../utils/editorOperations";
 
 const commandName = "Load CSV from Sheets";
 
-export async function loadCsvAsync(macroPath: string, context: CommandContext) {
+export async function loadCsvAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -15,26 +16,31 @@ export async function loadCsvAsync(macroPath: string, context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+      
       // setup command
-      const macroFileName = path.basename(macroPath);
-      const macroDir = path.dirname(macroPath);
-      const csvDir = path.join(macroDir, `${macroFileName}.csv`);
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const csvDir = path.join(bookDir, `${bookFileName}.csv`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Output: ${path.basename(csvDir)}`);
+      
+      logger.logCommandStart(commandName, {
+        File: bookFileName,
+        Output: `${bookFileName}.csv`
+      });
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, csvDir]);
+      const result = execPowerShell(scriptPath, [bookPath, csvDir]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
-      context.channel.appendLine(`[SUCCESS] CSV loaded from sheets`);
+      logger.logSuccess(`CSV extracted (${path.basename(csvDir)} folder)`);
 
       // Close all diff editors
       await closeAllDiffEditors(context.channel);

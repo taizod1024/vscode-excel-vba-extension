@@ -32,14 +32,14 @@ PowerShell スクリプト実行
 #### コード例
 
 ```typescript
-export async function exportSheetAsPngAsync(macroPath: string, context: CommandContext) {
+export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
   // ファイルパス抽出
-  const macroFileName = path.parse(macroPath).name;
-  const macroDir = path.dirname(macroPath);
-  const pngDir = path.join(macroDir, `${macroFileName}_png`);
+  const bookFileName = path.parse(bookPath).name;
+  const bookDir = path.dirname(bookPath);
+  const pngDir = path.join(bookDir, `${bookFileName}.png`);
 
   // PowerShell スクリプト実行
-  const result = execPowerShell(scriptPath, [macroPath, pngDir]);
+  const result = execPowerShell(scriptPath, [bookPath, pngDir]);
 }
 ```
 
@@ -129,7 +129,7 @@ $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
 - 処理対象のファイルを開く
 - コマンドを再実行
 
-### 症状 2: "No workbook open"
+### 症状 2: "No book open."
 
 **原因**: ブックが Excel で開かれていない
 

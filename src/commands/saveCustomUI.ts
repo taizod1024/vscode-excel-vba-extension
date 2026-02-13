@@ -2,17 +2,18 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { closeAllDiffEditors } from "../utils/editorOperations";
 
 const commandName = "Save CustomUI to Excel Book";
 
-export async function saveCustomUIAsync(macroPath: string, context: CommandContext) {
-  const ext = path.extname(macroPath).toLowerCase();
+export async function saveCustomUIAsync(bookPath: string, context: CommandContext) {
+  const ext = path.extname(bookPath).toLowerCase();
 
   // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
   if (ext !== ".xlam" && ext !== ".xlsm") {
-    throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
+    throw "CustomUI not supported";
   }
 
   return vscode.window.withProgress(
@@ -22,40 +23,49 @@ export async function saveCustomUIAsync(macroPath: string, context: CommandConte
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+      
       // setup command
-      const macroFileName = path.basename(macroPath);
-      const macroDir = path.dirname(macroPath);
-      const saveSourcePath = path.join(macroDir, `${macroFileName}.xml`);
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const saveSourcePath = path.join(bookDir, `${bookFileName}.xml`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-CustomUI.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Source: ${path.basename(saveSourcePath)}`);
+      
+      logger.logCommandStart(commandName, {
+        File: bookFileName,
+        Source: `${bookFileName}.xml`
+      });
 
       // Check if save source folder exists
       if (!fs.existsSync(saveSourcePath)) {
-        throw `Folder not found: ${path.basename(saveSourcePath)}. Please load CustomUI first.`;
+        const errorMsg = `CustomUI folder not found`;
+        logger.logError(errorMsg + ` (expected: ${bookFileName}.xml)`);
+        throw errorMsg;
       }
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, saveSourcePath]);
+      const result = execPowerShell(scriptPath, [bookPath, saveSourcePath]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
       // Remove temporary folder if it exists
-      const tmpPath = path.join(macroDir, `${macroFileName}_xml~`);
+      const tmpPath = path.join(bookDir, `${bookFileName}.xml~`);
       if (fs.existsSync(tmpPath)) {
         fs.rmSync(tmpPath, { recursive: true, force: true });
-        context.channel.appendLine(`- Cleaned: Temporary folder removed`);
+        logger.logInfo("Temporary folder removed");
       }
-      context.channel.appendLine(`[SUCCESS] CustomUI saved`);
+      
+      logger.logSuccess("CustomUI saved");
 
       // Close all diff editors
       await closeAllDiffEditors(context.channel);
     },
   );
+}
 }

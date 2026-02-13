@@ -3,11 +3,12 @@ import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
+import { Logger } from "../utils/logger";
 import { closeAllDiffEditors } from "../utils/editorOperations";
 
 const commandName = "Load VBA from Excel Book";
 
-export async function loadVbaAsync(macroPath: string, context: CommandContext) {
+export async function loadVbaAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -15,27 +16,32 @@ export async function loadVbaAsync(macroPath: string, context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+      
       // setup command
-      const macroFileName = path.basename(macroPath);
-      const macroDir = path.dirname(macroPath);
-      const tmpPath = path.join(macroDir, `${macroFileName}.bas~`);
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const tmpPath = path.join(bookDir, `${bookFileName}.bas~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-VBA.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+      
+      logger.logCommandStart(commandName, {
+        File: bookFileName
+      });
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, tmpPath]);
+      const result = execPowerShell(scriptPath, [bookPath, tmpPath]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
       // Organize loaded files
-      const newFolderName = `${macroFileName}.bas`;
-      const newPath = path.join(macroDir, newFolderName);
+      const newFolderName = `${bookFileName}.bas`;
+      const newPath = path.join(bookDir, newFolderName);
 
       // Remove existing folder if it exists
       if (fs.existsSync(newPath)) {
@@ -72,7 +78,7 @@ export async function loadVbaAsync(macroPath: string, context: CommandContext) {
         }
       }
 
-      context.channel.appendLine(`[SUCCESS] Loaded files organized`);
+      logger.logSuccess(`VBA extracted (${files.length} file(s))`);
     },
   );
 }

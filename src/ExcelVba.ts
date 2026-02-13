@@ -199,9 +199,9 @@ class ExcelVba {
         try {
           const selectedPath = uri.fsPath;
           this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
-          const macroPath = this.resolveVbaPath(selectedPath);
-          this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
-          await openBookAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(selectedPath);
+          this.channel.appendLine(`[DEBUG] Resolved path: ${bookPath}`);
+          await openBookAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -213,8 +213,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await loadVbaAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await loadVbaAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -226,8 +226,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveVbaAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await saveVbaAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -239,8 +239,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.compareVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await compareVbaAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await compareVbaAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -252,8 +252,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await loadCustomUIAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await loadCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -265,8 +265,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveCustomUIAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await saveCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -278,9 +278,9 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.runSub`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveVbaAsync(macroPath, commandContext);
-          await runSubAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await saveVbaAsync(bookPath, commandContext);
+          await runSubAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -292,8 +292,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await loadCsvAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await loadCsvAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -305,8 +305,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveCsvAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await saveCsvAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -354,8 +354,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.exportSheetAsPng`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await exportSheetAsPngAsync(macroPath, commandContext);
+          const bookPath = this.resolveVbaPath(uri.fsPath);
+          await exportSheetAsPngAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);

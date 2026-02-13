@@ -119,9 +119,9 @@ bin/
 
 | 種類 | フォルダ名 | 内容 |
 |------|----------|------|
-| VBA | `{name}_bas` | .bas, .cls, .frm ファイル |
-| CSV | `{name}_csv` | .csv ファイル |
-| CustomUI | `{name}_xml` | customUI.xml, customUI14.xml |
+| VBA | `{name}.bas` | .bas, .cls, .frm ファイル |
+| CSV | `{name}.csv` | .csv ファイル |
+| CustomUI | `{name}.xml` | customUI.xml, customUI14.xml |
 | PNG | `{name}_png` | .png 画像ファイル |
 
 ## ドキュメント構成

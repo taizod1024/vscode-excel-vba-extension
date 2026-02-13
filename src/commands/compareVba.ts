@@ -3,12 +3,13 @@ import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
+import { Logger } from "../utils/logger";
 import { getVbaFiles } from "../utils/fileOperations";
 import { showDiffAsync } from "../utils/editorOperations";
 
 const commandName = "Compare VBA with Excel Book";
 
-export async function compareVbaAsync(macroPath: string, context: CommandContext) {
+export async function compareVbaAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -16,55 +17,56 @@ export async function compareVbaAsync(macroPath: string, context: CommandContext
       cancellable: false,
     },
     async _progress => {
-      const macroExtension = path.parse(macroPath).ext.replace(".", "");
+      const logger = new Logger(context.channel);
+      const bookExtension = path.parse(bookPath).ext.replace(".", "");
       const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-      let macroDir = path.dirname(macroPath);
-      let referenceFileName = path.parse(macroPath).name;
+      let bookDir = path.dirname(bookPath);
+      let referenceFileName = path.parse(bookPath).name;
 
       // If VBA component file, find the parent Excel workbook to get the correct folder name
-      if (vbaComponentExtensions.includes(macroExtension)) {
-        const folderName = path.basename(macroDir);
-        const match = folderName.match(/^(.+)_bas$/i);
+      if (vbaComponentExtensions.includes(bookExtension)) {
+        const folderName = path.basename(bookDir);
+        const match = folderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
         if (match) {
-          const parentDir = path.dirname(macroDir);
+          const parentDir = path.dirname(bookDir);
           const baseFileName = match[1];
-          const extensions = [".xlsm", ".xlsx", ".xlam"];
 
-          for (const ext of extensions) {
-            const excelPath = path.join(parentDir, baseFileName + ext);
-            if (fs.existsSync(excelPath)) {
-              referenceFileName = path.parse(excelPath).name;
-              macroDir = parentDir;
-              break;
-            }
+          const excelPath = path.join(parentDir, baseFileName);
+          if (fs.existsSync(excelPath)) {
+            referenceFileName = path.parse(excelPath).name;
+            bookDir = parentDir;
           }
         }
       }
 
-      const currentFolderName = `${referenceFileName}_bas`;
-      const currentPath = path.join(macroDir, currentFolderName);
-      const tmpPath = path.join(macroDir, `${referenceFileName}_bas~`);
+      const currentFolderName = `${referenceFileName}.bas`;
+      const currentPath = path.join(bookDir, currentFolderName);
+      const tmpPath = path.join(bookDir, `${referenceFileName}.bas~`);
 
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Current: ${path.basename(currentPath)}`);
-      context.channel.appendLine(`- Loading from Excel...`);
+      logger.logCommandStart(commandName, {
+        File: path.basename(bookPath),
+        Current: currentFolderName
+      });
+      logger.logInfo("Loading from Excel...");
 
       if (!fs.existsSync(currentPath)) {
-        throw `Folder not found: ${path.basename(currentPath)}. Please load VBA first.`;
+        const errorMsg = `VBA folder not found`;
+        logger.logError(errorMsg + ` (expected: ${currentFolderName})`);
+        throw errorMsg;
       }
 
       // Load to temporary folder
       const scriptPath = `${context.extensionPath}\\bin\\Load-VBA.ps1`;
-      const result = execPowerShell(scriptPath, [macroPath, tmpPath]);
+      const result = execPowerShell(scriptPath, [bookPath, tmpPath]);
 
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
       // Compare files
-      const hasDifferences = compareDirectories(tmpPath, currentPath, context);
+      const hasDifferences = compareDirectories(tmpPath, currentPath, logger);
 
       // Remove temporary folder only if no differences
       if (!hasDifferences && fs.existsSync(tmpPath)) {
@@ -76,14 +78,12 @@ export async function compareVbaAsync(macroPath: string, context: CommandContext
     },
   );
 }
-
-function compareDirectories(dir1: string, dir2: string, context: CommandContext): boolean {
+logger: Logger): boolean {
   const files1 = getVbaFiles(dir1);
   const files2 = getVbaFiles(dir2);
 
-  context.channel.appendLine(`Comparison Results:`);
-  context.channel.appendLine(`- Files in Excel: ${files1.length}`);
-  context.channel.appendLine(`- Files on disk: ${files2.length}`);
+  logger.logDetail("Files in Excel", `${files1.length}`);
+  logger.logDetail("Files on disk", `${files2.length}`);
 
   const added = files1.filter(f => !files2.includes(f));
   const removed = files2.filter(f => !files1.includes(f));
@@ -93,31 +93,33 @@ function compareDirectories(dir1: string, dir2: string, context: CommandContext)
   let firstModifiedFile: { file1Path: string; file2Path: string; name: string } | null = null;
 
   if (added.length > 0) {
-    context.channel.appendLine(`- [+] Added (${added.length}):`);
+    logger.logInfo(`Added (${added.length}):`);
     added.forEach(f => {
       const relativePath = f.replace(/\\/g, "/");
-      context.channel.appendLine(`    ${relativePath}`);
+      logger.logRaw(`    + ${relativePath}`);
     });
   }
 
   if (removed.length > 0) {
-    context.channel.appendLine(`- [-] Removed (${removed.length}):`);
+    logger.logInfo(`Removed (${removed.length}):`);
     removed.forEach(f => {
       const relativePath = f.replace(/\\/g, "/");
-      context.channel.appendLine(`    ${relativePath}`);
+      logger.logRaw(`    - ${relativePath}`);
     });
   }
 
   if (common.length > 0) {
-    context.channel.appendLine(`- [~] Modified:`);
     common.forEach(f => {
       const file1Path = path.join(dir1, f);
       const file2Path = path.join(dir2, f);
       const content1 = fs.readFileSync(file1Path, "utf8");
       const content2 = fs.readFileSync(file2Path, "utf8");
       if (content1 !== content2) {
+        if (modifiedCount === 0) {
+          logger.logInfo(`Modified:`);
+        }
         const relativePath = f.replace(/\\/g, "/");
-        context.channel.appendLine(`    ${relativePath}`);
+        logger.logRaw(`    ~ ${relativePath}`);
         modifiedCount++;
         if (!firstModifiedFile) {
           firstModifiedFile = { file1Path, file2Path, name: relativePath };
@@ -129,8 +131,9 @@ function compareDirectories(dir1: string, dir2: string, context: CommandContext)
   // Summary and return whether differences exist
   const hasDifferences = added.length > 0 || removed.length > 0 || modifiedCount > 0;
   if (hasDifferences) {
-    context.channel.appendLine(`[WARN] Differences found: +${added.length} ~${modifiedCount} -${removed.length}`);
+    logger.logWarn(`Differences found: +${added.length} ~${modifiedCount} -${removed.length}`);
   } else {
+    logger.logSuccess("No differences found"
     context.channel.appendLine(`[SUCCESS] No differences found`);
   }
 

@@ -2,11 +2,12 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 
 const commandName = "Export Sheet as PNG";
 
-export async function exportSheetAsPngAsync(macroPath: string, context: CommandContext) {
+export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -14,26 +15,32 @@ export async function exportSheetAsPngAsync(macroPath: string, context: CommandC
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+      
       // setup command
-      const macroFileName = path.basename(macroPath);
-      const macroDir = path.dirname(macroPath);
-      const imageDir = path.join(macroDir, `${macroFileName}.png`);
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const imageDir = path.join(bookDir, `${bookFileName}.png`);
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Output: ${path.basename(imageDir)}`);
+      
+      logger.logCommandStart(commandName, {
+        File: bookFileName,
+        Output: `${bookFileName}.png`
+      });
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, imageDir]);
+      const result = execPowerShell(scriptPath, [bookPath, imageDir]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
-      vscode.window.showInformationMessage(`Sheets exported as images`);
+      logger.logSuccess("Sheets exported as images");
+      vscode.window.showInformationMessage("Sheets exported as PNG.");
     }
   );
 }

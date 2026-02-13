@@ -57,7 +57,7 @@ Excel ブックに含まれる VBA コード全体を VS Code で編集可能な
 **メイン処理**: `src/commands/loadVba.ts`
 
 ```typescript
-export async function loadVbaAsync(macroPath: string, context: CommandContext)
+export async function loadVbaAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: `bin/Load-VBA.ps1`
@@ -81,7 +81,7 @@ Document モジュール（Sheet, ThisWorkbook）は以下の処理を実施：
 | エラー条件 | メッセージ | 対応 |
 |---------|---------|------|
 | Excel が起動していない | "Excel not running." | Excel を起動 |
-| ブックが開かれていない | "No workbook open." | Excel でブックを開く |
+| ブックが開かれていない | "No book open." | Excel でブックを開く |
 | 無効なVBA プロジェクト | VBA object model access denied | Trust Center でアクセス許可 |
 
 ## 2. Save VBA to Excel Book
@@ -94,7 +94,7 @@ VS Code で編集した VBA ファイルを Excel ブックに保存します。
 
 **入力ファイル**
 ```
-{ブック名}_bas/
+{ブック名}.bas/
   ├── Module1.bas
   ├── Class1.cls
   ├── Form1.frm
@@ -135,7 +135,7 @@ MyClass.cls
 **メイン処理**: `src/commands/saveVba.ts`
 
 ```typescript
-export async function saveVbaAsync(macroPath: string, context: CommandContext)
+export async function saveVbaAsync(bookPath: string, context: CommandContext)
 ```
 
 **PowerShell**: `bin/Save-VBA.ps1`
@@ -146,6 +146,12 @@ export async function saveVbaAsync(macroPath: string, context: CommandContext)
 3. 新しいコンポーネント追加
 4. コード設定
 5. ファイル保存
+
+### 注意: アドインファイル（.xlam）の保存
+
+:warning: **重要**: `.xlam`（Excel アドイン）ファイルについては、VS Code での保存後に **VB Editor から Ctrl+S で保存する必要があります**。
+
+これは Excel の VBA オブジェクトモデルの制限によるもので、VB Editor 以外の方法ではアドインを自動保存できません。
 
 ## 3. Compare VBA with Excel Book
 
@@ -173,7 +179,7 @@ Diff ビュー（左:Excel, 右:VS Code）
 **メイン処理**: `src/commands/compareVba.ts`
 
 ```typescript
-export async function compareVbaAsync(macroPath: string, context: CommandContext)
+export async function compareVbaAsync(bookPath: string, context: CommandContext)
 ```
 
 利用方法：
@@ -212,7 +218,7 @@ VS Code のカーソル位置に在る Sub プロシージャを Excel で実行
 **メイン処理**: `src/commands/runSub.ts`
 
 ```typescript
-export async function runSubAsync(macroPath: string, context: CommandContext)
+export async function runSubAsync(bookPath: string, context: CommandContext)
 ```
 
 **処理順序**

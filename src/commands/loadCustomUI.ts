@@ -2,17 +2,18 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { closeAllDiffEditors } from "../utils/editorOperations";
 
 const commandName = "Load CustomUI from Excel Book";
 
-export async function loadCustomUIAsync(macroPath: string, context: CommandContext) {
-  const ext = path.extname(macroPath).toLowerCase();
+export async function loadCustomUIAsync(bookPath: string, context: CommandContext) {
+  const ext = path.extname(bookPath).toLowerCase();
 
   // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
   if (ext !== ".xlam" && ext !== ".xlsm") {
-    throw `CustomUI is only supported for .xlam and .xlsm files. Selected file: ${macroPath}`;
+    throw "CustomUI not supported";
   }
 
   return vscode.window.withProgress(
@@ -22,27 +23,32 @@ export async function loadCustomUIAsync(macroPath: string, context: CommandConte
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+      
       // setup command
-      const macroFileName = path.basename(macroPath);
-      const macroDir = path.dirname(macroPath);
-      const tmpPath = path.join(macroDir, `${macroFileName}.xml~`);
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const tmpPath = path.join(bookDir, `${bookFileName}.xml~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-CustomUI.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
+      
+      logger.logCommandStart(commandName, {
+        File: bookFileName
+      });
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, tmpPath]);
+      const result = execPowerShell(scriptPath, [bookPath, tmpPath]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        const errorMsg = `PowerShell error`;
+        logger.logError(`${errorMsg}: ${result.stderr}`);
+        throw errorMsg;
       }
 
       // Organize loaded files
-      const newFolderName = `${macroFileName}.xml`;
-      const newPath = path.join(macroDir, newFolderName);
+      const newFolderName = `${bookFileName}.xml`;
+      const newPath = path.join(bookDir, newFolderName);
 
       // Remove existing folder if it exists
       if (fs.existsSync(newPath)) {
@@ -51,12 +57,6 @@ export async function loadCustomUIAsync(macroPath: string, context: CommandConte
 
       // Move tmpPath to new location
       fs.renameSync(tmpPath, newPath);
-      context.channel.appendLine(`- Organized: Files moved`);
-
-      // Verify files exist in new location
-      if (fs.existsSync(newPath)) {
-        const files = fs.readdirSync(newPath);
-      }
 
       // Close all diff editors
       await closeAllDiffEditors(context.channel);
@@ -85,7 +85,7 @@ export async function loadCustomUIAsync(macroPath: string, context: CommandConte
         }
       }
 
-      context.channel.appendLine(`[SUCCESS] Loaded ${files.length} file(s)`);
+      logger.logSuccess(`CustomUI extracted (${files.length} file(s))`);
     },
   );
 }
