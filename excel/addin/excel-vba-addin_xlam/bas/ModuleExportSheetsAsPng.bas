@@ -68,8 +68,13 @@ Sub ExportSheetsAsPng()
     
     ' PowerShell コマンドを実行（別プロセスで）
     ' 出力フォルダを {bookfolder}/{bookname}_{ext}/png とする
+    Dim imageOutputPath As String
+    Dim fileExt As String
+    fileExt = Mid(bookPath, InStrRev(bookPath, ".") + 1)
+    imageOutputPath = GetParentFolder(bookPath) & "\" & GetFileNameWithoutExt(bookPath) & "_" & fileExt & "\png"
+    
     Set shell = CreateObject("WScript.Shell")
-    command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & scriptPath & """ """ & bookPath & """ """ & GetParentFolder(bookPath) & """" & " """ & GetFileNameWithoutExt(bookPath) & """"
+    command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & scriptPath & """ """ & bookPath & """ """ & imageOutputPath & """"
     shell.Run command, 0, False
     
     Exit Sub

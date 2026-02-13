@@ -18,7 +18,7 @@ VS Code のコマンド実行時に呼び出される非同期関数です。
 #### 実装フロー
 
 ```
-exportSheetAsPngAsync
+exportSheetsAsPngAsync
   ↓
 パス解析 (マクロパス → ファイル名、ディレクトリ)
   ↓
@@ -32,7 +32,7 @@ PowerShell スクリプト実行
 #### コード例
 
 ```typescript
-export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
+export async function exportSheetsAsPngAsync(bookPath: string, context: CommandContext) {
   // ファイルパス抽出
   const bookFileName = path.parse(bookPath).name;
   const bookDir = path.dirname(bookPath);
@@ -52,6 +52,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
    - 入力パラメータ検証
 
 2. **ブック確認**
+
    ```powershell
    $macroInfo = Get-BookInfo $bookPath
    $result = Find-VBProject $excel $macroInfo.ResolvedPath $macroInfo.IsAddIn
@@ -59,6 +60,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
    ```
 
 3. **出力フォルダ作成**
+
    ```powershell
    if (Test-Path $pngOutputPath) {
        Remove-Item $pngOutputPath -Recurse -Force
@@ -125,6 +127,7 @@ $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
 **原因**: Excel が起動していない
 
 **対応**:
+
 - Excel を起動
 - 処理対象のファイルを開く
 - コマンドを再実行
@@ -134,6 +137,7 @@ $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
 **原因**: ブックが Excel で開かれていない
 
 **対応**:
+
 - Excel でブックを開く
 - コマンドを再実行
 
@@ -142,6 +146,7 @@ $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
 **原因**: シートに印刷範囲が設定されていない
 
 **対応**:
+
 - Excel でシートを選択
 - 「ページレイアウト」タブで「印刷範囲の設定」を実行
 - コマンドを再実行
@@ -151,6 +156,7 @@ $image.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
 **原因**: シートの表示設定が有効になっている
 
 **対応**:
+
 - Excel でシートを選択
 - 「表示」タブでグリッド線のチェックを外す
 - コマンドを再実行

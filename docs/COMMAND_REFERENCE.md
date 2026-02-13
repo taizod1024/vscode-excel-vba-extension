@@ -349,7 +349,7 @@
 
 ### 13. Export Sheets as PNG
 
-**コマンド ID**: `excel-vba.exportSheetAsPng`
+**コマンド ID**: `excel-vba.exportSheetsAsPng`
 
 **実行方法**
 
@@ -421,7 +421,7 @@
 | 10  | createUrlShortcut   | URL ショートカット作成    | −    |
 | 11  | loadCustomUI        | CustomUI 抽出             | −    |
 | 12  | saveCustomUI        | CustomUI 保存             | −    |
-| 13  | exportSheetAsPng    | PNG エクスポート（複数）  | −    |
+| 13  | exportSheetsAsPng   | PNG エクスポート（複数）  | −    |
 | 14  | openSheetFromPng    | PNG から Sheet を開く     | −    |
 
 ---

@@ -8,7 +8,7 @@ import { getExcelFileName, getFileNameParts } from "../utils/pathResolution";
 
 const commandName = "Export Sheet as PNG";
 
-export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
+export async function exportSheetsAsPngAsync(bookPath: string, context: CommandContext) {
   // Get display file name (handles .url and VBA component files)
   const excelFileName = getExcelFileName(bookPath);
 
