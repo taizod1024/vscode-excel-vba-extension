@@ -293,7 +293,7 @@ try {
             try {
                 # Use GetType().InvokeMember for more reliable COM invocation with optional parameters
                 $listObjects = $Sheet.ListObjects
-                $listObject = $listObjects.Add(1, $tableRange, $null, 1, $null)
+                [void]$listObjects.Add(1, $tableRange, $null, 1, $null)
             }
             catch {
                 Write-Host "- Warning: Could not create table: $_"
