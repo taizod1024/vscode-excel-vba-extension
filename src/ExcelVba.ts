@@ -16,6 +16,7 @@ import { runSubAsync } from "./commands/runSub";
 import { newBookAsync } from "./commands/newBook";
 import { newBookWithCustomUIAsync } from "./commands/newBookWithCustomUI";
 import { createUrlShortcutAsync } from "./commands/createUrlShortcut";
+import { exportSheetAsPngAsync } from "./commands/exportSheetAsImage";
 import { copyAddinToAppData } from "./utils/fileOperations";
 
 /** Excel VBA extension class */
@@ -35,8 +36,8 @@ class ExcelVba {
   /** constructor */
   constructor() {}
 
-  /** resolve VBA path from selected file */
-  public resolveVbaPath(selectedPath: string): string {
+  /** resolve book (Excel file) path from selected file (handles .xlsx, .xlsm, .xlam, .bas, .csv, .xml files) */
+  public resolveBookPath(selectedPath: string): string {
     let resolvedPath = selectedPath;
 
     // Handle temporary Excel files (~$filename.xlsx)
@@ -50,7 +51,7 @@ class ExcelVba {
     const ext = path.extname(resolvedPath).toLowerCase();
 
     // If .url file is selected, treat it as a marker for cloud-based files
-    // Use the corresponding local Excel file if it exists
+    // Use the corresponding local Excel file if it exists, otherwise return the .url path itself
     if (ext === ".url") {
       const dir = path.dirname(resolvedPath);
       const fileNameWithoutExt = path.parse(resolvedPath).name;
@@ -72,7 +73,7 @@ class ExcelVba {
       }
 
       // If local file doesn't exist, return the .url path itself
-      // This will allow CSV/BAS/XML operations to use the corresponding folders
+      // PowerShell will handle it as a cloud-based file
       return resolvedPath;
     }
 
@@ -81,115 +82,242 @@ class ExcelVba {
       return resolvedPath;
     }
 
-    // If .csv is selected, find the parent _CSV folder and the corresponding Excel file
+    // If .csv is selected, find the parent folder and the corresponding Excel file
     if (ext === ".csv") {
       const parentDir = path.dirname(resolvedPath);
-      let parentName = path.basename(parentDir);
+      const parentName = path.basename(parentDir);
 
-      // Check if parent folder is _csv
-      const match = parentName.match(/^(.+)_csv$/i);
-      if (match) {
-        const macroName = match[1];
-        const parentParentDir = path.dirname(parentDir);
+      // Check if parent folder is csv (format: aaa_xlsm/csv or aaa.xlsm.url/csv or aaa_xlsx/csv)
+      if (parentName === "csv") {
+        let prevParentName = path.basename(path.dirname(parentDir));
 
-        // Try to find .xlsm first, then .xlsx, then .xlam, then .url
-        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
-        if (fs.existsSync(xlsmPath)) {
-          return xlsmPath;
+        // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+        if (prevParentName.endsWith(".url")) {
+          prevParentName = prevParentName.slice(0, -4); // Remove .url
         }
 
-        const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
-        if (fs.existsSync(xlsxPath)) {
-          return xlsxPath;
+        const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
+        if (match) {
+          const baseName = match[1];
+          const excelExt = match[2];
+          const excelFileName = `${baseName}.${excelExt}`;
+          const parentParentDir = path.dirname(path.dirname(parentDir));
+
+          // Try to find the exact file first
+          const filePath = path.join(parentParentDir, excelFileName);
+          if (fs.existsSync(filePath)) {
+            return filePath;
+          }
+
+          // Also check for .url with the full filename
+          const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+          if (fs.existsSync(urlPath)) {
+            return urlPath;
+          }
+
+          // For cloud-based files, return the Excel file name without .url
+          return filePath;
         }
 
-        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
-        if (fs.existsSync(xlamPath)) {
-          return xlamPath;
-        }
+        // Also check for direct Excel file name pattern: aaa.xlsx
+        const match2 = prevParentName.match(/^(.+?)\.(xlsm|xlsx|xlam)$/i);
+        if (match2) {
+          const excelFileName = prevParentName;
+          const parentParentDir = path.dirname(path.dirname(parentDir));
 
-        const urlPath = path.join(parentParentDir, `${macroName}.url`);
-        if (fs.existsSync(urlPath)) {
-          return urlPath;
+          // Try to find the exact file first
+          const filePath = path.join(parentParentDir, excelFileName);
+          if (fs.existsSync(filePath)) {
+            return filePath;
+          }
+
+          // Also check for .url with the full filename
+          const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+          if (fs.existsSync(urlPath)) {
+            return urlPath;
+          }
+
+          // For cloud-based files, return the file name as is
+          return filePath;
         }
       }
     }
 
-    // If .bas, .cls, .frm is selected, find the parent _bas folder
+    // If .bas, .cls, .frm is selected, find the parent folder
     if ([".bas", ".cls", ".frm"].includes(ext)) {
       const parentDir = path.dirname(resolvedPath);
-      let parentName = path.basename(parentDir);
+      const parentName = path.basename(parentDir);
 
-      // Remove trailing ~ from parent folder name
-      if (parentName.endsWith("~")) {
-        parentName = parentName.slice(0, -1);
+      // Check if parent folder is bas/csv/png (format: aaa_xlsm/bas or aaa.xlsm.url/bas or aaa_xlsx/bas)
+      let prevParentName = path.basename(path.dirname(parentDir));
+
+      // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+      if (prevParentName.endsWith(".url")) {
+        prevParentName = prevParentName.slice(0, -4); // Remove .url
       }
 
-      // Check if parent folder is _bas
-      const match = parentName.match(/^(.+)_bas$/i);
+      const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
       if (match) {
-        const macroName = match[1];
-        const parentParentDir = path.dirname(parentDir);
+        const baseName = match[1];
+        const excelExt = match[2];
+        const excelFileName = `${baseName}.${excelExt}`;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
 
-        // Try to find .xlsm first, then .xlsx, then .xlam, then .url
-        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
-        if (fs.existsSync(xlsmPath)) {
-          return xlsmPath;
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
         }
 
-        const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
-        if (fs.existsSync(xlsxPath)) {
-          return xlsxPath;
-        }
-
-        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
-        if (fs.existsSync(xlamPath)) {
-          return xlamPath;
-        }
-
-        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
         if (fs.existsSync(urlPath)) {
           return urlPath;
         }
+
+        // For cloud-based files, return the Excel file name without .url
+        // PowerShell will search for it by name in Excel
+        return filePath;
+      }
+
+      // Also check for direct Excel file name pattern: aaa.xlsx
+      const match2 = prevParentName.match(/^(.+?)\.(xlsm|xlsx|xlam)$/i);
+      if (match2) {
+        const excelFileName = prevParentName;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the file name as is
+        return filePath;
       }
     }
 
-    // If .xml is selected in a _xml folder, find the parent .xlam or .xlsm file
+    // If .xml is selected in a xml folder, find the parent Excel file
     if (ext === ".xml") {
       const parentDir = path.dirname(resolvedPath);
-      let parentName = path.basename(parentDir);
+      const parentName = path.basename(parentDir);
 
-      // Remove trailing ~ from parent folder name
-      if (parentName.endsWith("~")) {
-        parentName = parentName.slice(0, -1);
+      // Check if parent folder is xml (format: aaa_xlam/xml or aaa_xlsm/xml or aaa.xlam.url/xml)
+      let prevParentName = path.basename(path.dirname(parentDir));
+
+      // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+      if (prevParentName.endsWith(".url")) {
+        prevParentName = prevParentName.slice(0, -4); // Remove .url
       }
 
-      // Check if parent folder is _xml
-      const match = parentName.match(/^(.+)_xml$/i);
+      const match = prevParentName.match(/^(.+?)_(xlam|xlsm)$/i);
       if (match) {
-        const macroName = match[1];
-        const parentParentDir = path.dirname(parentDir);
+        const baseName = match[1];
+        const excelExt = match[2];
+        const excelFileName = `${baseName}.${excelExt}`;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
 
-        // Try to find .xlsm first, then .xlam, then .xlsx
-        const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
-        if (fs.existsSync(xlsmPath)) {
-          return xlsmPath;
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
         }
 
-        const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
-        if (fs.existsSync(xlamPath)) {
-          return xlamPath;
-        }
-
-        const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
-        if (fs.existsSync(xlsxPath)) {
-          return xlsxPath;
-        }
-
-        const urlPath = path.join(parentParentDir, `${macroName}.url`);
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
         if (fs.existsSync(urlPath)) {
           return urlPath;
         }
+
+        // For cloud-based files, return the Excel file name without .url
+        return filePath;
+      }
+
+      // Also check for direct Excel file name pattern: aaa.xlam or aaa.xlsm
+      const match2 = prevParentName.match(/^(.+?)\.(xlam|xlsm)$/i);
+      if (match2) {
+        const excelFileName = prevParentName;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the file name as is
+        return filePath;
+      }
+    }
+
+    // If .png is selected, find the parent folder and the corresponding Excel file
+    if (ext === ".png") {
+      const parentDir = path.dirname(resolvedPath);
+      const parentName = path.basename(parentDir);
+
+      // Check if parent folder is png (format: aaa_xlsx/png or aaa.xlsx.url/png)
+      let prevParentName = path.basename(path.dirname(parentDir));
+
+      // If parent folder ends with .url (cloud-based), remove it to get the actual Excel name
+      if (prevParentName.endsWith(".url")) {
+        prevParentName = prevParentName.slice(0, -4); // Remove .url
+      }
+
+      const match = prevParentName.match(/^(.+?)_(xlsm|xlsx|xlam)$/i);
+      if (match) {
+        const baseName = match[1];
+        const excelExt = match[2];
+        const excelFileName = `${baseName}.${excelExt}`;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the Excel file name without .url
+        return filePath;
+      }
+
+      // Also check for direct Excel file name pattern: aaa.xlsx
+      const match2 = prevParentName.match(/^(.+?)\.(xlsm|xlsx|xlam)$/i);
+      if (match2) {
+        const excelFileName = prevParentName;
+        const parentParentDir = path.dirname(path.dirname(parentDir));
+
+        // Try to find the exact file first
+        const filePath = path.join(parentParentDir, excelFileName);
+        if (fs.existsSync(filePath)) {
+          return filePath;
+        }
+
+        // Also check for .url with the full filename
+        const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
+        if (fs.existsSync(urlPath)) {
+          return urlPath;
+        }
+
+        // For cloud-based files, return the file name as is
+        return filePath;
       }
     }
 
@@ -205,7 +333,7 @@ class ExcelVba {
       return;
     }
     this.channel.appendLine("");
-    this.channel.appendLine(`${this.appName} extension activated`);
+    this.channel.appendLine(`## ${this.appName} extension activated`);
     this.channel.appendLine(`[DEBUG] Extension Path: ${context.extensionPath}`);
 
     // Copy Excel addin to AppData
@@ -225,9 +353,9 @@ class ExcelVba {
         try {
           const selectedPath = uri.fsPath;
           this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
-          const macroPath = this.resolveVbaPath(selectedPath);
-          this.channel.appendLine(`[DEBUG] Resolved path: ${macroPath}`);
-          await openBookAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(selectedPath);
+          this.channel.appendLine(`[DEBUG] Resolved path: ${bookPath}`);
+          await openBookAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -239,8 +367,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await loadVbaAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await loadVbaAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -252,8 +380,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveVbaAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await saveVbaAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -265,8 +393,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.compareVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await compareVbaAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await compareVbaAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -278,8 +406,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await loadCustomUIAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await loadCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -291,8 +419,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveCustomUIAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await saveCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -304,9 +432,9 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.runSub`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveVbaAsync(macroPath, commandContext);
-          await runSubAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await saveVbaAsync(bookPath, commandContext);
+          await runSubAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -318,8 +446,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.loadCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await loadCsvAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await loadCsvAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -331,8 +459,8 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.saveCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          const macroPath = this.resolveVbaPath(uri.fsPath);
-          await saveCsvAsync(macroPath, commandContext);
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await saveCsvAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -369,6 +497,19 @@ class ExcelVba {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
           await createUrlShortcutAsync(commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.exportSheetAsPng`, async (uri: vscode.Uri) => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        try {
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await exportSheetAsPngAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);

@@ -9,6 +9,12 @@ End Sub
 
 Sub Sample_onAction(control As IRibbonControl)
 
+    Sample
+
+End Sub
+
+Sub Sample
+
     Msgbox "Sample"
 
 End Sub

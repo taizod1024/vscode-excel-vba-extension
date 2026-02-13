@@ -3,12 +3,13 @@ const fs = require("fs");
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import child_process from "child_process";
+import { Logger } from "../utils/logger";
 
 /** Create new Excel workbook with CustomUI template */
 export async function newBookWithCustomUIAsync(context: CommandContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
-    throw "No workspace folder is open.";
+    throw "No open workspace.";
   }
 
   const workspaceFolder = workspaceFolders[0].uri.fsPath;
@@ -17,7 +18,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
   const templatePath = path.join(context.extensionPath, "excel", "bookWithCustomUI", "bookWithCustomUI.xlsm");
 
   if (!fs.existsSync(templatePath)) {
-    throw `Template file not found: ${templatePath}`;
+    throw "Template file not found.";
   }
 
   // Prompt for file name
@@ -44,10 +45,10 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
 
   // Check if file already exists
   if (fs.existsSync(filePath)) {
-    throw `File already exists: ${filePath}`;
+    throw "File already exists.";
   }
 
-  const commandName = `Create new Excel workbook with Custom UI`;
+  const commandName = `New Excel Book with CustomUI`;
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -55,26 +56,28 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- Path: ${filePath}`);
-      context.channel.appendLine(`- Template: ${templatePath}`);
+      const logger = new Logger(context.channel);
+      logger.logCommandStart(commandName, {
+        path: filePath,
+        template: path.basename(templatePath),
+      });
 
       // Copy template file
       fs.copyFileSync(templatePath, filePath);
 
-      context.channel.appendLine(`[SUCCESS] New workbook created with Custom UI`);
+      logger.logSuccess("New workbook created with Custom UI");
 
-      // Reveal file in Explorer
+      // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);
       await vscode.commands.executeCommand("revealInExplorer", fileUri);
+      await vscode.commands.executeCommand("vscode.open", fileUri);
 
       // Open the newly created file with Excel
       try {
         child_process.exec(`start "" "${filePath}"`);
-        context.channel.appendLine(`[INFO] Opening file with Excel...`);
+        logger.logInfo("Opening file with Excel");
       } catch (error) {
-        context.channel.appendLine(`[WARNING] Could not open file with Excel: ${error}`);
+        logger.logWarn("Could not open file with Excel");
       }
     },
   );

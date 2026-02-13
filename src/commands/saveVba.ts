@@ -3,12 +3,17 @@ import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
+import { Logger } from "../utils/logger";
 import { validateVbNames } from "../utils/vbValidation";
 import { closeAllDiffEditors } from "../utils/editorOperations";
+import { getActualPath, getExcelFileName, getFileNameParts } from "../utils/pathResolution";
 
 const commandName = "Save VBA to Excel Book";
 
-export async function saveVbaAsync(macroPath: string, context: CommandContext) {
+export async function saveVbaAsync(bookPath: string, context: CommandContext) {
+  // Get display file name (handles .url and VBA component files)
+  const excelFileName = getExcelFileName(bookPath);
+
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -16,45 +21,53 @@ export async function saveVbaAsync(macroPath: string, context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+
       // setup command
-      const macroFileName = path.parse(macroPath).name;
-      const macroDir = path.dirname(macroPath);
-      const saveSourcePath = path.join(macroDir, `${macroFileName}_bas`);
+      const actualPath = getActualPath(bookPath);
+      const ext = path.extname(actualPath).toLowerCase();
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const { fileNameWithoutExt, excelExt } = getFileNameParts(bookPath);
+      const saveSourcePath = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "bas");
       const scriptPath = `${context.extensionPath}\\bin\\Save-VBA.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Source: ${path.basename(saveSourcePath)}`);
+
+      logger.logCommandStart(commandName, {
+        file: bookFileName,
+        source: `${fileNameWithoutExt}_${excelExt}/bas`,
+      });
 
       // Check if save source folder exists
       if (!fs.existsSync(saveSourcePath)) {
-        throw `Folder not found: ${path.basename(saveSourcePath)}. Please load VBA first.`;
+        throw `VBA folder not found: ${fileNameWithoutExt}_${excelExt}/bas`;
       }
 
       // Validate VB_Name attribute matches file names
       await validateVbNames(saveSourcePath, context.channel);
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, saveSourcePath]);
+      const result = execPowerShell(scriptPath, [bookPath, saveSourcePath]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        // Extract first line of error message for user display
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save VBA.";
+        throw errorLine;
       }
 
       // Remove temporary folder if it exists
-      const tmpPath = path.join(macroDir, `${macroFileName}_bas~`);
+      const tmpPath = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "bas~");
       if (fs.existsSync(tmpPath)) {
         fs.rmSync(tmpPath, { recursive: true, force: true });
-        context.channel.appendLine(`- Cleaned: Temporary folder removed`);
+        logger.logInfo("Temporary folder removed");
       }
-      context.channel.appendLine(`[SUCCESS] VBA saved`);
+
+      logger.logSuccess("VBA saved");
 
       // Show warning for add-in files
-      const ext = path.extname(macroPath).toLowerCase();
       if (ext === ".xlam") {
-        vscode.window.showWarningMessage(".XLAM CANNOT BE SAVED AUTOMATICALLY. Please save manually from VBE using Ctrl+S.");
+        vscode.window.showWarningMessage("Save .XLAM in VB Editor (Ctrl+S).");
       }
 
       // Close all diff editors

@@ -3,12 +3,14 @@ const fs = require("fs");
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
+import { Logger } from "../utils/logger";
+import child_process from "child_process";
 
 /** Create new Excel workbook */
 export async function newBookAsync(context: CommandContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
-    throw "No workspace folder is open.";
+    throw "No open workspace.";
   }
 
   const workspaceFolder = workspaceFolders[0].uri.fsPath;
@@ -37,10 +39,10 @@ export async function newBookAsync(context: CommandContext) {
 
   // Check if file already exists
   if (fs.existsSync(filePath)) {
-    throw `File already exists: ${filePath}`;
+    throw "File already exists.";
   }
 
-  const commandName = `Create new Excel workbook`;
+  const commandName = `New Excel Book`;
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -48,25 +50,35 @@ export async function newBookAsync(context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
       const scriptPath = `${context.extensionPath}\\bin\\New-Excel.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- Path: ${filePath}`);
+      logger.logCommandStart(commandName, {
+        path: filePath,
+      });
 
       // exec command
       const result = execPowerShell(scriptPath, [filePath]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`${result.stdout}`);
+      if (result.stdout) logger.logRaw(result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        throw "Failed to create new workbook.";
       }
 
-      context.channel.appendLine(`[SUCCESS] New workbook created`);
+      logger.logSuccess("New workbook created");
 
-      // Reveal file in Explorer
+      // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);
       await vscode.commands.executeCommand("revealInExplorer", fileUri);
+      await vscode.commands.executeCommand("vscode.open", fileUri);
+
+      // Open the newly created file with Excel
+      try {
+        child_process.exec(`start "" "${filePath}"`);
+        logger.logInfo("Opening file with Excel");
+      } catch (error) {
+        logger.logWarn("Could not open file with Excel");
+      }
     },
   );
 }

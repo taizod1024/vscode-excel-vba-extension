@@ -28,11 +28,8 @@ try {
         
         $fileName = $workbook.Name
         
-        # Remove extension from filename
-        $fileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
-        
-        # Create shortcut path
-        $shortcutPath = Join-Path $workspacePath "$fileNameWithoutExt.url"
+        # Create shortcut path with full filename + .url extension
+        $shortcutPath = Join-Path $workspacePath "$fileName.url"
         
         # Create Internet Shortcut content
         $content = @"

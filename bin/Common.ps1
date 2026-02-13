@@ -26,6 +26,21 @@ function Get-ExcelInstance {
     return $excel
 }
 
+# Get Excel instance or create new one if not running
+function Get-OrCreate-ExcelInstance {
+    $excel = $null
+    try {
+        $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+        Write-Host "- using existing Excel instance"
+    }
+    catch {
+        $excel = New-Object -ComObject Excel.Application
+        Write-Host "- created new Excel instance"
+    }
+    
+    return $excel
+}
+
 # Resolve macro file path and determine file type
 function Get-BookInfo {
     param(
@@ -33,12 +48,24 @@ function Get-BookInfo {
     )
     
     Write-Host "- checking if workbook file exists"
+    
+    $fileExtension = [System.IO.Path]::GetExtension($bookPath).ToLower()
+    
+    # If .url file (cloud-based), skip file existence check and use the path as is
+    if ($fileExtension -eq ".url") {
+        return @{
+            ResolvedPath  = $bookPath
+            FileExtension = $fileExtension
+            IsAddIn       = $false
+        }
+    }
+    
+    # For local files, check existence
     if (-not (Test-Path $bookPath)) {
         throw "Workbook file not found: $bookPath"
     }
     
     $resolvedPath = (Resolve-Path $bookPath).Path
-    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
     $isAddIn = ($fileExtension -eq ".xlam")
     
     return @{
@@ -59,8 +86,18 @@ function Find-VBProject {
     $vbProject = $null
     
     Write-Host "- checking if workbook/add-in is open in Excel"
-    Write-Host "  resolvedPath: $resolvedPath"
-    Write-Host "  file extension: $(if ($isAddIn) { '.xlam' } else { 'other' })"
+    $searchKeyFileName = [System.IO.Path]::GetFileNameWithoutExtension($resolvedPath)
+    
+    # If the file is a .url file (cloud-based), remove the Excel extension (.xlsx/.xlsm/.xlam)
+    # Example: "あああ.xlsx.url" -> GetFileNameWithoutExtension -> "あああ.xlsx" -> further remove ".xlsx" -> "あああ"
+    $fileExtension = [System.IO.Path]::GetExtension($resolvedPath).ToLower()
+    if ($fileExtension -eq ".url") {
+        $searchKeyFileName = $searchKeyFileName -ireplace '\.(xlsm|xlsx|xlam)$', ''
+    }
+    
+    Write-Host "  Target: $resolvedPath"
+    Write-Host "  Search key (filename without ext): '$searchKeyFileName'"
+    Write-Host "  File type: $(if ($isAddIn) { 'Add-in (.xlam)' } else { 'Workbook' })"
     
     # First try to search through Excel.Workbooks (works for both workbooks and add-ins)
     Write-Host "  searching Excel.Workbooks:"
@@ -69,13 +106,13 @@ function Find-VBProject {
     
     foreach ($wb in $excel.Workbooks) {
         $wbFullName = $wb.FullName
-        Write-Host "    Workbook: $($wb.Name), FullName: $wbFullName"
-        
-        # ファイル名だけで比較 (拡張子を除去)
-        $resolvedFileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($resolvedPath)
         $wbNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($wb.Name)
-        if ($wbNameWithoutExt -eq $resolvedFileNameWithoutExt) {
-            Write-Host "    MATCHED!"
+        Write-Host "    [$($wb.Name)]"
+        Write-Host "      FullName: $wbFullName"
+        Write-Host "      Name (without ext): '$wbNameWithoutExt'"
+        
+        if ($wbNameWithoutExt -eq $searchKeyFileName) {
+            Write-Host "      Result: MATCHED!"
             $vbProject = $wb.VBProject
             if ($null -ne $vbProject) {
                 return @{
@@ -85,11 +122,14 @@ function Find-VBProject {
                 }
             }
         }
+        else {
+            Write-Host "      Result: No match (compare '$wbNameWithoutExt' vs '$searchKeyFileName')"
+        }
     }
     
     # If not found and it's an add-in, try VBE.VBProjects
-    if ($null -eq $vbProject -and $isAddIn) {
-        Write-Host "  not found in Workbooks, searching VBE.VBProjects (add-in):"
+    if ($isAddIn) {
+        Write-Host "  searching VBE.VBProjects (add-in):"
         try {
             $vbe = $excel.VBE
             if ($null -eq $vbe) {
@@ -106,15 +146,19 @@ function Find-VBProject {
                 $projectCount++
                 $projectFileName = $vbProj.FileName
                 $projectName = $vbProj.Name
-                Write-Host "    [$projectCount] Name: $projectName, FileName: $projectFileName"
+                Write-Host "    [$projectCount] Name: '$projectName'"
+                Write-Host "      FileName: $projectFileName"
                 
                 if ($projectFileName -eq $resolvedPath) {
-                    Write-Host "    MATCHED!"
+                    Write-Host "      Result: MATCHED!"
                     return @{
                         VBProject = $vbProj
                         Workbook  = $null
                         Source    = "VBE.VBProjects"
                     }
+                }
+                else {
+                    Write-Host "      Result: No match (compare '$projectFileName' vs '$resolvedPath')"
                 }
             }
             Write-Host "  total projects found: $projectCount"
@@ -132,15 +176,10 @@ function Find-VBProject {
         }
     }
     
-    if ($null -eq $vbProject) {
-        throw "No workbook open."
-    }
-    
-    return @{
-        VBProject = $vbProject
-        Workbook  = $null
-        Source    = "Unknown"
-    }
+    # No matching workbook found
+    Write-Host "  ERROR: No matching workbook/add-in found."
+    Write-Host "    Expected file name: '$searchKeyFileName'"
+    throw "No workbook open."
 }
 
 # Get workbook from Excel instance

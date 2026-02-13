@@ -2,12 +2,17 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 const path = require("path");
 import { CommandContext } from "../utils/types";
+import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { closeAllDiffEditors } from "../utils/editorOperations";
+import { getExcelFileName, getFileNameParts } from "../utils/pathResolution";
 
-const commandName = "Load CSV from Sheets";
+const commandName = "Load CSV from Excel Book";
 
-export async function loadCsvAsync(macroPath: string, context: CommandContext) {
+export async function loadCsvAsync(bookPath: string, context: CommandContext) {
+  // Get display file name (handles .url and VBA component files)
+  const excelFileName = getExcelFileName(bookPath);
+
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -15,26 +20,38 @@ export async function loadCsvAsync(macroPath: string, context: CommandContext) {
       cancellable: false,
     },
     async _progress => {
+      const logger = new Logger(context.channel);
+
       // setup command
-      const macroFileName = path.parse(macroPath).name;
-      const macroDir = path.dirname(macroPath);
-      const csvDir = path.join(macroDir, `${macroFileName}_csv`);
+      const bookFileName = path.basename(bookPath);
+      const bookDir = path.dirname(bookPath);
+      const { fileNameWithoutExt, excelExt } = getFileNameParts(bookPath);
+      const csvDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "csv");
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
-      context.channel.appendLine("");
-      context.channel.appendLine(`${commandName}`);
-      context.channel.appendLine(`- File: ${path.basename(macroPath)}`);
-      context.channel.appendLine(`- Output: ${path.basename(csvDir)}`);
+
+      logger.logCommandStart(commandName, {
+        file: bookFileName,
+        output: `${fileNameWithoutExt}_${excelExt}/csv`,
+      });
 
       // exec command
-      const result = execPowerShell(scriptPath, [macroPath, csvDir]);
+      const result = execPowerShell(scriptPath, [bookPath, csvDir]);
 
       // output result
-      if (result.stdout) context.channel.appendLine(`- Output: ${result.stdout}`);
+      if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        throw `${result.stderr}`;
+        // Extract first line of error message for user display
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to load CSV.";
+        throw errorLine;
       }
 
-      context.channel.appendLine(`[SUCCESS] CSV loaded from sheets`);
+      logger.logSuccess(`CSV extracted (${path.basename(path.dirname(csvDir))}/csv folder)`);
+
+      // Create parent folder if it doesn't exist
+      const parentDir = path.dirname(csvDir);
+      if (!fs.existsSync(parentDir)) {
+        fs.mkdirSync(parentDir, { recursive: true });
+      }
 
       // Close all diff editors
       await closeAllDiffEditors(context.channel);

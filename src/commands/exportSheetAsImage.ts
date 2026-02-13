@@ -6,9 +6,9 @@ import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { getExcelFileName, getFileNameParts } from "../utils/pathResolution";
 
-const commandName = "Save CSV to Excel Book";
+const commandName = "Export Sheet as PNG";
 
-export async function saveCsvAsync(bookPath: string, context: CommandContext) {
+export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
   // Get display file name (handles .url and VBA component files)
   const excelFileName = getExcelFileName(bookPath);
 
@@ -25,33 +25,39 @@ export async function saveCsvAsync(bookPath: string, context: CommandContext) {
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const { fileNameWithoutExt, excelExt } = getFileNameParts(bookPath);
-      const csvDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "csv");
-      const scriptPath = `${context.extensionPath}\\bin\\Save-CSV.ps1`;
+      const imageDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "png");
+      const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        source: `${fileNameWithoutExt}_${excelExt}/csv`,
+        output: `${fileNameWithoutExt}_${excelExt}/png`,
       });
 
-      // Check if CSV directory exists
-      if (!fs.existsSync(csvDir)) {
-        const errorMsg = `CSV folder not found`;
-        throw errorMsg;
-      }
-
       // exec command
-      const result = execPowerShell(scriptPath, [bookPath, csvDir]);
+      const result = execPowerShell(scriptPath, [bookPath, imageDir]);
 
       // output result
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save CSV.";
-        logger.logError(errorLine);
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to export sheet as PNG.";
         throw errorLine;
       }
 
-      logger.logSuccess("Sheets saved from CSV");
+      logger.logSuccess("Sheets exported as images");
+      vscode.window.showInformationMessage("Sheets exported as PNG.");
+
+      // Reveal the first PNG file in Explorer
+      const files = fs.readdirSync(imageDir).filter(file => {
+        const ext = path.extname(file).toLowerCase();
+        return ext === ".png";
+      });
+
+      if (files.length > 0) {
+        const firstFile = path.join(imageDir, files[0]);
+        const fileUri = vscode.Uri.file(firstFile);
+        await vscode.commands.executeCommand("revealInExplorer", fileUri);
+      }
     },
   );
 }

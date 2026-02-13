@@ -37,40 +37,60 @@ try {
         Write-Host "- Warning: Could not activate window: $_"
     }
     
+    # Disable alerts and events during macro execution
+    $originalDisplayAlerts = $excel.DisplayAlerts
+    $originalEnableEvents = $excel.EnableEvents
+    
     try {
-        # First, try to run it directly using Application.Run
-        # This is the most reliable method
-        $excel.Run($subName)
-        $subFound = $true
-    }
-    catch {
-        # If direct run fails, try to find the module and run it
-        Write-Host "- Direct run failed, searching in modules..."
+        $excel.DisplayAlerts = $false
+        $excel.EnableEvents = $false
         
-        foreach ($vbModule in $vbProject.VBComponents) {
-            $moduleCode = $vbModule.CodeModule
-            $linesCount = $moduleCode.CountOfLines
+        try {
+            # First, try to run it directly using Application.Run
+            # This is the most reliable method
+            $excel.Run($subName)
+            $subFound = $true
+        }
+        catch {
+            # If direct run fails, try to find the module and run it
+            Write-Host "- Direct run failed, searching in modules..."
             
-            # Search for the Sub declaration
-            for ($i = 1; $i -le $linesCount; $i++) {
-                $line = $moduleCode.Lines($i, 1)
-                if ($line -match "^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+$subName\s*(?:\(|$)") {
-                    Write-Host "  found in module: $($vbModule.Name)"
-                    try {
-                        $excel.Run("$($vbModule.Name).$subName")
-                        $subFound = $true
-                        break
-                    }
-                    catch {
-                        throw "Failed to run subroutine: $_"
+            foreach ($vbModule in $vbProject.VBComponents) {
+                $moduleCode = $vbModule.CodeModule
+                $linesCount = $moduleCode.CountOfLines
+                
+                # Search for the Sub declaration
+                for ($i = 1; $i -le $linesCount; $i++) {
+                    $line = $moduleCode.Lines($i, 1)
+                    if ($line -match "^\s*(?:Public\s+|Private\s+)?(?:Sub|Function)\s+$subName\s*(?:\(|$)") {
+                        Write-Host "  found in module: $($vbModule.Name)"
+                        try {
+                            $excel.Run("$($vbModule.Name).$subName")
+                            $subFound = $true
+                            break
+                        }
+                        catch {
+                            # Check if error is related to macro security
+                            if ($_ -match "実行できません|cannot run|disabled|security") {
+                                throw "Macro execution blocked by Excel security settings. Run the macro manually in Excel or check security settings."
+                            }
+                            else {
+                                throw "Failed to run subroutine: $_"
+                            }
+                        }
                     }
                 }
-            }
-            
-            if ($subFound) {
-                break
+                
+                if ($subFound) {
+                    break
+                }
             }
         }
+    }
+    finally {
+        # Restore original settings
+        $excel.DisplayAlerts = $originalDisplayAlerts
+        $excel.EnableEvents = $originalEnableEvents
     }
     
     if (-not $subFound) {

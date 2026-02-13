@@ -1,5 +1,12 @@
 [ENGLISH](#excel-vba-extension-en) | [日本語](#excel-vba-extension-jp)
 
+**The folder structure has been changed since version 0.2.0.**
+
+- aaa_bas/ → aaa_xlsx/bas/
+- aaa_csv/ → aaa_xslx/csv/
+- aaa_png/ → aaa_xlsx/png/
+- aaa_xml/ → aaa_xlsx/xml/
+
 ---
 
 ## Excel VBA Extension EN
@@ -37,6 +44,7 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 | **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
 | **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
 | **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                |
+| **Export Sheet as PNG**           | Export sheets with print area as PNG images.                                  |
 
 ## Setup
 
@@ -103,7 +111,7 @@ Right-click a book file in Explorer View or click the icon in the editor title t
 2. Select the book file in VS Code's Explorer View
 3. Select **Load VBA from Excel Book** from the editor title
 4. A folder with the same name as the book file is created
-   - Example: `MyBook.xlsm` → `MyBook_bas` folder
+   - Example: `MyBook.xlsm` → `MyBook_xlsm/bas` folder
 
 ### Edit VBA
 
@@ -136,7 +144,7 @@ Edit VBA files in VS Code.
 1. Select the book file in Explorer View
 2. Select **Load CustomUI from Excel Book** from the editor title
 3. A folder with the same name as the book file is created
-   - Example: `MyAddin.xlam` → `MyAddin_xml` folder
+   - Example: `MyAddin.xlam` → `MyAddin_xlam/xml` folder
    - CustomUI XML files (customUI.xml, customUI14.xml) are extracted directly into the folder
 
 ### Edit CustomUI
@@ -165,6 +173,18 @@ For Excel files stored on OneDrive or SharePoint:
 - When you Load/Save VBA, Sheets, or CustomUI, the extension automatically detects these markers
 - The active Excel workbook is used for processing (no local file copy needed)
 - This enables seamless version control and editing of cloud-hosted files
+
+### Export Sheet as PNG
+
+1. In Excel, create sheets with names ending in `.png` (e.g., `Dashboard.png`)
+2. Set the print area for each sheet (the content you want to export)
+3. Hide gridlines and page breaks in the sheet if you don't want them in the image
+4. Select the book file in VS Code's Explorer View
+5. Select **Export Sheet as PNG** from the editor title
+6. A folder with the same name as the book file is created
+   - Example: `MyBook.xlsm` → `MyBook_xlsm/png` folder
+   - PNG images are created for all sheets ending with `.png`
+   - File names match the sheet names (e.g., `Dashboard.png`)
 
 ## Notes
 
@@ -220,6 +240,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Create URL Shortcut**           | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
 | **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポートする。                  |
 | **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存する。                                         |
+| **Export Sheet as PNG**           | 印刷範囲をシートから PNG 画像にエクスポートする。                                                |
 
 ## 準備
 
@@ -286,7 +307,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 2. VS Code のエクスプローラービューでブックファイルを選択
 3. エディタのタイトルから「Load VBA from Excel Book」を選択
 4. ブックファイルと同じ名前のフォルダが作成される
-   - 例：`MyBook.xlsm` → `MyBook_bas` フォルダ
+   - 例：`MyBook.xlsm` → `MyBook_xlsm/bas` フォルダ
 
 ### VBA を編集する
 
@@ -318,7 +339,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 1. ブックファイルをエクスプローラービューで選択
 2. エディタのタイトルから「Load CustomUI from Excel Book」を選択
 3. アドインファイルと同じ名前のフォルダが作成される
-   - 例：`MyAddin.xlam` → `MyAddin_xml` フォルダ
+   - 例：`MyAddin.xlam` → `MyAddin_xlam/xml` フォルダ
    - CustomUI XMLファイル（`customUI.xml`, `customUI14.xml`）が直接フォルダ内に抽出される
 
 ### CustomUI を編集する
@@ -347,6 +368,18 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
 - VBA、シート、CustomUI の Load/Save を実行する際、拡張機能はこのマーカーを自動的に検出する
 - 処理時は Excel で開いているアクティブなワークブックが使用される（ローカルファイルのコピーは不要）
 - これにより、クラウドホストファイルのシームレスなバージョン管理と編集が可能になる
+
+### シートを PNG 画像にエクスポートする
+
+1. Excel で、`.png` で終わる名前のシートを作成（例：`Dashboard.png`）
+2. 各シートにエクスポートしたい範囲として印刷範囲を設定
+3. 画像にグリッド線やページ番号を含めたくない場合は、シートで非表示に設定
+4. VS Code のエクスプローラービューでブックファイルを選択
+5. エディタのタイトルから「Export Sheet as PNG」を選択
+6. ブックファイルと同じ名前のフォルダが作成される
+   - 例 : `MyBook.xlsm` → `MyBook_xlsm/png` フォルダ
+   - `.png` で終わるすべてのシートの PNG 画像が作成される
+   - ファイル名はシート名と同じになります（例：`Dashboard.png`）
 
 ## 注意事項
 

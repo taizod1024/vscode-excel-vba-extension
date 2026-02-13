@@ -14,6 +14,10 @@ Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
 Write-Host "- bookPath: $($bookPath)"
 Write-Host "- csvInputPath: $($csvInputPath)"
 
+# Constants
+$DEFAULT_FONT_NAME = "Meiryo UI"
+$DEFAULT_FONT_SIZE = 9
+
 # Function to read and parse CSV file
 function Read-CsvFile {
     param(
@@ -139,32 +143,22 @@ try {
     $isUrlFile = [System.IO.Path]::GetExtension($bookPath).ToLower() -eq ".url"
     
     if ($isUrlFile) {
-        # For .url files, try to find the corresponding Excel file in the same directory
-        $csvDir = Split-Path $csvInputPath -Parent
-        $baseFileName = [System.IO.Path]::GetFileNameWithoutExtension($CsvInputPath)
+        # Convert folder name (from csvInputPath) to Excel file name (あああ_xlsx -> あああ.xlsx)
+        $csvDir = Split-Path $csvInputPath -Parent           # /path/to/あああ_xlsx
+        $folderName = Split-Path $csvDir -Leaf                # あああ_xlsx
         
-        # Look for Excel files matching the CSV folder name (without _csv suffix)
-        $possibleFiles = @()
-        foreach ($ext in @(".xlsm", ".xlsx", ".xlam")) {
-            $possiblePath = Join-Path $csvDir ($baseFileName + $ext)
-            if (Test-Path $possiblePath) {
-                $possibleFiles += $possiblePath
-            }
+        # Match the folder name pattern
+        $match = $folderName -imatch '^(.+?)_(xlsm|xlsx|xlam)$'
+        if (-not $match) {
+            throw "Invalid folder name format: $folderName"
         }
         
-        if ($possibleFiles.Count -eq 0) {
-            throw "Excel file not found: $baseFileName"
-        }
-        
-        if ($possibleFiles.Count -gt 1) {
-            throw "Multiple Excel files found: $baseFileName. Please specify the exact file."
-        }
-        
-        $bookPath = $possibleFiles[0]
-        $fullPath = [System.IO.Path]::GetFullPath($bookPath)
+        $expectedFileName = "$($matches[1]).$($matches[2])"
+        $fullPath = ""
     }
     else {
         $fullPath = [System.IO.Path]::GetFullPath($bookPath)
+        $expectedFileName = [System.IO.Path]::GetFileNameWithoutExtension($bookPath)
         
         if (-not (Test-Path $fullPath)) {
             throw "Workbook file not found: $fullPath"
@@ -174,21 +168,40 @@ try {
     # Find the workbook in open workbooks
     $workbook = $null
     foreach ($openWorkbook in $excel.Workbooks) {
-        if ($openWorkbook.FullName -eq $fullPath) {
-            $workbook = $openWorkbook
-            break
+        $openBookFullName = $openWorkbook.FullName
+        $openBookName = $openWorkbook.Name
+        
+        if ($isUrlFile) {
+            # For .url files, match by filename (without extension)
+            $openBookBaseName = [System.IO.Path]::GetFileNameWithoutExtension($openBookName)
+            if ($openBookBaseName -ieq [System.IO.Path]::GetFileNameWithoutExtension($expectedFileName)) {
+                $workbook = $openWorkbook
+                break
+            }
+        }
+        else {
+            # For regular files, match by full path
+            if ($openBookFullName -eq $fullPath) {
+                $workbook = $openWorkbook
+                break
+            }
         }
     }
     
     if ($null -eq $workbook) {
-        throw "Workbook not open: $fullPath"
+        if ($isUrlFile) {
+            throw "Workbook not open: $expectedFileName"
+        }
+        else {
+            throw "Workbook not open: $fullPath"
+        }
     }
     
     # Get all CSV files from input path
     $csvFiles = Get-ChildItem -Path $csvInputPath -Filter "*.csv" -File | Sort-Object -Property BaseName
 
     if ($csvFiles.Count -eq 0) {
-        Write-Host "No CSV files found in: $CsvInputPath"
+        Write-Host "No CSV files found in: $csvInputPath"
         exit 0
     }
 
@@ -208,24 +221,24 @@ try {
     }
     
     # Create a hashtable to store CSV data (keyed by CSV filename with .csv extension)
-    $csvData = @{}
+    $csvDataMap = @{}
     foreach ($csvFile in $csvFiles) {
-        $csvData[$csvFile.Name] = $csvFile
+        $csvDataMap[$csvFile.Name] = $csvFile
     }
     
     # Count total sheets to process
     $sheetsToProcessCount = 0
     foreach ($existingSheetName in $existingSheetNames) {
-        if ($csvData.ContainsKey($existingSheetName)) {
+        if ($csvDataMap.ContainsKey($existingSheetName)) {
             $sheetsToProcessCount++
         }
     }
     
     # Add new sheets count
     $newSheetNames = @()
-    foreach ($sheetName in $csvData.Keys) {
-        if ($existingSheetNames -notcontains $sheetName) {
-            $newSheetNames += $sheetName
+    foreach ($csvFileName in $csvDataMap.Keys) {
+        if ($existingSheetNames -notcontains $csvFileName) {
+            $newSheetNames += $csvFileName
         }
     }
     $newSheetNames = $newSheetNames | Sort-Object
@@ -255,22 +268,55 @@ try {
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
         Update-SheetData -Sheet $Sheet -Data $data
         
-        # Set font for entire sheet to Meiryo UI 9pt and auto-fit row heights
+        # Set font for entire sheet to $DEFAULT_FONT_NAME $($DEFAULT_FONT_SIZE)pt and auto-fit row heights
         try {
             $allCells = $Sheet.Cells
-            $allCells.Font.Name = "Meiryo UI"
-            $allCells.Font.Size = 9
+            $allCells.Font.Name = $DEFAULT_FONT_NAME
+            $allCells.Font.Size = $DEFAULT_FONT_SIZE
             
             # Auto-fit row heights
             $Sheet.Rows.AutoFit() | Out-Null
             
-            Write-Host "Applied formatting: Meiryo UI 9pt and auto-fit row heights"
+            Write-Host "Applied formatting: $($DEFAULT_FONT_NAME) $($DEFAULT_FONT_SIZE)pt and auto-fit row heights"
         }
         catch {
             Write-Host "Warning: Could not apply formatting to $sheetName : $_"
         }
         
         Write-Host "Imported: $sheetName ($($data.Count) rows)"
+    }
+    
+    # Function to reset freeze panes
+    function Reset-FreezePanes {
+        param(
+            [object]$Sheet
+        )
+        
+        try {
+            $Sheet.Activate()
+            $excel.ActiveWindow.FreezePanes = $false
+            $excel.ActiveWindow.SplitRow = 0
+            $excel.ActiveWindow.SplitColumn = 0
+        }
+        catch {
+            Write-Host "- Warning: Failed to reset freeze panes"
+        }
+    }
+    
+    # Function to set freeze panes
+    function Set-FreezePanes {
+        param(
+            [object]$Sheet
+        )
+        
+        try {
+            $Sheet.Activate()
+            $Sheet.Range("B2").Select()
+            $excel.ActiveWindow.FreezePanes = $true
+        }
+        catch {
+            Write-Host "- Warning: Failed to set freeze panes"
+        }
     }
     
     # Function to convert range to table
@@ -286,81 +332,77 @@ try {
             $tableRange = $Sheet.Range("A1").Resize($usedRange.Rows.Count, $usedRange.Columns.Count)
             
             # Create table object (ListObject in Excel)
-            [void]$Sheet.ListObjects.Add(1, $tableRange, $null, 1)
+            try {
+                # Use GetType().InvokeMember for more reliable COM invocation with optional parameters
+                $listObjects = $Sheet.ListObjects
+                [void]$listObjects.Add(1, $tableRange, $null, 1, $null)
+            }
+            catch {
+                Write-Host "- Warning: Could not create table: $_"
+                return
+            }
             
             # Set table style
             $Sheet.ListObjects(1).TableStyle = "TableStyleLight1"
             
-            # Freeze first row and first column
-            try {
-                $Sheet.Activate()
-                $Sheet.Range("B2").Select()
-                $excel.ActiveWindow.FreezePanes = $true
-            }
-            catch {
-                Write-Host "- Warning: Failed to set freeze panes"
-            }
+            # Set freeze panes
+            Set-FreezePanes -Sheet $Sheet
             
             Write-Host "Converted to table: $($Sheet.Name)"
         }
+    }
+    
+    # Function to import sheet data and convert to table
+    function Invoke-SheetDataImport {
+        param(
+            [object]$Sheet,
+            [object]$CsvFile,
+            [int]$CurrentIndex,
+            [int]$TotalCount
+        )
+        
+        # Import the sheet data
+        Import-SheetData -Sheet $Sheet -CsvFile $CsvFile -CurrentIndex $CurrentIndex -TotalCount $TotalCount | Out-Null
+        
+        # Convert range to table
+        Convert-RangeToTable -Sheet $Sheet | Out-Null
     }
     
     # Process sheets in the order they appear in the workbook
     # First, update existing sheets
     $currentIndex = 0
     foreach ($existingSheetName in $existingSheetNames) {
-        if ($csvData.ContainsKey($existingSheetName)) {
+        if ($csvDataMap.ContainsKey($existingSheetName)) {
             $currentIndex++
-            $csvFile = $csvData[$existingSheetName]
+            $csvFile = $csvDataMap[$existingSheetName]
             $existingSheet = $workbook.Sheets.Item($existingSheetName)
             
             # Reset freeze panes before clearing
-            try {
-                $existingSheet.Activate()
-                $excel.ActiveWindow.FreezePanes = $false
-                $excel.ActiveWindow.SplitRow = 0
-                $excel.ActiveWindow.SplitColumn = 0
-            }
-            catch {
-                Write-Host "- Warning: Failed to reset freeze panes"
-            }
+            Reset-FreezePanes -Sheet $existingSheet
             
             # Clear existing data
             $existingSheet.Cells.Clear() | Out-Null
             
-            # Import the sheet data
-            Import-SheetData -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount | Out-Null
-            
-            # Convert range to table
-            Convert-RangeToTable -Sheet $existingSheet | Out-Null
+            # Import sheet data and convert to table
+            Invoke-SheetDataImport -Sheet $existingSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount
         }
     }
     
     # Add new sheets (CSV files that don't exist in the workbook) at the end
-    foreach ($sheetName in $newSheetNames) {
+    foreach ($csvFileName in $newSheetNames) {
         $currentIndex++
-        $csvFile = $csvData[$sheetName]
+        $csvFile = $csvDataMap[$csvFileName]
         
         # Create new sheet at the end
-        $newSheet = $workbook.Sheets.Add([System.Type]::Missing, $workbook.Sheets($workbook.Sheets.Count))
-        $newSheet.Name = $sheetName
+        $lastSheet = $workbook.Sheets($workbook.Sheets.Count)
+        $newSheet = $workbook.Sheets.Add($null, $lastSheet)
+        $newSheet.Name = $csvFileName
         
         # Reset freeze panes for new sheet
-        try {
-            $newSheet.Activate()
-            $excel.ActiveWindow.FreezePanes = $false
-            $excel.ActiveWindow.SplitRow = 0
-            $excel.ActiveWindow.SplitColumn = 0
-        }
-        catch {
-            Write-Host "- Warning: Failed to reset freeze panes"
-        }
+        Reset-FreezePanes -Sheet $newSheet
         
-        # Import the sheet data
-        Import-SheetData -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount | Out-Null
-        
-        # Convert range to table
-        Convert-RangeToTable -Sheet $newSheet | Out-Null
+        # Import sheet data and convert to table
+        Invoke-SheetDataImport -Sheet $newSheet -CsvFile $csvFile -CurrentIndex $currentIndex -TotalCount $sheetsToProcessCount
     }
     
     # Clear status bar
