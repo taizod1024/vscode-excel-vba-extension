@@ -179,7 +179,7 @@ class ExcelVba {
       return;
     }
     this.channel.appendLine("");
-    this.channel.appendLine(`${this.appName} extension activated`);
+    this.channel.appendLine(`## ${this.appName} extension activated`);
     this.channel.appendLine(`[DEBUG] Extension Path: ${context.extensionPath}`);
 
     // Copy Excel addin to AppData

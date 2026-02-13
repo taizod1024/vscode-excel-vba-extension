@@ -21,7 +21,7 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
       const bookExtension = path.parse(bookPath).ext.replace(".", "");
       const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
       let bookDir = path.dirname(bookPath);
-      let referenceFileName = path.parse(bookPath).name;
+      let referenceFileName = path.basename(bookPath);
 
       // If VBA component file, find the parent Excel workbook to get the correct folder name
       if (vbaComponentExtensions.includes(bookExtension)) {
@@ -33,7 +33,7 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
 
           const excelPath = path.join(parentDir, baseFileName);
           if (fs.existsSync(excelPath)) {
-            referenceFileName = path.parse(excelPath).name;
+            referenceFileName = path.basename(excelPath);
             bookDir = parentDir;
           }
         }
@@ -60,9 +60,10 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
       const result = execPowerShell(scriptPath, [bookPath, tmpPath]);
 
       if (result.exitCode !== 0) {
-        const errorMsg = `PowerShell error`;
-        logger.logError(`${errorMsg}: ${result.stderr}`);
-        throw errorMsg;
+        // Extract first line of error message for user display
+        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to compare VBA.";
+        logger.logError(`${errorLine}:\n${result.stderr}`);
+        throw errorLine;
       }
 
       // Compare files
@@ -78,7 +79,8 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
     },
   );
 }
-logger: Logger): boolean {
+
+function compareDirectories(dir1: string, dir2: string, logger: Logger): boolean {
   const files1 = getVbaFiles(dir1);
   const files2 = getVbaFiles(dir2);
 
@@ -133,8 +135,7 @@ logger: Logger): boolean {
   if (hasDifferences) {
     logger.logWarn(`Differences found: +${added.length} ~${modifiedCount} -${removed.length}`);
   } else {
-    logger.logSuccess("No differences found"
-    context.channel.appendLine(`[SUCCESS] No differences found`);
+    logger.logSuccess("No differences found");
   }
 
   // Display first modified file in diff view

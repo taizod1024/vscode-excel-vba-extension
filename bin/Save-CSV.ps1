@@ -14,6 +14,10 @@ Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
 Write-Host "- bookPath: $($bookPath)"
 Write-Host "- csvInputPath: $($csvInputPath)"
 
+# Constants
+$DEFAULT_FONT_NAME = "Meiryo UI"
+$DEFAULT_FONT_SIZE = 9
+
 # Function to read and parse CSV file
 function Read-CsvFile {
     param(
@@ -255,16 +259,16 @@ try {
         $data = Read-CsvFile -CsvFilePath $CsvFile.FullName
         Update-SheetData -Sheet $Sheet -Data $data
         
-        # Set font for entire sheet to Meiryo UI 9pt and auto-fit row heights
+        # Set font for entire sheet to $DEFAULT_FONT_NAME $($DEFAULT_FONT_SIZE)pt and auto-fit row heights
         try {
             $allCells = $Sheet.Cells
-            $allCells.Font.Name = "Meiryo UI"
-            $allCells.Font.Size = 9
+            $allCells.Font.Name = $DEFAULT_FONT_NAME
+            $allCells.Font.Size = $DEFAULT_FONT_SIZE
             
             # Auto-fit row heights
             $Sheet.Rows.AutoFit() | Out-Null
             
-            Write-Host "Applied formatting: Meiryo UI 9pt and auto-fit row heights"
+            Write-Host "Applied formatting: $($DEFAULT_FONT_NAME) $($DEFAULT_FONT_SIZE)pt and auto-fit row heights"
         }
         catch {
             Write-Host "Warning: Could not apply formatting to $sheetName : $_"
@@ -286,7 +290,15 @@ try {
             $tableRange = $Sheet.Range("A1").Resize($usedRange.Rows.Count, $usedRange.Columns.Count)
             
             # Create table object (ListObject in Excel)
-            [void]$Sheet.ListObjects.Add(1, $tableRange, $null, 1)
+            try {
+                # Use GetType().InvokeMember for more reliable COM invocation with optional parameters
+                $listObjects = $Sheet.ListObjects
+                $listObject = $listObjects.Add(1, $tableRange, $null, 1, $null)
+            }
+            catch {
+                Write-Host "- Warning: Could not create table: $_"
+                return
+            }
             
             # Set table style
             $Sheet.ListObjects(1).TableStyle = "TableStyleLight1"
@@ -342,7 +354,8 @@ try {
         $csvFile = $csvData[$sheetName]
         
         # Create new sheet at the end
-        $newSheet = $workbook.Sheets.Add([System.Type]::Missing, $workbook.Sheets($workbook.Sheets.Count))
+        $lastSheet = $workbook.Sheets($workbook.Sheets.Count)
+        $newSheet = $workbook.Sheets.Add($null, $lastSheet)
         $newSheet.Name = $sheetName
         
         # Reset freeze panes for new sheet

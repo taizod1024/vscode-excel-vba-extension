@@ -46,9 +46,10 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       // output result
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        const errorMsg = `PowerShell error`;
-        logger.logError(`${errorMsg}: ${result.stderr}`);
-        throw errorMsg;
+        // Extract first line of error message for user display
+        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to save VBA.";
+        logger.logError(`${errorLine}:\n${result.stderr}`);
+        throw errorLine;
       }
 
       // Remove temporary folder if it exists

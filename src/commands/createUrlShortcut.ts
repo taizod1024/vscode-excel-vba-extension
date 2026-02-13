@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
-import Logger from "../utils/logger";
+import { Logger } from "../utils/logger";
 
 const commandName = "Create URL Shortcut";
 

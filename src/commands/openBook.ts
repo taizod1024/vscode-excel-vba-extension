@@ -4,7 +4,7 @@ import child_process from "child_process";
 import { CommandContext } from "../utils/types";
 import { readUrlFile } from "../utils/urlFile";
 import { getExcelPath } from "../utils/excelPath";
-import Logger from "../utils/logger";
+import { Logger } from "../utils/logger";
 
 const commandName = "Open Excel Book";
 

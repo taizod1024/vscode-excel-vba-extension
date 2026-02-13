@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
-import Logger from "../utils/logger";
+import { Logger } from "../utils/logger";
 
 /** Create new Excel workbook */
 export async function newBookAsync(context: CommandContext) {

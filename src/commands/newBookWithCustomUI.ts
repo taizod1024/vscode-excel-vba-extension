@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 import { CommandContext } from "../utils/types";
 import child_process from "child_process";
-import Logger from "../utils/logger";
+import { Logger } from "../utils/logger";
 
 /** Create new Excel workbook with CustomUI template */
 export async function newBookWithCustomUIAsync(context: CommandContext) {

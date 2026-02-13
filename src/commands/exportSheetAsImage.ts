@@ -34,9 +34,10 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       // output result
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
-        const errorMsg = `PowerShell error`;
-        logger.logError(`${errorMsg}: ${result.stderr}`);
-        throw errorMsg;
+        // Extract first line of error message for user display
+        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to export sheet as PNG.";
+        logger.logError(`${errorLine}:\n${result.stderr}`);
+        throw errorLine;
       }
 
       logger.logSuccess("Sheets exported as images");
