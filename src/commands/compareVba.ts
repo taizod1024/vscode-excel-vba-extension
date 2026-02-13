@@ -6,30 +6,13 @@ import { execPowerShell } from "../utils/execPowerShell";
 import { Logger } from "../utils/logger";
 import { getVbaFiles } from "../utils/fileOperations";
 import { showDiffAsync } from "../utils/editorOperations";
+import { getExcelFileName, getFileNameParts, getActualPath } from "../utils/pathResolution";
 
 const commandName = "Compare VBA with Excel Book";
 
 export async function compareVbaAsync(bookPath: string, context: CommandContext) {
-  // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
-  // Also handle .url files (OneDrive/cloud files)
-  let actualPathForExtension = bookPath;
-  const urlExt = path.extname(bookPath).toLowerCase();
-  if (urlExt === ".url") {
-    actualPathForExtension = bookPath.slice(0, -4); // Remove .url
-  }
-
-  const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
-  const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-  let excelFileName = path.basename(actualPathForExtension);
-
-  if (vbaComponentExtensions.includes(fileExtension)) {
-    // VBA component file selected - extract Excel name from parent folder
-    const parentFolderName = path.basename(path.dirname(actualPathForExtension));
-    const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
-    if (match) {
-      excelFileName = match[1];
-    }
-  }
+  // Get display file name (handles .url and VBA component files)
+  const excelFileName = getExcelFileName(bookPath);
 
   return vscode.window.withProgress(
     {
@@ -39,12 +22,8 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      // Remove .url extension if present
-      let actualBookPath = bookPath;
-      const ext = path.extname(bookPath).toLowerCase();
-      if (ext === ".url") {
-        actualBookPath = bookPath.slice(0, -4); // Remove .url
-      }
+      // Get actual path without .url extension
+      let actualBookPath = getActualPath(bookPath);
       const bookExtension = path.parse(actualBookPath).ext.replace(".", "");
       const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
       let bookDir = path.dirname(actualBookPath);
@@ -68,11 +47,11 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
         }
       }
 
-      const fileNameWithoutExt = path.parse(referenceFileName).name;
-      const excelExt = path.extname(referenceFileName).slice(1);
-      const currentFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const refFileNameWithoutExt = path.parse(referenceFileName).name;
+      const refExcelExt = path.extname(referenceFileName).slice(1);
+      const currentFolderName = `${refFileNameWithoutExt}_${refExcelExt}`;
       const currentPath = path.join(bookDir, currentFolderName, "bas");
-      const tmpPath = path.join(bookDir, `${referenceFileName}.bas~`);
+      const tmpPath = path.join(bookDir, currentFolderName, "bas~");
 
       logger.logCommandStart(commandName, {
         file: path.basename(bookPath),

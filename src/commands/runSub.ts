@@ -3,29 +3,12 @@ const path = require("path");
 import { CommandContext } from "../utils/types";
 import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
+import { getExcelFileName } from "../utils/pathResolution";
 
 /** Run VBA Sub command */
 export async function runSubAsync(bookPath: string, context: CommandContext) {
-  // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
-  // Also handle .url files (OneDrive/cloud files)
-  let actualPathForExtension = bookPath;
-  const urlExt = path.extname(bookPath).toLowerCase();
-  if (urlExt === ".url") {
-    actualPathForExtension = bookPath.slice(0, -4); // Remove .url
-  }
-
-  const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
-  const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-  let excelFileName = path.basename(actualPathForExtension);
-
-  if (vbaComponentExtensions.includes(fileExtension)) {
-    // VBA component file selected - extract Excel name from parent folder
-    const parentFolderName = path.basename(path.dirname(actualPathForExtension));
-    const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
-    if (match) {
-      excelFileName = match[1];
-    }
-  }
+  // Get display file name (handles .url and VBA component files)
+  const excelFileName = getExcelFileName(bookPath);
 
   const editor = vscode.window.activeTextEditor;
   if (!editor) {

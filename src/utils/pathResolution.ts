@@ -140,3 +140,39 @@ export function resolveBookPath(selectedPath: string): string {
 
   return resolvedPath;
 }
+
+/** Remove .url extension from path if present */
+export function getActualPath(bookPath: string): string {
+  const ext = path.extname(bookPath).toLowerCase();
+  if (ext === ".url") {
+    return bookPath.slice(0, -4); // Remove .url
+  }
+  return bookPath;
+}
+
+/** Resolve Excel display file name (handles .url and VBA component files) */
+export function getExcelFileName(bookPath: string): string {
+  const actualPath = getActualPath(bookPath);
+  const fileExtension = path.parse(actualPath).ext.replace(".", "");
+  const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
+  let excelFileName = path.basename(actualPath);
+
+  if (vbaComponentExtensions.includes(fileExtension)) {
+    // VBA component file selected - extract Excel name from parent folder
+    const parentFolderName = path.basename(path.dirname(actualPath));
+    const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
+    if (match) {
+      excelFileName = match[1];
+    }
+  }
+
+  return excelFileName;
+}
+
+/** Get file name parts (without extension and extension only) for path construction */
+export function getFileNameParts(bookPath: string): { fileNameWithoutExt: string; excelExt: string } {
+  const actualPath = getActualPath(bookPath);
+  const fileNameWithoutExt = path.parse(actualPath).name;
+  const excelExt = path.extname(actualPath).slice(1);
+  return { fileNameWithoutExt, excelExt };
+}

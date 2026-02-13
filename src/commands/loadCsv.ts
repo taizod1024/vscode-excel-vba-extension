@@ -5,30 +5,13 @@ import { CommandContext } from "../utils/types";
 import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { closeAllDiffEditors } from "../utils/editorOperations";
+import { getExcelFileName, getFileNameParts } from "../utils/pathResolution";
 
 const commandName = "Load CSV from Excel Book";
 
 export async function loadCsvAsync(bookPath: string, context: CommandContext) {
-  // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
-  // Also handle .url files (OneDrive/cloud files)
-  let actualPathForExtension = bookPath;
-  const urlExt = path.extname(bookPath).toLowerCase();
-  if (urlExt === ".url") {
-    actualPathForExtension = bookPath.slice(0, -4); // Remove .url
-  }
-
-  const fileExtension = path.parse(actualPathForExtension).ext.replace(".", "");
-  const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
-  let excelFileName = path.basename(actualPathForExtension);
-
-  if (vbaComponentExtensions.includes(fileExtension)) {
-    // VBA component file selected - extract Excel name from parent folder
-    const parentFolderName = path.basename(path.dirname(actualPathForExtension));
-    const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
-    if (match) {
-      excelFileName = match[1];
-    }
-  }
+  // Get display file name (handles .url and VBA component files)
+  const excelFileName = getExcelFileName(bookPath);
 
   return vscode.window.withProgress(
     {
@@ -40,15 +23,9 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       const logger = new Logger(context.channel);
 
       // setup command
-      let actualBookPath = bookPath;
-      const ext = path.extname(bookPath).toLowerCase();
-      if (ext === ".url") {
-        actualBookPath = bookPath.slice(0, -4); // Remove .url
-      }
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
-      const fileNameWithoutExt = path.parse(actualBookPath).name;
-      const excelExt = path.extname(actualBookPath).slice(1);
+      const { fileNameWithoutExt, excelExt } = getFileNameParts(bookPath);
       const csvDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "csv");
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
 
