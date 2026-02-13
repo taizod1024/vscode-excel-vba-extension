@@ -30,7 +30,8 @@ try {
             Write-Output "Sheet found: $($ws.Name)"
             $sheetNames += $ws.Name
         }
-    } catch {
+    }
+    catch {
         Write-Output "Error listing sheets: $_"
     }
     Write-Output "Available sheets: $($sheetNames -join ', ')"
@@ -55,7 +56,8 @@ try {
             $shell = New-Object -ComObject WScript.Shell
             $shell.AppActivate($excel.Caption) | Out-Null
             Write-Output "Excel window activated"
-        } catch {
+        }
+        catch {
             Write-Output "Warning: Could not activate Excel window: $_"
         }
         
