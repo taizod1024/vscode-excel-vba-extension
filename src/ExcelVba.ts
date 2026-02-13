@@ -17,6 +17,7 @@ import { newBookAsync } from "./commands/newBook";
 import { newBookWithCustomUIAsync } from "./commands/newBookWithCustomUI";
 import { createUrlShortcutAsync } from "./commands/createUrlShortcut";
 import { exportSheetAsPngAsync } from "./commands/exportSheetAsImage";
+import { openSheetFromPngAsync } from "./commands/openSheetFromPng";
 import { copyAddinToAppData } from "./utils/fileOperations";
 
 /** Excel VBA extension class */
@@ -510,6 +511,18 @@ class ExcelVba {
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await exportSheetAsPngAsync(bookPath, commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.openSheetFromPng`, async (uri: vscode.Uri) => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        try {
+          await openSheetFromPngAsync(uri.fsPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);

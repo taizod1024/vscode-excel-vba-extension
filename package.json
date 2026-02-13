@@ -85,6 +85,11 @@
         "command": "excel-vba.exportSheetAsPng",
         "title": "Export Sheet as PNG",
         "icon": "$(file-media)"
+      },
+      {
+        "command": "excel-vba.openSheetFromPng",
+        "title": "Open Sheet from PNG",
+        "icon": "$(edit)"
       }
     ],
     "menus": {
@@ -144,73 +149,82 @@
         {
           "command": "excel-vba.exportSheetAsPng",
           "when": "false"
+        },
+        {
+          "command": "excel-vba.openSheetFromPng",
+          "when": "false"
         }
       ],
       "editor/title": [
         {
           "command": "excel-vba.openBook",
           "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",
           "group": "navigation@2",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.saveVba",
           "group": "navigation@3",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
           "group": "navigation@4",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.compareVba",
           "group": "navigation@5",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.loadCsv",
           "group": "navigation@6",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
           "group": "navigation@7",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.exportSheetAsPng",
           "group": "navigation@8",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
+        },
+        {
+          "command": "excel-vba.openSheetFromPng",
+          "group": "navigation@9",
+          "when": "resourceExtname =~ /\\.png$/i"
         },
         {
           "command": "excel-vba.newBook",
           "group": "1/excel-vba@1",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.newBookWithCustomUI",
           "group": "1/excel-vba@2",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.createUrlShortcut",
           "group": "1/excel-vba@3",
-          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
           "group": "1/excel-vba@4",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
           "group": "1/excel-vba@5",
-          "when": "resourceExtname =~ /\\.(xlsm|xlam|url||bas|cls|frm|csv|png|xml)$/i"
+          "when": "resourceExtname =~ /\\.(xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         }
       ]
     },
