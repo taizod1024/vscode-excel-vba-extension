@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.23...v0.2.0) (2026-02-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **FOLDER NAME CHANGED** .xlsx.bas, .xlsx.csv, .xlsx.xml, .xlsx.png
+
+### Features
+
+* **FOLDER NAME CHANGED** .xlsx.bas, .xlsx.csv, .xlsx.xml, .xlsx.png ([6d77592](https://github.com/taizod1024/vscode-excel-vba-extension/commit/6d77592ca4096ad5b5ed91df856ffdf8aa9598ec))
+* Excelシートを画像としてエクスポートする機能を追加 ([0ff15c3](https://github.com/taizod1024/vscode-excel-vba-extension/commit/0ff15c3df7c778b4d22d56c7c650d91c25c5de4d))
+* Excelファイル名を解決し、進行状況通知のタイトルを更新 ([192be0a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/192be0a3d80796882c044d11c35fe8a8555d9e5b))
+* VBA関連コマンドのロギング機能を追加し、エラーメッセージを改善 ([e7fc8af](https://github.com/taizod1024/vscode-excel-vba-extension/commit/e7fc8af0f90cb619ad6ba9f1025ca5e42868c768))
+* シートをPNG画像としてエクスポートする機能を追加 ([2bc368e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/2bc368e32b766f8904f262036e95810ba99bfafd))
+* 新しいカスタムUIとサンプルモジュールを追加し、エラーメッセージを改善 ([0d03b68](https://github.com/taizod1024/vscode-excel-vba-extension/commit/0d03b680355e3063169d37654a6e1f18288b8a4f))
+* 新機能追加 - Excel シートを PNG 画像としてエクスポートする機能仕様書を作成 ([902c030](https://github.com/taizod1024/vscode-excel-vba-extension/commit/902c030b4c5c57d923e72b6f4abd62d146df262c))
+
+
+### Bug Fixes
+
+* COM呼び出しの信頼性を向上させるために、リストオブジェクトの追加方法を修正 ([1c1d1d5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1c1d1d5a291aeb73252ec3dcf66ed371b3eaa6b5))
+* エラーメッセージを改善し、ユーザーに表示する内容を明確化 ([ad4321a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/ad4321aee77fea037e9cfff73161f71a428822c9))
+
 ### [0.1.23](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.22...v0.1.23) (2026-02-12)
 
 ### [0.1.22](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.21...v0.1.22) (2026-02-12)
