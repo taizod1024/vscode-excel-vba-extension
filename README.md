@@ -37,6 +37,7 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 | **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
 | **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
 | **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                |
+| **Export Sheet as PNG**           | Export sheets with print area as PNG images.                                  |
 
 ## Setup
 
@@ -166,6 +167,18 @@ For Excel files stored on OneDrive or SharePoint:
 - The active Excel workbook is used for processing (no local file copy needed)
 - This enables seamless version control and editing of cloud-hosted files
 
+### Export Sheet as PNG
+
+1. In Excel, create sheets with names ending in `.png` (e.g., `Dashboard.png`)
+2. Set the print area for each sheet (the content you want to export)
+3. Hide gridlines and page breaks in the sheet if you don't want them in the image
+4. Select the book file in VS Code's Explorer View
+5. Select **Export Sheet as PNG** from the editor title
+6. A folder with the suffix `_png` is created
+   - Example: `MyBook.xlsm` → `MyBook_png` folder
+   - PNG images are created for all sheets ending with `.png`
+   - File names match the sheet names (e.g., `Dashboard.png`)
+
 ## Notes
 
 - **General**
@@ -220,6 +233,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Create URL Shortcut**           | OneDrive/SharePoint にあるクラウドホストの Excel ファイルのダミー URL ショートカットを作成する。 |
 | **Load CustomUI from Excel Book** | ブックファイルから CustomUI（customUI.xml, customUI14.xml）をエクスポートする。                  |
 | **Save CustomUI to Excel Book**   | VS Code で編集した CustomUI をブックファイルに保存する。                                         |
+| **Export Sheet as PNG**           | 印刷範囲をシートから PNG 画像にエクスポートする。                                                |
 
 ## 準備
 
@@ -347,6 +361,18 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
 - VBA、シート、CustomUI の Load/Save を実行する際、拡張機能はこのマーカーを自動的に検出する
 - 処理時は Excel で開いているアクティブなワークブックが使用される（ローカルファイルのコピーは不要）
 - これにより、クラウドホストファイルのシームレスなバージョン管理と編集が可能になる
+
+### シートを PNG 画像にエクスポートする
+
+1. Excel で、`.png` で終わる名前のシートを作成（例：`Dashboard.png`）
+2. 各シートにエクスポートしたい範囲として印刷範囲を設定
+3. 画像にグリッド線やページ番号を含めたくない場合は、シートで非表示に設定
+4. VS Code のエクスプローラービューでブックファイルを選択
+5. エディタのタイトルから「Export Sheet as PNG」を選択
+6. `_png` 接尾辞のフォルダが作成される
+   - 例：`MyBook.xlsm` → `MyBook_png` フォルダ
+   - `.png` で終わるすべてのシートの PNG 画像が作成される
+   - ファイル名はシート名と同じになります（例：`Dashboard.png`）
 
 ## 注意事項
 

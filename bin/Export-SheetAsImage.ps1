@@ -9,7 +9,7 @@ param(
 
 try {
     # Initialize
-    Initialize-Script $MyInvocation.MyCommand.Name | Out-Null
+    Initialize-Script "Export-SheetAsPng.ps1" | Out-Null
     Write-Host "- bookPath: $($bookPath)"
     Write-Host "- imageOutputPath: $($imageOutputPath)"
 

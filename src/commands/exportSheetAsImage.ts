@@ -4,9 +4,9 @@ const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
 
-const commandName = "Export Sheet as Image";
+const commandName = "Export Sheet as PNG";
 
-export async function exportSheetAsImageAsync(macroPath: string, context: CommandContext) {
+export async function exportSheetAsPngAsync(macroPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,

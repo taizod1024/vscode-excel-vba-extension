@@ -82,8 +82,8 @@
         "icon": "$(arrow-circle-down)"
       },
       {
-        "command": "excel-vba.exportSheetAsImage",
-        "title": "Export Sheet as Image",
+        "command": "excel-vba.exportSheetAsPng",
+        "title": "Export Sheet as PNG",
         "icon": "$(file-media)"
       }
     ],
@@ -142,7 +142,7 @@
           "when": "false"
         },
         {
-          "command": "excel-vba.exportSheetAsImage",
+          "command": "excel-vba.exportSheetAsPng",
           "when": "false"
         }
       ],
@@ -183,7 +183,7 @@
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url|csv|txt|bas|cls|frm|xml)$/i"
         },
         {
-          "command": "excel-vba.exportSheetAsImage",
+          "command": "excel-vba.exportSheetAsPng",
           "group": "navigation@8",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam)$/i"
         },
