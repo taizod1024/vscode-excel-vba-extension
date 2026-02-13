@@ -357,9 +357,8 @@ class ExcelVba {
           this.channel.appendLine(`[DEBUG] Resolved path: ${bookPath}`);
           await openBookAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -371,9 +370,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await loadVbaAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -385,9 +383,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveVbaAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -399,9 +396,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await compareVbaAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -413,9 +409,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await loadCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -427,9 +422,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCustomUIAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -442,9 +436,8 @@ class ExcelVba {
           await saveVbaAsync(bookPath, commandContext);
           await runSubAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -456,9 +449,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await loadCsvAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -470,9 +462,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCsvAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );
@@ -520,9 +511,8 @@ class ExcelVba {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await exportSheetAsPngAsync(bookPath, commandContext);
         } catch (reason) {
-          const bookName = require("path").basename(uri.fsPath);
           this.channel.appendLine(`ERROR: ${reason}`);
-          vscode.window.showErrorMessage(`[${bookName}] ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
         }
       }),
     );

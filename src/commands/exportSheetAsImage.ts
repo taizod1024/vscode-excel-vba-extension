@@ -15,7 +15,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `[${excelFileName}] ${commandName}`,
+      title: commandName,
       cancellable: false,
     },
     async _progress => {
@@ -45,7 +45,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       }
 
       logger.logSuccess("Sheets exported as images");
-      vscode.window.showInformationMessage(`[${bookFileName}] Sheets exported as PNG.`);
+      vscode.window.showInformationMessage("Sheets exported as PNG.");
     },
   );
 }

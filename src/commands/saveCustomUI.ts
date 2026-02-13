@@ -25,7 +25,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `[${excelFileName}] ${commandName}`,
+      title: commandName,
       cancellable: false,
     },
     async _progress => {

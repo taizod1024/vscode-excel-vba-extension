@@ -4,6 +4,7 @@ const path = require("path");
 import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
 import { Logger } from "../utils/logger";
+import child_process from "child_process";
 
 /** Create new Excel workbook */
 export async function newBookAsync(context: CommandContext) {
@@ -69,6 +70,14 @@ export async function newBookAsync(context: CommandContext) {
       // Reveal file in Explorer
       const fileUri = vscode.Uri.file(filePath);
       await vscode.commands.executeCommand("revealInExplorer", fileUri);
+
+      // Open the newly created file with Excel
+      try {
+        child_process.exec(`start "" "${filePath}"`);
+        logger.logInfo("Opening file with Excel");
+      } catch (error) {
+        logger.logWarn("Could not open file with Excel");
+      }
     },
   );
 }

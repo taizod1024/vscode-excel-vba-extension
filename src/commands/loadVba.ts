@@ -16,7 +16,7 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `[${excelFileName}] ${commandName}`,
+      title: commandName,
       cancellable: false,
     },
     async _progress => {

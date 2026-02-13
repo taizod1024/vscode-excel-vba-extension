@@ -17,7 +17,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `[${excelFileName}] ${commandName}`,
+      title: commandName,
       cancellable: false,
     },
     async _progress => {
@@ -67,7 +67,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
 
       // Show warning for add-in files
       if (ext === ".xlam") {
-        vscode.window.showWarningMessage(`[${bookFileName}] Save .XLAM in VB Editor (Ctrl+S).`);
+        vscode.window.showWarningMessage("Save .XLAM in VB Editor (Ctrl+S).");
       }
 
       // Close all diff editors
