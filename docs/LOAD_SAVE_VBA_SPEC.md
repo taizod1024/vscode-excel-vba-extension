@@ -27,7 +27,7 @@ Excel ブックに含まれる VBA コード全体を VS Code で編集可能な
 
 **出力フォルダ**
 ```
-{ブック名}_bas/
+{ブック名}.bas/
   ├── StandardModule1.bas
   ├── StandardModule2.bas
   ├── ClassModule1.cls
@@ -108,7 +108,7 @@ VS Code で編集した VBA ファイルを Excel ブックに保存します。
 3. 「Save VBA to Excel Book」を実行
 4. 保存処理
    - 既存 VBA コンポーネントをすべて削除
-   - _bas フォルダ内のファイルを読み込み
+   - .bas フォルダ内のファイルを読み込み
    - VB プロジェクトに新しいコンポーネントを追加
    - コード内容を設定
    - 保存完了

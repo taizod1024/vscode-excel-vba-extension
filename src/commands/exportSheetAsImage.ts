@@ -15,9 +15,9 @@ export async function exportSheetAsPngAsync(macroPath: string, context: CommandC
     },
     async _progress => {
       // setup command
-      const macroFileName = path.parse(macroPath).name;
+      const macroFileName = path.basename(macroPath);
       const macroDir = path.dirname(macroPath);
-      const imageDir = path.join(macroDir, `${macroFileName}_png`);
+      const imageDir = path.join(macroDir, `${macroFileName}.png`);
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
       context.channel.appendLine("");
       context.channel.appendLine(`${commandName}`);

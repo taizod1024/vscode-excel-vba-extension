@@ -17,9 +17,9 @@ export async function saveVbaAsync(macroPath: string, context: CommandContext) {
     },
     async _progress => {
       // setup command
-      const macroFileName = path.parse(macroPath).name;
+      const macroFileName = path.basename(macroPath);
       const macroDir = path.dirname(macroPath);
-      const saveSourcePath = path.join(macroDir, `${macroFileName}_bas`);
+      const saveSourcePath = path.join(macroDir, `${macroFileName}.bas`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-VBA.ps1`;
       context.channel.appendLine("");
       context.channel.appendLine(`${commandName}`);

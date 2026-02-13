@@ -29,7 +29,7 @@ Excel ブック内で名前が「.csv」で終わるシートを CSV ファイ�
 
 **出力フォルダ**
 ```
-{ブック名}_csv/
+{ブック名}.csv/
   ├── data.csv
   ├── output.csv
   ├── 2024.csv
@@ -127,7 +127,7 @@ VS Code で編集した CSV ファイルを Excel シートに保存します。
 2. VS Code でブックファイル（または CSV ファイル）を選択
 3. 「Save CSV to Excel Book」を実行
 4. CSV インポート処理
-   - _csv フォルダ内の全 CSV ファイルを読み込み
+   - .csv フォルダ内の全 CSV ファイルを読み込み
    - 既存シートを削除
    - 新しいシートを作成
    - CSV データをシートに書き込み
@@ -136,7 +136,7 @@ VS Code で編集した CSV ファイルを Excel シートに保存します。
 ### シート作成ロジック
 
 ```
-for each csv file in {name}_csv:
+for each csv file in {name}.csv:
   sheet_name = csv_filename (without .csv)
   create sheet with sheet_name
   write csv data to sheet

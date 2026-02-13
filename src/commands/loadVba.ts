@@ -16,9 +16,9 @@ export async function loadVbaAsync(macroPath: string, context: CommandContext) {
     },
     async _progress => {
       // setup command
-      const macroFileName = path.parse(macroPath).name;
+      const macroFileName = path.basename(macroPath);
       const macroDir = path.dirname(macroPath);
-      const tmpPath = path.join(macroDir, `${macroFileName}_bas~`);
+      const tmpPath = path.join(macroDir, `${macroFileName}.bas~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-VBA.ps1`;
       context.channel.appendLine("");
       context.channel.appendLine(`${commandName}`);
@@ -34,7 +34,7 @@ export async function loadVbaAsync(macroPath: string, context: CommandContext) {
       }
 
       // Organize loaded files
-      const newFolderName = `${macroFileName}_bas`;
+      const newFolderName = `${macroFileName}.bas`;
       const newPath = path.join(macroDir, newFolderName);
 
       // Remove existing folder if it exists

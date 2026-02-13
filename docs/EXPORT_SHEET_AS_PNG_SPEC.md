@@ -41,11 +41,11 @@ Excel ブックの指定シートの印刷範囲を PNG 画像にエクスポー
 ### 出力フォルダ
 
 ```
-{ブック名}_png/
+{ブック名}.png/
 ```
 
-- ブック名の末尾に `_png` を追加したフォルダが作成されます
-- 例: `test.xlsx` → `test_png` フォルダ
+- ブック名に `.png` を追加したフォルダが作成されます
+- 例: `test.xlsx` → `test.xlsx.png` フォルダ
 
 ### 出力ファイル
 
@@ -73,7 +73,7 @@ Excel ブックの指定シートの印刷範囲を PNG 画像にエクスポー
 5. 各シートの印刷範囲を確認
 6. 印刷範囲をクリップボードにコピー
 7. クリップボードの内容を PNG 画像として保存
-8. `_png` フォルダに保存
+6. `{ブック名}.png` フォルダに保存
 
 ### エラーハンドリング
 
@@ -109,10 +109,10 @@ Excel ブックの指定シートの印刷範囲を PNG 画像にエクスポー
 ```
 Export Sheet as PNG
 - File: test.xlsx
-- Output: test_png
+- Output: test.xlsx.png
 - Output: Export-SheetAsPng.ps1:
   - bookPath: C:\path\to\test.xlsx
-  - imageOutputPath: C:\path\to\test_png
+  - imageOutputPath: C:\path\to\test.xlsx.png
   - checking if workbook file exists
   - checking if workbook/add-in is open in Excel
   - Total sheets: 2
@@ -120,7 +120,7 @@ Export Sheet as PNG
   - Exporting: aaa.png
     - Print area: $A$1:$E$15
     - Copied to clipboard
-    - Saved to: C:\path\to\test_png\aaa.png
+    - Saved to: C:\path\to\test.xlsx.png\aaa.png
   - Export complete
 ```
 
@@ -153,7 +153,7 @@ test.xlsx
 
 実行後:
 
-test_xlsx_png/
+test.xlsx.png/
 ├── Dashboard.png（画像ファイル）
 └── Report.png（画像ファイル）
 ```

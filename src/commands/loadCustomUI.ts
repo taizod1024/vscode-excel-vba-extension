@@ -23,9 +23,9 @@ export async function loadCustomUIAsync(macroPath: string, context: CommandConte
     },
     async _progress => {
       // setup command
-      const macroFileName = path.parse(macroPath).name;
+      const macroFileName = path.basename(macroPath);
       const macroDir = path.dirname(macroPath);
-      const tmpPath = path.join(macroDir, `${macroFileName}_xml~`);
+      const tmpPath = path.join(macroDir, `${macroFileName}.xml~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-CustomUI.ps1`;
       context.channel.appendLine("");
       context.channel.appendLine(`${commandName}`);
@@ -41,7 +41,7 @@ export async function loadCustomUIAsync(macroPath: string, context: CommandConte
       }
 
       // Organize loaded files
-      const newFolderName = `${macroFileName}_xml`;
+      const newFolderName = `${macroFileName}.xml`;
       const newPath = path.join(macroDir, newFolderName);
 
       // Remove existing folder if it exists

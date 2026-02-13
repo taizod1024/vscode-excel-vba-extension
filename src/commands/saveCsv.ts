@@ -15,9 +15,9 @@ export async function saveCsvAsync(macroPath: string, context: CommandContext) {
     },
     async _progress => {
       // setup command
-      const macroFileName = path.parse(macroPath).name;
+      const macroFileName = path.basename(macroPath);
       const macroDir = path.dirname(macroPath);
-      const csvDir = path.join(macroDir, `${macroFileName}_csv`);
+      const csvDir = path.join(macroDir, `${macroFileName}.csv`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-CSV.ps1`;
       context.channel.appendLine("");
       context.channel.appendLine(`${commandName}`);

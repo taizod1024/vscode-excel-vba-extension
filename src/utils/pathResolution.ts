@@ -19,20 +19,26 @@ export function resolveVbaPath(selectedPath: string): string {
   // Use the corresponding local Excel file if it exists
   if (ext === ".url") {
     const dir = path.dirname(resolvedPath);
-    const fileNameWithoutExt = path.parse(resolvedPath).name;
+    const fileNameWithoutUrlExt = path.parse(resolvedPath).name; // e.g., "aaa.xlsx"
 
-    // Try to find .xlsm first, then .xlsx, then .xlam
-    const xlsmPath = path.join(dir, `${fileNameWithoutExt}.xlsm`);
+    // Try to find the file with the extracted name first
+    const filePath = path.join(dir, fileNameWithoutUrlExt);
+    if (fs.existsSync(filePath)) {
+      return filePath;
+    }
+
+    // If not found, try old format compatibility (for aaa.url -> aaa.xlsm/xlsx/xlam)
+    const xlsmPath = path.join(dir, `${fileNameWithoutUrlExt}.xlsm`);
     if (fs.existsSync(xlsmPath)) {
       return xlsmPath;
     }
 
-    const xlsxPath = path.join(dir, `${fileNameWithoutExt}.xlsx`);
+    const xlsxPath = path.join(dir, `${fileNameWithoutUrlExt}.xlsx`);
     if (fs.existsSync(xlsxPath)) {
       return xlsxPath;
     }
 
-    const xlamPath = path.join(dir, `${fileNameWithoutExt}.xlam`);
+    const xlamPath = path.join(dir, `${fileNameWithoutUrlExt}.xlam`);
     if (fs.existsSync(xlamPath)) {
       return xlamPath;
     }
@@ -47,41 +53,32 @@ export function resolveVbaPath(selectedPath: string): string {
     return resolvedPath;
   }
 
-  // If .csv is selected, find the parent _CSV folder and the corresponding Excel file
+  // If .csv is selected, find the parent .CSV folder and the corresponding Excel file
   if (ext === ".csv") {
     const parentDir = path.dirname(resolvedPath);
     let parentName = path.basename(parentDir);
 
-    // Check if parent folder is _csv
-    const match = parentName.match(/^(.+)_csv$/i);
+    // Check if parent folder is .csv (format: aaa.xlsx.csv)
+    const match = parentName.match(/^(.+\.(xlsm|xlsx|xlam))\.csv$/i);
     if (match) {
-      const macroName = match[1];
+      const excelFileName = match[1];
       const parentParentDir = path.dirname(parentDir);
 
-      // Try to find .xlsm first, then .xlsx, then .xlam, then .url
-      const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
-      if (fs.existsSync(xlsmPath)) {
-        return xlsmPath;
+      // Try to find the exact file first
+      const filePath = path.join(parentParentDir, excelFileName);
+      if (fs.existsSync(filePath)) {
+        return filePath;
       }
 
-      const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
-      if (fs.existsSync(xlsxPath)) {
-        return xlsxPath;
-      }
-
-      const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
-      if (fs.existsSync(xlamPath)) {
-        return xlamPath;
-      }
-
-      const urlPath = path.join(parentParentDir, `${macroName}.url`);
+      // Also check for .url with the full filename
+      const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
       if (fs.existsSync(urlPath)) {
         return urlPath;
       }
     }
   }
 
-  // If .bas, .cls, .frm is selected, find the parent _bas folder
+  // If .bas, .cls, .frm is selected, find the parent .bas folder
   if ([".bas", ".cls", ".frm"].includes(ext)) {
     const parentDir = path.dirname(resolvedPath);
     let parentName = path.basename(parentDir);
@@ -91,36 +88,27 @@ export function resolveVbaPath(selectedPath: string): string {
       parentName = parentName.slice(0, -1);
     }
 
-    // Check if parent folder is _bas
-    const match = parentName.match(/^(.+)_bas$/i);
+    // Check if parent folder is .bas (format: aaa.xlsx.bas)
+    const match = parentName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
     if (match) {
-      const macroName = match[1];
+      const excelFileName = match[1];
       const parentParentDir = path.dirname(parentDir);
 
-      // Try to find .xlsm first, then .xlsx, then .xlam, then .url
-      const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
-      if (fs.existsSync(xlsmPath)) {
-        return xlsmPath;
+      // Try to find the exact file first
+      const filePath = path.join(parentParentDir, excelFileName);
+      if (fs.existsSync(filePath)) {
+        return filePath;
       }
 
-      const xlsxPath = path.join(parentParentDir, `${macroName}.xlsx`);
-      if (fs.existsSync(xlsxPath)) {
-        return xlsxPath;
-      }
-
-      const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
-      if (fs.existsSync(xlamPath)) {
-        return xlamPath;
-      }
-
-      const urlPath = path.join(parentParentDir, `${macroName}.url`);
+      // Also check for .url with the full filename
+      const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
       if (fs.existsSync(urlPath)) {
         return urlPath;
       }
     }
   }
 
-  // If .xml is selected in a _xml folder, find the parent .xlam or .xlsm file
+  // If .xml is selected in a .xml folder, find the parent .xlam or .xlsm file
   if (ext === ".xml") {
     const parentDir = path.dirname(resolvedPath);
     let parentName = path.basename(parentDir);
@@ -130,30 +118,23 @@ export function resolveVbaPath(selectedPath: string): string {
       parentName = parentName.slice(0, -1);
     }
 
-    // Check if parent folder is _xml
-    const match = parentName.match(/^(.+)_xml$/i);
+    // Check if parent folder is .xml (format: aaa.xlam.xml or aaa.xlsm.xml)
+    const match = parentName.match(/^(.+\.(xlam|xlsm))\.xml$/i);
     if (match) {
-      const macroName = match[1];
+      const excelFileName = match[1];
       const parentParentDir = path.dirname(parentDir);
 
-      // Try to find .xlam first, then .xlsm, then .url
-      const xlamPath = path.join(parentParentDir, `${macroName}.xlam`);
-      if (fs.existsSync(xlamPath)) {
-        return xlamPath;
+      // Try to find the exact file first
+      const filePath = path.join(parentParentDir, excelFileName);
+      if (fs.existsSync(filePath)) {
+        return filePath;
       }
 
-      const xlsmPath = path.join(parentParentDir, `${macroName}.xlsm`);
-      if (fs.existsSync(xlsmPath)) {
-        return xlsmPath;
-      }
-
-      const urlPath = path.join(parentParentDir, `${macroName}.url`);
+      // Also check for .url with the full filename
+      const urlPath = path.join(parentParentDir, `${excelFileName}.url`);
       if (fs.existsSync(urlPath)) {
         return urlPath;
       }
-
-      // Default to .xlam if neither exists (will be handled as error later)
-      return xlamPath;
     }
   }
 

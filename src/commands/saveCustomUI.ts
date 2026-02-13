@@ -23,9 +23,9 @@ export async function saveCustomUIAsync(macroPath: string, context: CommandConte
     },
     async _progress => {
       // setup command
-      const macroFileName = path.parse(macroPath).name;
+      const macroFileName = path.basename(macroPath);
       const macroDir = path.dirname(macroPath);
-      const saveSourcePath = path.join(macroDir, `${macroFileName}_xml`);
+      const saveSourcePath = path.join(macroDir, `${macroFileName}.xml`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-CustomUI.ps1`;
       context.channel.appendLine("");
       context.channel.appendLine(`${commandName}`);
