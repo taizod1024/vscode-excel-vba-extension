@@ -55,12 +55,12 @@ PNG 画像ファイルから元の Excel ワークブックを開き、対応す
 
 ### メッセージ
 
-| 状態 | 出力 |
-|------|------|
-| 成功 | `Sheet '{sheet}' selected successfully` |
-| ファイルなし | `Excel file not found: {path}` |
-| シートなし | `Sheet '{sheet}' not found in workbook. Available sheets: ...` |
-| 無効なパス | `Invalid folder structure. Expected format: filename_ext` |
+| 状態         | 出力                                                           |
+| ------------ | -------------------------------------------------------------- |
+| 成功         | `Sheet '{sheet}' selected successfully`                        |
+| ファイルなし | `Excel file not found: {path}`                                 |
+| シートなし   | `Sheet '{sheet}' not found in workbook. Available sheets: ...` |
+| 無効なパス   | `Invalid folder structure. Expected format: filename_ext`      |
 
 ## 処理仕様
 
@@ -79,12 +79,12 @@ PNG 画像ファイルから元の Excel ワークブックを開き、対応す
 
 ### エラーハンドリング
 
-| エラー条件 | メッセージ | 対応 |
-|-----------|----------|------|
-| PNG でない | "`File is not a PNG file.`" | PNG ファイルを選択してください |
-| パス無効 | "`Invalid folder structure. Expected format: filename_ext`" | PNG ファイルがフォルダ構造にないか確認 |
-| Excel ファイルなし | "`Excel file not found: {path}`" | Excel ファイルを作成してください |
-| シートなし | "`Sheet '{name}' not found in workbook. Available sheets: ...`" | シート名が PNG ファイル名と一致しているか確認 |
+| エラー条件         | メッセージ                                                      | 対応                                          |
+| ------------------ | --------------------------------------------------------------- | --------------------------------------------- |
+| PNG でない         | "`File is not a PNG file.`"                                     | PNG ファイルを選択してください                |
+| パス無効           | "`Invalid folder structure. Expected format: filename_ext`"     | PNG ファイルがフォルダ構造にないか確認        |
+| Excel ファイルなし | "`Excel file not found: {path}`"                                | Excel ファイルを作成してください              |
+| シートなし         | "`Sheet '{name}' not found in workbook. Available sheets: ...`" | シート名が PNG ファイル名と一致しているか確認 |
 
 ## 技術仕様
 

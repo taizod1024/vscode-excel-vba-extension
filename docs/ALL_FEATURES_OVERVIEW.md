@@ -45,7 +45,7 @@ Excel COM API
 
 ## ファイル構成
 
-```
+````
 src/
   commands/
     createUrlShortcut.ts
@@ -114,8 +114,10 @@ bin/
 
 ### 出力フォルダ命名規則
 
-```
-{ブック名の拡張子前}_{拡張子}/{サブフォルダ}
+````
+
+{ブック名の拡張子前}\_{拡張子}/{サブフォルダ}
+
 ```
 
 | 種類     | フォルダ名パターン | 内容                         |
@@ -128,9 +130,11 @@ bin/
 **例:**
 
 ```
+
 book.xlsx → book_xlsx/bas, book_xlsx/csv, book_xlsx/png
 book.xlsm → book_xlsm/bas, book_xlsm/csv, book_xlsm/png
 addin.xlam → addin_xlam/xml
+
 ```
 
 ## ドキュメント構成
@@ -143,3 +147,4 @@ addin.xlam → addin_xlam/xml
 - [EXPORT_SHEET_AS_PNG_SPEC.md](./EXPORT_SHEET_AS_PNG_SPEC.md) - Export Sheet as PNG の仕様書
 - [CLOUD_SUPPORT_SPEC.md](./CLOUD_SUPPORT_SPEC.md) - URL Shortcut とクラウドサポートの仕様書
 - [COMMAND_REFERENCE.md](./COMMAND_REFERENCE.md) - コマンドリファレンス
+```
