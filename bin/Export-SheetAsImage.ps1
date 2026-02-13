@@ -67,7 +67,8 @@ try {
                 # Try to select sheet, but proceed if Select() is not supported
                 try {
                     $sheet.Select() | Out-Null
-                } catch {
+                }
+                catch {
                     # Some sheet types (e.g., chart sheets) may not support Select()
                     # This is not critical for exporting
                 }

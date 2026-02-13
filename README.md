@@ -1,6 +1,6 @@
 [ENGLISH](#excel-vba-extension-en) | [日本語](#excel-vba-extension-jp)
 
-**The folder structure has been changed since version 0.1.24.**
+**The folder structure has been changed since version 0.2.0.**
 
 - aaa_bas/ → aaa_xlsx/bas/
 - aaa_csv/ → aaa_xslx/csv/
