@@ -18,16 +18,16 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      
+
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const saveSourcePath = path.join(bookDir, `${bookFileName}.bas`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-VBA.ps1`;
-      
+
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        source: `${bookFileName}.bas`
+        source: `${bookFileName}.bas`,
       });
 
       // Check if save source folder exists
@@ -47,7 +47,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to save VBA.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save VBA.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
@@ -58,7 +58,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
         fs.rmSync(tmpPath, { recursive: true, force: true });
         logger.logInfo("Temporary folder removed");
       }
-      
+
       logger.logSuccess("VBA saved");
 
       // Show warning for add-in files

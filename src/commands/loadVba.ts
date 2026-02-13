@@ -17,15 +17,15 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      
+
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const tmpPath = path.join(bookDir, `${bookFileName}.bas~`);
       const scriptPath = `${context.extensionPath}\\bin\\Load-VBA.ps1`;
-      
+
       logger.logCommandStart(commandName, {
-        file: bookFileName
+        file: bookFileName,
       });
 
       // exec command
@@ -35,7 +35,7 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "No book open.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "No book open.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }

@@ -24,16 +24,16 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      
+
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const saveSourcePath = path.join(bookDir, `${bookFileName}.xml`);
       const scriptPath = `${context.extensionPath}\\bin\\Save-CustomUI.ps1`;
-      
+
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        source: `${bookFileName}.xml`
+        source: `${bookFileName}.xml`,
       });
 
       // Check if save source folder exists
@@ -50,7 +50,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to save CustomUI.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save CustomUI.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
@@ -61,7 +61,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
         fs.rmSync(tmpPath, { recursive: true, force: true });
         logger.logInfo("Temporary folder removed");
       }
-      
+
       logger.logSuccess("CustomUI saved");
 
       // Close all diff editors

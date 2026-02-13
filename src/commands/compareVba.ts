@@ -45,7 +45,7 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
 
       logger.logCommandStart(commandName, {
         file: path.basename(bookPath),
-        current: currentFolderName
+        current: currentFolderName,
       });
       logger.logInfo("Loading from Excel...");
 
@@ -61,7 +61,7 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
 
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to compare VBA.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to compare VBA.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }

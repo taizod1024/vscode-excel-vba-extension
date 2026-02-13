@@ -28,7 +28,7 @@ export async function runSubAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Run-Sub.ps1`;
       logger.logCommandStart(commandName, {
         file: path.basename(bookPath),
-        sub: subName
+        sub: subName,
       });
 
       // exec command
@@ -38,7 +38,7 @@ export async function runSubAsync(bookPath: string, context: CommandContext) {
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to run Sub.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to run Sub.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }

@@ -16,16 +16,16 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
     },
     async _progress => {
       const logger = new Logger(context.channel);
-      
+
       // setup command
       const bookFileName = path.basename(bookPath);
       const bookDir = path.dirname(bookPath);
       const imageDir = path.join(bookDir, `${bookFileName}.png`);
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
-      
+
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        output: `${bookFileName}.png`
+        output: `${bookFileName}.png`,
       });
 
       // exec command
@@ -35,13 +35,13 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       if (result.stdout) logger.logDetail("Output", result.stdout);
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
-        const errorLine = result.stderr.split('\n')[0].trim() || "Failed to export sheet as PNG.";
+        const errorLine = result.stderr.split("\n")[0].trim() || "Failed to export sheet as PNG.";
         logger.logError(`${errorLine}:\n${result.stderr}`);
         throw errorLine;
       }
 
       logger.logSuccess("Sheets exported as images");
       vscode.window.showInformationMessage("Sheets exported as PNG.");
-    }
+    },
   );
 }
