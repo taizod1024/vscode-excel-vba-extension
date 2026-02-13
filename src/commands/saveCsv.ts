@@ -5,7 +5,7 @@ import { CommandContext } from "../utils/types";
 import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 
-const commandName = "Save Sheets from CSV";
+const commandName = "Save CSV to Excel Book";
 
 export async function saveCsvAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
@@ -24,8 +24,8 @@ export async function saveCsvAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Save-CSV.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Source: `${bookFileName}.csv`
+        file: bookFileName,
+        source: `${bookFileName}.csv`
       });
 
       // Check if CSV directory exists

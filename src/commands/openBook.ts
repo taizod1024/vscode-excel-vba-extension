@@ -22,7 +22,7 @@ export async function openBookAsync(bookPath: string, context: CommandContext) {
   }
 
   logger.logCommandStart(commandName, {
-    File: path.basename(bookPath),
+    file: path.basename(bookPath),
   });
   // Excel の実行ファイルパスを取得して起動
   const excelPath = getExcelPath();

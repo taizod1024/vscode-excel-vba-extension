@@ -32,8 +32,8 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
       const scriptPath = `${context.extensionPath}\\bin\\Save-CustomUI.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Source: `${bookFileName}.xml`
+        file: bookFileName,
+        source: `${bookFileName}.xml`
       });
 
       // Check if save source folder exists

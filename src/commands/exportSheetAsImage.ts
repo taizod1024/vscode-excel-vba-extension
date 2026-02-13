@@ -24,8 +24,8 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Output: `${bookFileName}.png`
+        file: bookFileName,
+        output: `${bookFileName}.png`
       });
 
       // exec command
@@ -41,7 +41,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       }
 
       logger.logSuccess("Sheets exported as images");
-      vscode.window.showInformationMessage("Sheets exported as PNG.");
+      vscode.window.showInformationMessage(`[${bookFileName}] Sheets exported as PNG.`);
     }
   );
 }

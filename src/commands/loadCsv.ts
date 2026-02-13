@@ -6,7 +6,7 @@ import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 import { closeAllDiffEditors } from "../utils/editorOperations";
 
-const commandName = "Load CSV from Sheets";
+const commandName = "Load CSV from Excel Book";
 
 export async function loadCsvAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(
@@ -25,8 +25,8 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Output: `${bookFileName}.csv`
+        file: bookFileName,
+        output: `${bookFileName}.csv`
       });
 
       // exec command

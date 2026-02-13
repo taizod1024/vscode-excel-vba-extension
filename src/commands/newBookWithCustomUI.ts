@@ -58,8 +58,8 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
     async _progress => {
       const logger = new Logger(context.channel);
       logger.logCommandStart(commandName, {
-        Path: filePath,
-        Template: path.basename(templatePath),
+        path: filePath,
+        template: path.basename(templatePath),
       });
 
       // Copy template file

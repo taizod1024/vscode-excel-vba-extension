@@ -26,8 +26,8 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       const scriptPath = `${context.extensionPath}\\bin\\Save-VBA.ps1`;
       
       logger.logCommandStart(commandName, {
-        File: bookFileName,
-        Source: `${bookFileName}.bas`
+        file: bookFileName,
+        source: `${bookFileName}.bas`
       });
 
       // Check if save source folder exists
@@ -64,7 +64,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       // Show warning for add-in files
       const ext = path.extname(bookPath).toLowerCase();
       if (ext === ".xlam") {
-        vscode.window.showWarningMessage("Save .XLAM in VB Editor (Ctrl+S).");
+        vscode.window.showWarningMessage(`[${bookFileName}] Save .XLAM in VB Editor (Ctrl+S).`);
       }
 
       // Close all diff editors

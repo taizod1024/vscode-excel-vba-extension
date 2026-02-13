@@ -44,8 +44,8 @@ export async function compareVbaAsync(bookPath: string, context: CommandContext)
       const tmpPath = path.join(bookDir, `${referenceFileName}.bas~`);
 
       logger.logCommandStart(commandName, {
-        File: path.basename(bookPath),
-        Current: currentFolderName
+        file: path.basename(bookPath),
+        current: currentFolderName
       });
       logger.logInfo("Loading from Excel...");
 

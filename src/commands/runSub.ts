@@ -27,8 +27,8 @@ export async function runSubAsync(bookPath: string, context: CommandContext) {
       const logger = new Logger(context.channel);
       const scriptPath = `${context.extensionPath}\\bin\\Run-Sub.ps1`;
       logger.logCommandStart(commandName, {
-        File: path.basename(bookPath),
-        Sub: subName
+        file: path.basename(bookPath),
+        sub: subName
       });
 
       // exec command
