@@ -48,7 +48,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
     throw "File already exists.";
   }
 
-  const commandName = `Create new Excel workbook with Custom UI`;
+  const commandName = `New Excel Book with CustomUI`;
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,

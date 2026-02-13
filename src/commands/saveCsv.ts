@@ -5,7 +5,7 @@ import { CommandContext } from "../utils/types";
 import { Logger } from "../utils/logger";
 import { execPowerShell } from "../utils/execPowerShell";
 
-const commandName = "Save Sheets from CSV";
+const commandName = "Save CSV to Excel Book";
 
 export async function saveCsvAsync(bookPath: string, context: CommandContext) {
   return vscode.window.withProgress(

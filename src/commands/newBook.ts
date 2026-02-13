@@ -41,7 +41,7 @@ export async function newBookAsync(context: CommandContext) {
     throw "File already exists.";
   }
 
-  const commandName = `Create new Excel workbook`;
+  const commandName = `New Excel Book`;
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,

@@ -4,7 +4,7 @@ import { CommandContext } from "../utils/types";
 import { execPowerShell } from "../utils/execPowerShell";
 import { Logger } from "../utils/logger";
 
-const commandName = "Create URL Shortcut";
+const commandName = "Create URL Shortcut for Cloud Files";
 
 /** Create .url shortcut for cloud-based Excel files */
 export async function createUrlShortcutAsync(context: CommandContext) {
