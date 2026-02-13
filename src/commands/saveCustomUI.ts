@@ -9,6 +9,20 @@ import { closeAllDiffEditors } from "../utils/editorOperations";
 const commandName = "Save CustomUI to Excel Book";
 
 export async function saveCustomUIAsync(bookPath: string, context: CommandContext) {
+  // Resolve Excel file name (handle both direct .xlsx and VBA component file selections)
+  const fileExtension = path.parse(bookPath).ext.replace(".", "");
+  const vbaComponentExtensions = ["bas", "cls", "frm", "frx"];
+  let excelFileName = path.basename(bookPath);
+
+  if (vbaComponentExtensions.includes(fileExtension)) {
+    // VBA component file selected - extract Excel name from parent folder
+    const parentFolderName = path.basename(path.dirname(bookPath));
+    const match = parentFolderName.match(/^(.+\.(xlsm|xlsx|xlam))\.bas$/i);
+    if (match) {
+      excelFileName = match[1];
+    }
+  }
+
   const ext = path.extname(bookPath).toLowerCase();
 
   // CustomUI is supported for .xlam (add-ins) and .xlsm (workbooks)
@@ -19,7 +33,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: commandName,
+      title: `[${excelFileName}] ${commandName}`,
       cancellable: false,
     },
     async _progress => {
@@ -33,7 +47,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
-        source: `${bookFileName}.xml`,
+        source: `${bookFileName}.xml`
       });
 
       // Check if save source folder exists
