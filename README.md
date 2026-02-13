@@ -1,5 +1,12 @@
 [ENGLISH](#excel-vba-extension-en) | [日本語](#excel-vba-extension-jp)
 
+**The folder structure has been changed since version 0.1.24.**
+
+- aaa_bas/ → aaa_xlsx/bas/
+- aaa_csv/ → aaa_xslx/csv/
+- aaa_png/ → aaa_xlsx/png/
+- aaa_xml/ → aaa_xlsx/xml/
+
 ---
 
 ## Excel VBA Extension EN

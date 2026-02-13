@@ -67,9 +67,10 @@ export async function newBookAsync(context: CommandContext) {
 
       logger.logSuccess("New workbook created");
 
-      // Reveal file in Explorer
+      // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);
       await vscode.commands.executeCommand("revealInExplorer", fileUri);
+      await vscode.commands.executeCommand("vscode.open", fileUri);
 
       // Open the newly created file with Excel
       try {

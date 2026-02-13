@@ -63,7 +63,14 @@ try {
             # Check if sheet name ends with .png
             if ($sheetName -match '.*\.png$') {
                 Write-Host "  - Exporting: $sheetName"
-                $sheet.Select() | Out-Null
+                
+                # Try to select sheet, but proceed if Select() is not supported
+                try {
+                    $sheet.Select() | Out-Null
+                } catch {
+                    # Some sheet types (e.g., chart sheets) may not support Select()
+                    # This is not critical for exporting
+                }
 
                 # Get print area
                 $printArea = $sheet.PageSetup.PrintArea

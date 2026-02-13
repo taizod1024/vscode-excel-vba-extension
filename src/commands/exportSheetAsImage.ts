@@ -46,6 +46,18 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
 
       logger.logSuccess("Sheets exported as images");
       vscode.window.showInformationMessage("Sheets exported as PNG.");
+
+      // Reveal the first PNG file in Explorer
+      const files = fs.readdirSync(imageDir).filter(file => {
+        const ext = path.extname(file).toLowerCase();
+        return ext === ".png";
+      });
+
+      if (files.length > 0) {
+        const firstFile = path.join(imageDir, files[0]);
+        const fileUri = vscode.Uri.file(firstFile);
+        await vscode.commands.executeCommand("revealInExplorer", fileUri);
+      }
     },
   );
 }
