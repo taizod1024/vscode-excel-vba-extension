@@ -142,7 +142,7 @@ function compareDirectories(dir1: string, dir2: string, logger: Logger): boolean
   if (hasDifferences) {
     logger.logWarn(`Differences found: +${added.length} ~${modifiedCount} -${removed.length}`);
   } else {
-    logger.logSuccess("No differences found");
+    logger.logSuccess("No differences found (disk and workbook match)");
   }
 
   // Display first modified file in diff view

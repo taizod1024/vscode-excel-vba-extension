@@ -65,7 +65,7 @@ export async function newBookWithCustomUIAsAddinAsync(context: CommandContext) {
       // Copy template file
       fs.copyFileSync(templatePath, filePath);
 
-      logger.logSuccess("New addin created with Custom UI");
+      logger.logSuccess(`New addin created (${fileName})`);
 
       // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);

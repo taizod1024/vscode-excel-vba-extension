@@ -38,7 +38,7 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       const result = execPowerShell(scriptPath, [bookPath, csvDir]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to load CSV.";

@@ -37,14 +37,14 @@ export async function exportSheetsAsPngAsync(bookPath: string, context: CommandC
       const result = execPowerShell(scriptPath, [bookPath, imageDir]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to export sheet as PNG.";
         throw errorLine;
       }
 
-      logger.logSuccess("Sheets exported as images");
+      logger.logSuccess("Sheets exported (PNG images created)");
       vscode.window.showInformationMessage("Sheets exported as PNG.");
 
       // Reveal the first PNG file in Explorer

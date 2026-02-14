@@ -30,10 +30,12 @@ export async function createUrlShortcutAsync(context: CommandContext) {
       const result = execPowerShell(scriptPath, [workspaceFolder], false);
 
       // Output result
-      if (result.stdout) logger.logRaw(result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         throw "Failed to create URL shortcut.";
       }
+
+      logger.logSuccess("URL shortcuts created (cloud file references saved)");
     },
   );
 }

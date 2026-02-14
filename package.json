@@ -172,12 +172,12 @@
         {
           "command": "excel-vba.loadVba",
           "group": "navigation@1.02",
-          "when": "resourcePath =~ /[._](xlsx|xlsm|xlam)/i"
+          "when": "resourcePath =~ /[._](xlsm|xlam)/i"
         },
         {
           "command": "excel-vba.saveVba",
           "group": "navigation@1.03",
-          "when": "resourcePath =~ /[._](xlsx|xlsm|xlam)/i"
+          "when": "resourcePath =~ /[._](xlsm|xlam)/i"
         },
         {
           "command": "excel-vba.runSub",

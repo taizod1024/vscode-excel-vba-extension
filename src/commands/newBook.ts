@@ -65,7 +65,7 @@ export async function newBookAsync(context: CommandContext) {
         throw "Failed to create new workbook.";
       }
 
-      logger.logSuccess("New workbook created");
+      logger.logSuccess(`New workbook created (${fileName})`);
 
       // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);

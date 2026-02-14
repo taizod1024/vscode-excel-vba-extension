@@ -52,7 +52,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
       const result = execPowerShell(scriptPath, [bookPath, saveSourcePath]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save CustomUI.";
@@ -66,7 +66,7 @@ export async function saveCustomUIAsync(bookPath: string, context: CommandContex
         logger.logInfo("Temporary folder removed");
       }
 
-      logger.logSuccess("CustomUI saved");
+      logger.logSuccess("CustomUI saved to Excel book");
 
       // Close all diff editors
       await closeAllDiffEditors(context.channel);
