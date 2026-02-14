@@ -39,6 +39,38 @@
 
 ---
 
+## 出力フォーマット
+
+すべてのコマンド実行で、VS Code の出力チャネルに以下のフォーマットで結果が表示されます：
+
+### メッセージ形式
+
+```
+## [コマンド名]
+- Output: [PowerShellの出力があれば表示]
+[SUCCESS] アクション説明 (コンテキスト詳細)
+```
+
+### 例表
+
+```
+## Load VBA from Excel Book
+- Output: VBA load completed
+[SUCCESS] VBA extracted (3 file(s)) to folder
+
+## Create URL Shortcut
+- Output: URL shortcuts created successfully
+[SUCCESS] URL shortcuts created (cloud file references saved)
+
+## Run VBA Sub at Cursor
+- Output: Sub execution completed
+[SUCCESS] Sub executed (TestSub)
+```
+
+詳細は [OUTPUT_FORMAT_SPEC.md](./OUTPUT_FORMAT_SPEC.md) を参照してください。
+
+---
+
 ## コマンド詳細
 
 ### 1. New Excel Book
@@ -46,13 +78,16 @@
 **コマンド ID**: `excel-vba.newBook`
 
 **実行方法**
+
 - File → New File → New Excel Book
 - コマンドパレット → "New Excel Book"
 
 **入力**
+
 - ファイル名（拡張子なし）
 
 **出力**
+
 - `{name}.xlsx`（ワークスペース直下）
 
 **処理時間**: < 5 秒
@@ -61,17 +96,20 @@
 
 ---
 
-### 2. New Excel Book with CustomUI
+### 2. New Excel Book with CustomUI as Macro
 
 **コマンド ID**: `excel-vba.newBookWithCustomUI`
 
 **実行方法**
-- コマンドパレット → "New Excel Book with CustomUI"
+
+- コマンドパレット → "New Excel Book with CustomUI as Macro"
 
 **入力**
+
 - ファイル名（拡張子なし）
 
 **出力**
+
 - `{name}.xlsm`（ワークスペース直下）
 - CustomUI テンプレート付き
 
@@ -86,13 +124,16 @@
 **コマンド ID**: `excel-vba.openBook`
 
 **実行方法**
+
 - ファイルを右クリック → Open Excel Book
 - エディタタイトルアイコン
 
 **対象ファイル**
+
 - `.xlsx`, `.xlsm`, `.xlam`, `.url`, `.csv`, `.bas`, `.cls`, `.frm`, `.xml`
 
 **動作**
+
 - Excel で対象ファイルを開く
 - VBA/CSV/XML ファイルの場合、対応する Excel ファイルを検出・開く
 
@@ -107,13 +148,16 @@
 **コマンド ID**: `excel-vba.loadVba`
 
 **実行方法**
+
 - ブックファイルを右クリック → Load VBA from Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でブックが開かれている
 
 **出力**
+
 - `{name}.bas/` フォルダ
 - `.bas`, `.cls`, `.frm` ファイル
 
@@ -128,14 +172,17 @@
 **コマンド ID**: `excel-vba.saveVba`
 
 **実行方法**
+
 - ブックファイルを右クリック → Save VBA to Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でブックが開かれている
 - `{name}.bas/` フォルダが存在
 
 **動作**
+
 - `.bas` フォルダ内のファイルを読み込み
 - 既存 VBA コンポーネントをすべて削除・再作成
 - Excel ブックに保存
@@ -151,14 +198,17 @@
 **コマンド ID**: `excel-vba.compareVba`
 
 **実行方法**
+
 - ブックファイルを右クリック → Compare VBA with Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でブックが開かれている
 - `{name}.bas/` フォルダが存在
 
 **動作**
+
 - Excel のコードを一時ファイルに書き込み
 - VS Code で Diff ビュー表示
 - 左窒: Excel, 右窒: VS Code
@@ -174,15 +224,18 @@
 **コマンド ID**: `excel-vba.runSub`
 
 **実行方法**
+
 - VBA ファイル内で実行 → Run VBA Sub at Cursor
 - エディタタイトルアイコン
 
 **前提条件**
+
 - VBA ファイルを開いている
 - Excel でブックが開かれている
 - カーソルが Sub 内
 
 **動作**
+
 1. VBA ファイルを Save
 2. カーソル位置の Sub を特定
 3. Excel で Sub を実行
@@ -199,14 +252,17 @@
 **コマンド ID**: `excel-vba.loadCsv`
 
 **実行方法**
+
 - ブックファイルを右クリック → Load CSV from Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でブックが開かれている
 - シート名が「.csv」で終わるシートが存在
 
 **出力**
+
 - `{name}.csv/` フォルダ
 - 各シート = CSV ファイル
 
@@ -221,14 +277,17 @@
 **コマンド ID**: `excel-vba.saveCsv`
 
 **実行方法**
+
 - ブックファイルを右クリック → Save CSV to Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でブックが開かれている
 - `{name}.csv/` フォルダが存在
 
 **動作**
+
 - `.csv` フォルダ内の CSV を読み込み
 - 既存シートを削除
 - 新しいシートを作成・データを書き込み
@@ -245,15 +304,19 @@
 **コマンド ID**: `excel-vba.createUrlShortcut`
 
 **実行方法**
+
 - コマンドパレット → "Create URL Shortcut"
 
 **前提条件**
+
 - OneDrive / SharePoint のファイルが Excel で開かれている（複数可）
 
 **出力**
+
 - `{name}.url` ファイル（ワークスペース直下）
 
 **動作**
+
 1. Excel で開かれている全ブックをスキャン
 2. クラウドホストの URL を抽出
 3. .url ショートカット作成
@@ -269,13 +332,16 @@
 **コマンド ID**: `excel-vba.loadCustomUI`
 
 **実行方法**
+
 - アドインファイル（.xlam）を右クリック → Load CustomUI from Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でアドインが開かれている
 
 **出力**
+
 - `{name}.xml/` フォルダ
 - `customUI.xml`, `customUI14.xml`
 
@@ -290,15 +356,18 @@
 **コマンド ID**: `excel-vba.saveCustomUI`
 
 **実行方法**
+
 - アドインファイルを右クリック → Save CustomUI to Excel Book
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel を閉じている（重要）
 - `{name}.xml/` フォルダが存在
 - XML ファイルが編集済み
 
 **動作**
+
 1. アドインをZIP として開く
 2. customUI パーツを更新
 3. アドイン再構築
@@ -310,20 +379,23 @@
 
 ---
 
-### 13. Export Sheet as PNG
+### 13. Export Sheets as PNG
 
-**コマンド ID**: `excel-vba.exportSheetAsPng`
+**コマンド ID**: `excel-vba.exportSheetsAsPng`
 
 **実行方法**
+
 - ブックファイルを右クリック → Export Sheet as PNG
 - エディタタイトルアイコン
 
 **前提条件**
+
 - Excel でブックが開かれている
 - シート名が「.png」で終わるシートが存在
 - 各シートに印刷範囲が設定されている
 
 **出力**
+
 - `{name}_png/` フォルダ
 - 各シート = PNG ファイル
 
@@ -333,23 +405,56 @@
 
 ---
 
+### 14. Open Sheet from PNG
+
+**コマンド ID**: `excel-vba.openSheetFromPng`
+
+**実行方法**
+
+- PNG ファイルを右クリック → Open Sheet from PNG
+- エディタタイトルアイコン
+
+**対象ファイル**
+
+- `.png`（Export Sheet as PNG で作成した PNG ファイル）
+
+**前提条件**
+
+- PNG ファイルが `{name}_拡張子/png/` フォルダ内に存在
+- PNG ファイル名をシート名として使用（例: `aaa.png` → シート名 `aaa.png`）
+- 対応する Excel ファイルが同じディレクトリまたは親ディレクトリに存在
+
+**動作**
+
+- PNG ファイル名からシート名を抽出
+- フォルダ構造から対応する Excel ファイルを特定
+- Excel でファイルを開く
+- 指定されたシート名のシートをアクティベート
+
+**処理時間**: 1-3 秒
+
+**参照**: [OPEN_SHEET_FROM_PNG_SPEC.md](./OPEN_SHEET_FROM_PNG_SPEC.md)
+
+---
+
 ## コマンド早見表
 
-| # | コマンド ID | 説明 | キー |
-|----|----------|------|------|
-| 1 | newBook | 新しい Excel ファイル作成 | − |
-| 2 | newBookWithCustomUI | CustomUI 付き作成 | − |
-| 3 | openBook | Excel で開く | − |
-| 4 | loadVba | VBA 抽出 | − |
-| 5 | saveVba | VBA 保存 | − |
-| 6 | compareVba | VBA 比較 | − |
-| 7 | runSub | Sub 実行 | − |
-| 8 | loadCsv | CSV 抽出 | − |
-| 9 | saveCsv | CSV 保存 | − |
-| 10 | createUrlShortcut | URL ショートカット作成 | − |
-| 11 | loadCustomUI | CustomUI 抽出 | − |
-| 12 | saveCustomUI | CustomUI 保存 | − |
-| 13 | exportSheetAsPng | PNG エクスポート | − |
+| #   | コマンド ID         | 説明                       | キー |
+| --- | ------------------- | -------------------------- | ---- |
+| 1   | newBook             | 新しい Excel ファイル作成  | −    |
+| 2   | newBookWithCustomUI | CustomUI as Macro 付き作成 | −    |
+| 3   | openBook            | Excel で開く               | −    |
+| 4   | loadVba             | VBA 抽出                   | −    |
+| 5   | saveVba             | VBA 保存                   | −    |
+| 6   | compareVba          | VBA 比較                   | −    |
+| 7   | runSub              | Sub 実行                   | −    |
+| 8   | loadCsv             | CSV 抽出                   | −    |
+| 9   | saveCsv             | CSV 保存                   | −    |
+| 10  | createUrlShortcut   | URL ショートカット作成     | −    |
+| 11  | loadCustomUI        | CustomUI 抽出              | −    |
+| 12  | saveCustomUI        | CustomUI 保存              | −    |
+| 13  | exportSheetsAsPng   | PNG エクスポート（複数）   | −    |
+| 14  | openSheetFromPng    | PNG から Sheet を開く      | −    |
 
 ---
 
@@ -359,9 +464,10 @@
 VS Code の設定から任意に追加できます。
 
 例:
+
 ```json
 {
-    "key": "ctrl+alt+l",
-    "command": "excel-vba.loadVba"
+  "key": "ctrl+alt+l",
+  "command": "excel-vba.loadVba"
 }
 ```

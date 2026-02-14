@@ -5,10 +5,19 @@ Excel VBA Extension の全機能に関する仕様書とドキュメントです
 ## 全機能の概要
 
 - [ALL_FEATURES_OVERVIEW.md](./ALL_FEATURES_OVERVIEW.md)
-  - 13 個の全機能の概要
+  - 14 個の全機能の概要
   - アーキテクチャ
   - ファイル構成
   - 共通仕様
+
+## 出力・仕様ガイド
+
+- [OUTPUT_FORMAT_SPEC.md](./OUTPUT_FORMAT_SPEC.md) - **新規**
+  - 入出力フォーマット仕様
+  - チャネル表示仕様
+  - 成功・エラーメッセージ形式
+  - ファイルエンコーディング仕様
+  - 実装ガイドラインと注意点
 
 ## 機能別仕様書
 
@@ -90,12 +99,17 @@ Excel VBA Extension の全機能に関する仕様書とドキュメントです
 
 ```
 ALL_FEATURES_OVERVIEW.md（全体像）
+    │
+    ├── OUTPUT_FORMAT_SPEC.md（出力仕様）← NEW
+    │
     ├── NEW_BOOK_SPEC.md（ファイル作成）
     ├── LOAD_SAVE_VBA_SPEC.md（VBA 開発）
     ├── LOAD_SAVE_CSV_SPEC.md（CSV 管理）
     ├── LOAD_SAVE_CUSTOMUI_SPEC.md（CustomUI）
     ├── EXPORT_SHEET_AS_PNG_SPEC.md（PNG）
+    ├── OPEN_SHEET_FROM_PNG_SPEC.md（PNG 逆変換）
     ├── CLOUD_SUPPORT_SPEC.md（クラウド）
+    │
     └── COMMAND_REFERENCE.md（コマンド一覧）
 ```
 
@@ -103,15 +117,17 @@ ALL_FEATURES_OVERVIEW.md（全体像）
 
 **「〇〇がしたい」の場合**
 
-| 目的 | 参照先 |
-|------|--------|
-| 新しい Excel ファイルを作成したい | NEW_BOOK_SPEC.md |
-| VBA コードを編集したい | LOAD_SAVE_VBA_SPEC.md |
-| Excel シートを Git で管理したい | LOAD_SAVE_CSV_SPEC.md |
-| リボンをカスタマイズしたい | LOAD_SAVE_CUSTOMUI_SPEC.md |
+| 目的                              | 参照先                      |
+| --------------------------------- | --------------------------- |
+| 出力形式を理解したい              | OUTPUT_FORMAT_SPEC.md       |
+| 新しい Excel ファイルを作成したい | NEW_BOOK_SPEC.md            |
+| VBA コードを編集したい            | LOAD_SAVE_VBA_SPEC.md       |
+| Excel シートを Git で管理したい   | LOAD_SAVE_CSV_SPEC.md       |
+| リボンをカスタマイズしたい        | LOAD_SAVE_CUSTOMUI_SPEC.md  |
 | ダッシュボードを PNG で保存したい | EXPORT_SHEET_AS_PNG_SPEC.md |
-| OneDrive のファイルを管理したい | CLOUD_SUPPORT_SPEC.md |
-| 특정 コマンドの使い方を知りたい | COMMAND_REFERENCE.md |
+| PNG から Sheet を開きたい         | OPEN_SHEET_FROM_PNG_SPEC.md |
+| OneDrive のファイルを管理したい   | CLOUD_SUPPORT_SPEC.md       |
+| 特定 コマンドの使い方を知りたい   | COMMAND_REFERENCE.md        |
 
 ## 技術情報
 
@@ -130,23 +146,27 @@ ALL_FEATURES_OVERVIEW.md（全体像）
 
 一般的な問題：
 
-| 問題 | 参照先 |
-|------|--------|
-| Excel が起動しない | 各仕様書のエラーハンドリング |
-| ファイルが見つからない | CLOUD_SUPPORT_SPEC.md |
-| XML 構文エラー | LOAD_SAVE_CUSTOMUI_SPEC.md |
-| VBA 保存に失敗 | LOAD_SAVE_VBA_SPEC.md |
+| 問題                   | 参照先                       |
+| ---------------------- | ---------------------------- |
+| Excel が起動しない     | 各仕様書のエラーハンドリング |
+| ファイルが見つからない | CLOUD_SUPPORT_SPEC.md        |
+| XML 構文エラー         | LOAD_SAVE_CUSTOMUI_SPEC.md   |
+| VBA 保存に失敗         | LOAD_SAVE_VBA_SPEC.md        |
 
 ## 推奨リーディング順序
 
 初めて使う場合：
 
 1. ALL_FEATURES_OVERVIEW.md - 全体像を理解
-2. COMMAND_REFERENCE.md - コマンド一覧を確認
-3. 目的に応じて個別の仕様書を参照
+2. OUTPUT_FORMAT_SPEC.md - 出力フォーマットを理解
+3. COMMAND_REFERENCE.md - コマンド一覧を確認
+4. 目的に応じて個別の仕様書を参照
 
 頻繁に使う場合：
 
-- COMMAND_REFERENCE.md をブックマーク
-- 個別機能は必要な時に仕様書で確認
+- COMMAND_REFERENCE.md と OUTPUT_FORMAT_SPEC.md をブックマーク
 
+開発者向け：
+
+- OUTPUT_FORMAT_SPEC.md の「実装上の注意点」セクション参照
+- 個別機能は必要な時に仕様書で確認

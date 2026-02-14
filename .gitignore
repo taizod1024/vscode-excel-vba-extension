@@ -8,5 +8,8 @@ build
 *.vsix
 *.zip
 
-# ignore excel temporary file
+# ignore excel temporary files
 ~$*
+
+# ignore excel vba extension temporary files
+*~

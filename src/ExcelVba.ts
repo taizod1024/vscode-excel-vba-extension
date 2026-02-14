@@ -14,9 +14,11 @@ import { saveCsvAsync } from "./commands/saveCsv";
 import { openBookAsync } from "./commands/openBook";
 import { runSubAsync } from "./commands/runSub";
 import { newBookAsync } from "./commands/newBook";
-import { newBookWithCustomUIAsync } from "./commands/newBookWithCustomUI";
+import { newBookWithCustomUIAsMacroAsync } from "./commands/newBookWithCustomUI";
+import { newBookWithCustomUIAsAddinAsync } from "./commands/newBookWithCustomUIAsAddin";
 import { createUrlShortcutAsync } from "./commands/createUrlShortcut";
-import { exportSheetAsPngAsync } from "./commands/exportSheetAsImage";
+import { exportSheetsAsPngAsync } from "./commands/exportSheetAsImage";
+import { openSheetFromPngAsync } from "./commands/openSheetFromPng";
 import { copyAddinToAppData } from "./utils/fileOperations";
 
 /** Excel VBA extension class */
@@ -338,7 +340,7 @@ class ExcelVba {
 
     // Copy Excel addin to AppData
     // Always copy on activation to ensure addin is up-to-date
-    const addinPath = path.join(context.extensionPath, "excel", "addin", "excel-vba-addin.xlam");
+    const addinPath = path.join(context.extensionPath, "excel", "excel-vba-addin", "excel-vba-addin.xlam");
     this.channel.appendLine(`[DEBUG] Attempting to copy addin from: ${addinPath}`);
     if (copyAddinToAppData(addinPath, this.channel)) {
       this.channel.appendLine(`[DEBUG] Addin copied successfully`);
@@ -350,6 +352,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.openBook`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const selectedPath = uri.fsPath;
           this.channel.appendLine(`[DEBUG] Selected path: ${selectedPath}`);
@@ -366,6 +369,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.loadVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await loadVbaAsync(bookPath, commandContext);
@@ -379,6 +383,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.saveVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveVbaAsync(bookPath, commandContext);
@@ -392,6 +397,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.compareVba`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await compareVbaAsync(bookPath, commandContext);
@@ -405,6 +411,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.loadCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await loadCustomUIAsync(bookPath, commandContext);
@@ -418,6 +425,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.saveCustomUI`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCustomUIAsync(bookPath, commandContext);
@@ -431,6 +439,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.runSub`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveVbaAsync(bookPath, commandContext);
@@ -445,6 +454,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.loadCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await loadCsvAsync(bookPath, commandContext);
@@ -458,6 +468,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.saveCsv`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCsvAsync(bookPath, commandContext);
@@ -471,6 +482,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.newBook`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           await newBookAsync(commandContext);
         } catch (reason) {
@@ -483,8 +495,22 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUI`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
-          await newBookWithCustomUIAsync(commandContext);
+          await newBookWithCustomUIAsMacroAsync(commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUIAsAddin`, async () => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
+        try {
+          await newBookWithCustomUIAsAddinAsync(commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
@@ -495,6 +521,7 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.createUrlShortcut`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           await createUrlShortcutAsync(commandContext);
         } catch (reason) {
@@ -505,11 +532,25 @@ class ExcelVba {
     );
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(`${this.appId}.exportSheetAsPng`, async (uri: vscode.Uri) => {
+      vscode.commands.registerCommand(`${this.appId}.exportSheetsAsPng`, async (uri: vscode.Uri) => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
-          await exportSheetAsPngAsync(bookPath, commandContext);
+          await exportSheetsAsPngAsync(bookPath, commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.openSheetFromPng`, async (uri: vscode.Uri) => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
+        try {
+          await openSheetFromPngAsync(uri.fsPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);

@@ -1,0 +1,15 @@
+﻿<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+    <ribbon>
+        <tabs>
+            <tab id="TabSampleMacro" label="TabSampleMacro">
+                <group id="GroupSampleMacro" label="GroupSampleMacro">
+                    <button id="ButtonSamplle" imageMso="FormControlButton" label="ButtonSampleMacro"
+                        onAction="SampleMacro_onAction" getEnabled="SampleMacro_getEnabled"
+                        screentip="サンプルマクロボタン"
+                        supertip="サンプルマクロボタンです。"
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

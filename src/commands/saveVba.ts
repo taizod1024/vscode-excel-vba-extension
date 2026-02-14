@@ -49,7 +49,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
       const result = execPowerShell(scriptPath, [bookPath, saveSourcePath]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save VBA.";
@@ -63,7 +63,7 @@ export async function saveVbaAsync(bookPath: string, context: CommandContext) {
         logger.logInfo("Temporary folder removed");
       }
 
-      logger.logSuccess("VBA saved");
+      logger.logSuccess("VBA saved to Excel book");
 
       // Show warning for add-in files
       if (ext === ".xlam") {

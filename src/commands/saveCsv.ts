@@ -43,7 +43,7 @@ export async function saveCsvAsync(bookPath: string, context: CommandContext) {
       const result = execPowerShell(scriptPath, [bookPath, csvDir]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to save CSV.";
@@ -51,7 +51,7 @@ export async function saveCsvAsync(bookPath: string, context: CommandContext) {
         throw errorLine;
       }
 
-      logger.logSuccess("Sheets saved from CSV");
+      logger.logSuccess("Sheets saved from CSV file");
     },
   );
 }

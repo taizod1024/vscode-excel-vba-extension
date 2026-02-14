@@ -38,7 +38,7 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
       const result = execPowerShell(scriptPath, [bookPath, tmpPath]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "No book open.";
@@ -91,7 +91,7 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
         }
       }
 
-      logger.logSuccess(`VBA extracted (${files.length} file(s))`);
+      logger.logSuccess(`VBA extracted (${files.length} file(s)) to ${path.basename(path.dirname(newPath))}`);
     },
   );
 }

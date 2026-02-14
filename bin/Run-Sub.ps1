@@ -97,7 +97,7 @@ try {
         throw "SUB NOT FOUND: $subName"
     }
 
-    Write-Host "[SUCCESS] Sub executed: $subName"
+    Write-Host "Sub executed successfully"
 }
 catch {
     [Console]::Error.WriteLine("$($_)")

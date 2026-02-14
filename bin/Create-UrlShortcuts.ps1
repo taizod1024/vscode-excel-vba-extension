@@ -37,8 +37,8 @@ try {
 URL=$fileUrl
 "@
         
-        # Create .url file with Internet Shortcut format (UTF-8 encoding)
-        $content | Out-File -LiteralPath $shortcutPath -Encoding UTF8 -Force
+        # Create .url file with Internet Shortcut format (Shift-JIS encoding)
+        $content | Out-File -LiteralPath $shortcutPath -Encoding Default -Force
         
         Write-Host "  - Created: $shortcutPath"
         $workbookCount++
@@ -48,7 +48,7 @@ URL=$fileUrl
         Write-Host "[INFO] No OneDrive/SharePoint workbooks found"
     }
     else {
-        Write-Host "[SUCCESS] Internet Shortcut files created for $workbookCount workbook(s)"
+        Write-Host "URL shortcuts created successfully"
     }
 }
 catch {

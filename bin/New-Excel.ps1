@@ -43,7 +43,7 @@ try {
     $shell = New-Object -ComObject wscript.shell
     $shell.AppActivate($excel.Caption) | Out-Null
 
-    Write-Host "[SUCCESS] New Excel file created and opened"
+    Write-Host "New Excel file created successfully"
 }
 catch {
     Write-Host "[ERROR] $_"

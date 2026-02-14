@@ -1,0 +1,15 @@
+﻿<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+    <ribbon>
+        <tabs>
+            <tab id="TabSampleAddin" label="TabSampleAddin">
+                <group id="GroupSampleAddin" label="GroupSampleAddin">
+                    <button id="ButtonSamplle" imageMso="FormControlButton" label="ButtonSampleAddin"
+                        onAction="SampleAddin_onAction" getEnabled="SampleAddin_getEnabled"
+                        screentip="サンプルアドインボタン"
+                        supertip="サンプルアドインボタンです。"
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

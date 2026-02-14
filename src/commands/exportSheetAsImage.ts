@@ -8,7 +8,7 @@ import { getExcelFileName, getFileNameParts } from "../utils/pathResolution";
 
 const commandName = "Export Sheet as PNG";
 
-export async function exportSheetAsPngAsync(bookPath: string, context: CommandContext) {
+export async function exportSheetsAsPngAsync(bookPath: string, context: CommandContext) {
   // Get display file name (handles .url and VBA component files)
   const excelFileName = getExcelFileName(bookPath);
 
@@ -26,7 +26,7 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       const bookDir = path.dirname(bookPath);
       const { fileNameWithoutExt, excelExt } = getFileNameParts(bookPath);
       const imageDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "png");
-      const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsImage.ps1`;
+      const scriptPath = `${context.extensionPath}\\bin\\Export-SheetAsPng.ps1`;
 
       logger.logCommandStart(commandName, {
         file: bookFileName,
@@ -37,14 +37,14 @@ export async function exportSheetAsPngAsync(bookPath: string, context: CommandCo
       const result = execPowerShell(scriptPath, [bookPath, imageDir]);
 
       // output result
-      if (result.stdout) logger.logDetail("Output", result.stdout);
+      if (result.stdout) logger.logDetail("Output", result.stdout.trim());
       if (result.exitCode !== 0) {
         // Extract first line of error message for user display
         const errorLine = result.stderr.split("\n")[0].trim() || "Failed to export sheet as PNG.";
         throw errorLine;
       }
 
-      logger.logSuccess("Sheets exported as images");
+      logger.logSuccess("Sheets exported (PNG images created)");
       vscode.window.showInformationMessage("Sheets exported as PNG.");
 
       // Reveal the first PNG file in Explorer

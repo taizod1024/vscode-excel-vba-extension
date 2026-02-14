@@ -5,8 +5,8 @@ import { CommandContext } from "../utils/types";
 import child_process from "child_process";
 import { Logger } from "../utils/logger";
 
-/** Create new Excel workbook with CustomUI template */
-export async function newBookWithCustomUIAsync(context: CommandContext) {
+/** Create new Excel workbook with CustomUI as Macro template */
+export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     throw "No open workspace.";
@@ -15,7 +15,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
   const workspaceFolder = workspaceFolders[0].uri.fsPath;
 
   // Check if template file exists
-  const templatePath = path.join(context.extensionPath, "excel", "bookWithCustomUI", "bookWithCustomUI.xlsm");
+  const templatePath = path.join(context.extensionPath, "excel", "bookWithCustomUIAsMacro", "bookWithCustomUIAsMacro.xlsm");
 
   if (!fs.existsSync(templatePath)) {
     throw "Template file not found.";
@@ -23,8 +23,8 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
 
   // Prompt for file name
   const inputPrompt = await vscode.window.showInputBox({
-    prompt: "Enter new book name",
-    placeHolder: "Example: MyBook (no extension)",
+    prompt: "Enter new macro name",
+    placeHolder: "Example: MyMacro (no extension)",
     validateInput: (value: string) => {
       if (value.length === 0) {
         return "File name cannot be empty";
@@ -48,7 +48,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
     throw "File already exists.";
   }
 
-  const commandName = `New Excel Book with CustomUI`;
+  const commandName = `New Excel Book with CustomUI as Macro`;
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -65,7 +65,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext) {
       // Copy template file
       fs.copyFileSync(templatePath, filePath);
 
-      logger.logSuccess("New workbook created with Custom UI");
+      logger.logSuccess(`New macro workbook created (${fileName})`);
 
       // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);
