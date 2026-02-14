@@ -6,12 +6,12 @@ Option Explicit
 ' 説明: PNG エクスポート機能（リボンボタンコールバック）
 ' ================================================================================
 
-' 定数定義  
+' 定数定義
 Const ENV_USERPROFILE As String = "USERPROFILE"
 Const VSCODE_EXTENSIONS_PATH As String = ".vscode\extensions\"
 Const EXTENSION_PREFIX As String = "taizod1024.excel-vba-"
 Sub ExportSheetsAsPng_getEnabled(control As IRibbonControl, ByRef enabled)
-    enabled = true
+    enabled = True
 End Sub
 
 ''' ================================================================================
@@ -31,23 +31,25 @@ End Sub
 ''' ================================================================================
 Sub ExportSheetsAsPng()
     Dim shell As Object
-    Dim command As String
+    Dim fso As Object
     Dim bookPath As String
     Dim extensionPath As String
     Dim scriptPath As String
+    Dim imageOutputPath As String
+    Dim fileExt As String
+    Dim command As String
     
     On Error GoTo ErrorHandler
     
-    ' アクティブなワークブックが存在するか確認
+    ' ワークブックの確認と初期化
     If ActiveWorkbook Is Nothing Then
         MsgBox "No workbook open.", vbInformation
         Exit Sub
     End If
     
-    ' ワークブックのパスを取得
     bookPath = ActiveWorkbook.FullName
     
-    ' Webから開いている場合（URLの場合）は、Recentフォルダから.urlを探す
+    ' クラウドファイルの場合は Recent フォルダから検索
     If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
         bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
         If bookPath = "" Then
@@ -56,31 +58,46 @@ Sub ExportSheetsAsPng()
         End If
     End If
     
-    ' 拡張機能のパスを取得
+    ' Azure拡張機能のパスを取得
     extensionPath = GetExtensionPath()
     If extensionPath = "" Then
         MsgBox "Excel VBA Extension not found.", vbExclamation
         Exit Sub
     End If
     
-    ' Export-SheetAsPng.ps1 のパスを構築
     scriptPath = extensionPath & "\bin\Export-SheetAsPng.ps1"
+    If Dir(scriptPath) = "" Then
+        MsgBox "PowerShell script not found: " & scriptPath, vbExclamation
+        Exit Sub
+    End If
     
-    ' PowerShell コマンドを実行（別プロセスで）
-    ' 出力フォルダを {bookfolder}/{bookname}_{ext}/png とする
-    Dim imageOutputPath As String
-    Dim fileExt As String
+    ' 出力パスの構築
     fileExt = Mid(bookPath, InStrRev(bookPath, ".") + 1)
-    imageOutputPath = GetParentFolder(bookPath) & "\" & GetFileNameWithoutExt(bookPath) & "_" & fileExt & "\png"
+    imageOutputPath = GetParentFolder(bookPath) & "\" & GetFileNameWithoutExt(bookPath) & _
+                      "_" & fileExt & "\png"
     
+    ' PowerShell スクリプト実行
     Set shell = CreateObject("WScript.Shell")
-    command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & scriptPath & """ """ & bookPath & """ """ & imageOutputPath & """"
-    shell.Run command, 0, False
+    command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & _
+              scriptPath & """ """ & bookPath & """ """ & imageOutputPath & """"
+    shell.Run command, 0, True
+    
+    ' 出力フォルダをエクスプローラで開く
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FolderExists(imageOutputPath) Then
+        shell.Run "explorer """ & imageOutputPath & """", 1, False
+    Else
+        Dim parentFolder As String
+        parentFolder = GetParentFolder(imageOutputPath)
+        If parentFolder <> "" Then
+            shell.Run "explorer """ & parentFolder & """", 1, False
+        End If
+    End If
     
     Exit Sub
     
 ErrorHandler:
-    MsgBox "Failed to export sheets as PNG: " & Err.Description, vbExclamation
+    MsgBox "Failed to export sheets as PNG: " & Err.description, vbExclamation
 End Sub
 
 ''' ================================================================================
@@ -122,7 +139,7 @@ Function GetExtensionPath() As String
     Exit Function
     
 ErrorHandler:
-    MsgBox "Failed to retrieve extension path: " & Err.Description, vbExclamation
+    MsgBox "Failed to retrieve extension path: " & Err.description, vbExclamation
     GetExtensionPath = ""
 End Function
 
