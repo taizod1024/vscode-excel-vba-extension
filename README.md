@@ -18,6 +18,7 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 - Editing in VS Code
   - Edit, add, update, and delete VBA files
   - Edit, add, update, and delete Excel CSV
+  - Export sheets as PNG images
   - Edit and update CustomUI XML files
   - Execute Sub procedures of VBA files from VS Code
 - Integration with VS Code
@@ -30,22 +31,23 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 
 ## Features
 
-| Feature                           | Description                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **New Excel Book**                | Create a new Excel file.                                                      |
-| **New Excel Book with CustomUI**  | Create a new Excel file with CustomUI template.                               |
-| **Open Excel Book**               | Open Excel files from Explorer View.                                          |
-| **Load VBA from Excel Book**      | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam).          |
-| **Save VBA to Excel Book**        | Save VBA files edited in VS Code to book files.                               |
-| **Compare VBA with Excel Book**   | Compare code edited in VS Code with the state of book files.                  |
-| **Run VBA Sub at Cursor**         | Execute the Sub procedure at cursor position in Excel.                        |
-| **Load CSV from Excel Book**      | Export sheets (.csv) from book files as CSV files.                            |
-| **Save CSV to Excel Book**        | Save CSV files edited in VS Code to book file sheets.                         |
-| **Create URL Shortcut**           | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
-| **Load CustomUI from Excel Book** | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
-| **Save CustomUI to Excel Book**   | Save CustomUI edited in VS Code to book files.                                |
-| **Export Sheets as PNG**          | Export sheets with print area as PNG images.                                  |
-| **Open Sheet from PNG**           | Open the original Excel sheet from a PNG image file.                          |
+| Feature                                   | Description                                                                   |
+| ----------------------------------------- | ----------------------------------------------------------------------------- |
+| **New Excel Book**                        | Create a new Excel file.                                                      |
+| **New Excel Book with CustomUI as Macro** | Create a new Excel macro file with CustomUI template.                         |
+| **New Excel Book with CustomUI as Addin** | Create a new Excel add-in file with CustomUI template.                        |
+| **Open Excel Book**                       | Open Excel files from Explorer View.                                          |
+| **Load VBA from Excel Book**              | Extract VBA files (.bas, .cls, .frm) from book files (.xlsm, .xlam).          |
+| **Save VBA to Excel Book**                | Save VBA files edited in VS Code to book files.                               |
+| **Compare VBA with Excel Book**           | Compare code edited in VS Code with the state of book files.                  |
+| **Run VBA Sub at Cursor**                 | Execute the Sub procedure at cursor position in Excel.                        |
+| **Load CSV from Excel Book**              | Export sheets (.csv) from book files as CSV files.                            |
+| **Save CSV to Excel Book**                | Save CSV files edited in VS Code to book file sheets.                         |
+| **Create URL Shortcut**                   | Create URL shortcut files for cloud-hosted Excel files (OneDrive/SharePoint). |
+| **Load CustomUI from Excel Book**         | Export CustomUI (customUI.xml, customUI14.xml) from book files.               |
+| **Save CustomUI to Excel Book**           | Save CustomUI edited in VS Code to book files.                                |
+| **Export Sheets as PNG**                  | Export sheets with print area as PNG images.                                  |
+| **Open Sheet from PNG**                   | Open the original Excel sheet from a PNG image file.                          |
 
 ## Setup
 
@@ -85,7 +87,7 @@ After installing the extension, you need to enable the `excel-vba-addin` in Exce
 Once the `excel-vba-addin` is enabled, you can quickly access VS Code from Excel.
 
 1. Open the target book in Excel.
-2. Click the **Open in VS Code** button from the **ExcelVBA** ribbon in Excel.
+2. Click the **Open in VS Code** button from the **Excel VBA** ribbon in Excel.
 3. The target book opens in VS Code.
 
 ## Usage
@@ -101,14 +103,23 @@ Right-click a book file in Explorer View or click the icon in the editor title t
    - Example: `MyBook` (the file will be created as `MyBook.xlsx`)
 4. A new Excel file (.xlsx) is created and opened in Excel.
 
-### New Excel Book with CustomUI
+### New Excel Book with CustomUI as Macro
 
 1. Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
-2. Search for and select **"New Excel Book with CustomUI"**
+2. Search for and select **"New Excel Book with CustomUI as Macro"**
 3. Enter the file name (supports Japanese and other characters)
    - Note: Enter the name without the `.xlsm` extension
    - Example: `MyMacro` (the file will be created as `MyMacro.xlsm`)
-4. A new Excel file (.xlsm) with CustomUI template is created and opened.
+4. A new Excel macro file (.xlsm) with CustomUI template is created and opened in Excel.
+
+### New Excel Book with CustomUI as Addin
+
+1. Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
+2. Search for and select **"New Excel Book with CustomUI as Addin"**
+3. Enter the file name (supports Japanese and other characters)
+   - Note: Enter the name without the `.xlam` extension
+   - Example: `MyAddin` (the file will be created as `MyAddin.xlam`)
+4. A new Excel add-in file (.xlam) with CustomUI template is created and opened in Excel.
 
 ### Open Excel File
 
@@ -118,11 +129,11 @@ Right-click a book file in Explorer View or click the icon in the editor title t
 
 ### Load VBA
 
-1. Open the book file in Excel
-2. Select the book file in VS Code's Explorer View
-3. Select **Load VBA from Excel Book** from the editor title
+1. Open the book file in Excel.
+2. Select the book file in VS Code's Explorer View.
+3. Select **Load VBA from Excel Book** from the editor title.
 4. A folder with the same name as the book file is created with VBA files.
-   - Example: `MyBook.xlsm` → `MyBook_xlsm/bas` folder
+   - Example: `MyBook.xlsm` → `MyBook_xlsm/bas` folder.
 
 ### Edit VBA
 
@@ -130,25 +141,24 @@ Edit VBA files (.bas, .cls, .frm) in VS Code.
 
 ### Compare VBA
 
-1. Select the book file in Explorer View
-2. Select **Compare VBA with Excel Book** from the editor title
+1. Select the book file in Explorer View.
+2. Select **Compare VBA with Excel Book** from the editor title.
 3. The differences with the book file are displayed in a diff view.
 
 ### Save VBA
 
-1. Select the book file in Explorer View
-2. Select **Save VBA to Excel Book** from the editor title
+1. Select the book file in Explorer View.
+2. Select **Save VBA to Excel Book** from the editor title.
 3. The changes are saved to the book file.
-   - Note: For .xlam files, you cannot save directly from the extension. Save from the VB Editor toolbar.
 
 ### Run Sub Procedure
 
-1. Open the VBA file in the editor
-2. Place the cursor inside the Sub procedure you want to run
-3. Select **Run VBA Sub at Cursor** from the editor title
+1. Open the VBA file in the editor.
+2. Place the cursor inside the Sub procedure you want to run.
+3. Select **Run VBA Sub at Cursor** from the editor title.
 4. The following processes are executed automatically:
-   - Save any changes to the book file
-   - Execute the Sub procedure in Excel
+   - Save any changes to the book file.
+   - Execute the Sub procedure in Excel.
 
 ### Load CustomUI
 
@@ -299,7 +309,7 @@ VS Code で Excel VBA を開発するための拡張機能です。
 `excel-vba-addin` を使用すると、Excelから VS Code にすばやくアクセスできます。
 
 1. 対象のブックをExcelで開きます。
-2. Excel の **ExcelVBA** リボンから **Open in VSCode** ボタンをクリックします。
+2. **Excel VBA** リボンから **Open in VSCode** ボタンをクリックします。
 3. 対象のブックがVS Codeで開かれます。
 
 ## 使い方
@@ -315,14 +325,23 @@ VS Code で Excel VBA を開発するための拡張機能です。
    - 例：`MyBook` と入力すると `MyBook.xlsx` として作成されます。
 4. 新しい Excel ファイル（.xlsx）が作成されて Excel で開きます。
 
-### CustomUI テンプレート付きの新規 Excel ファイルを作成する
+### CustomUI テンプレート付きの新規 Excel ファイル（Macro版）を作成する
 
 1. コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）を開きます。
-2. **"New Excel Book with CustomUI"** を検索して選択します。
+2. **"New Excel Book with CustomUI as Macro"** を検索して選択します。
 3. ファイル名を入力（日本語など各国語に対応）します。
    - 注：`.xlsm` 拡張子を除いた名前を入力してください。
    - 例：`MyMacro` と入力すると `MyMacro.xlsm` として作成されます。
-4. CustomUI テンプレート付きの新しい Excel ファイル（.xlsm）が作成されて開きます。
+4. CustomUI テンプレート付きの新しい Excel マクロファイル（.xlsm）が作成されて Excel で開きます。
+
+### CustomUI テンプレート付きの新規 Excel ファイル（Addin版）を作成する
+
+1. コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）を開きます。
+2. **"New Excel Book with CustomUI as Addin"** を検索して選択します。
+3. ファイル名を入力（日本語など各国語に対応）します。
+   - 注：`.xlam` 拡張子を除いた名前を入力してください。
+   - 例：`MyAddin` と入力すると `MyAddin.xlam` として作成されます。
+4. CustomUI テンプレート付きの新しい Excel アドインファイル（.xlam）が作成されて Excel で開きます。
 
 ### Excel ファイルを開く
 
