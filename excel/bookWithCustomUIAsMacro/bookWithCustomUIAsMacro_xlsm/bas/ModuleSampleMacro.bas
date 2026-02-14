@@ -13,7 +13,7 @@ Sub SampleMacro_onAction(control As IRibbonControl)
 
 End Sub
 
-Sub SampleMacro
+Sub SampleMacro()
 
     Msgbox "SampleMacro"
 
