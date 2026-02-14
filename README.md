@@ -80,6 +80,14 @@ After installing the extension, you need to enable the `excel-vba-addin` in Exce
 - When you open an Excel file (.xlsm, .xlam) after installing the extension, an **Enable Content** button may appear at the top of the window. If prompted, click the **Enable Content** button to allow the add-in to function properly.
 - It is recommended to manage book files with a version control system in case they become corrupted.
 
+### Using excel-vba-addin
+
+Once the `excel-vba-addin` is enabled, you can quickly access VS Code from Excel.
+
+1. Open the target book in Excel.
+2. Click the **Open in VS Code** button from the **ExcelVBA** ribbon in Excel.
+3. The target book opens in VS Code.
+
 ## Usage
 
 Right-click a book file in Explorer View or click the icon in the editor title to run commands.
@@ -285,6 +293,14 @@ VS Code で Excel VBA を開発するための拡張機能です。
 - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
 - 拡張機能をインストール後、Excel ファイル（.xlsm、.xlam）を開いたときに、ウィンドウの上部に**コンテンツの有効化**ボタンが表示される場合があります。表示された場合、**コンテンツの有効化** ボタンをクリックして、アドインが正しく機能するようにしてください。
 - ブックファイルが壊れた場合に備えてバージョン管理システムで管理することをお勧めします。
+
+### excel-vba-addin を使用する
+
+`excel-vba-addin` を使用すると、Excelから VS Code にすばやくアクセスできます。
+
+1. 対象のブックをExcelで開きます。
+2. Excel の **ExcelVBA** リボンから **Open in VSCode** ボタンをクリックします。
+3. 対象のブックがVS Codeで開かれます。
 
 ## 使い方
 
