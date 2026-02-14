@@ -74,9 +74,11 @@ After installing the extension, you need to enable the `excel-vba-addin` in Exce
    - Check the checkbox next to `excel-vba-addin` to enable it
 6. Click **OK** to save settings
 
-### Enable Content (If Prompted)
+### Important Notes
 
-When you open an Excel file (.xlsm, .xlam) after installing the extension, a **Enable Content** button may appear at the top of the window. If prompted, click the **Enable Content** button to allow the add-in to function properly.
+- Files downloaded from the internet need to have the access block removed.
+- When you open an Excel file (.xlsm, .xlam) after installing the extension, an **Enable Content** button may appear at the top of the window. If prompted, click the **Enable Content** button to allow the add-in to function properly.
+- It is recommended to manage book files with a version control system in case they become corrupted.
 
 ## Usage
 
@@ -89,7 +91,7 @@ Right-click a book file in Explorer View or click the icon in the editor title t
 3. Enter the file name (supports Japanese and other characters)
    - Note: Enter the name without the `.xlsx` extension
    - Example: `MyBook` (the file will be created as `MyBook.xlsx`)
-4. A new Excel file (.xlsx) is created and opened in Excel
+4. A new Excel file (.xlsx) is created and opened in Excel.
 
 ### New Excel Book with CustomUI
 
@@ -98,38 +100,38 @@ Right-click a book file in Explorer View or click the icon in the editor title t
 3. Enter the file name (supports Japanese and other characters)
    - Note: Enter the name without the `.xlsm` extension
    - Example: `MyMacro` (the file will be created as `MyMacro.xlsm`)
-4. A new Excel file (.xlsm) with CustomUI template is created and opened
+4. A new Excel file (.xlsm) with CustomUI template is created and opened.
 
 ### Open Excel File
 
 1. Select a book file in Explorer View
 2. Select **Open Excel Book** from the editor title
-3. File opens in Excel
+3. The file opens in Excel.
 
 ### Load VBA
 
 1. Open the book file in Excel
 2. Select the book file in VS Code's Explorer View
 3. Select **Load VBA from Excel Book** from the editor title
-4. A folder with the same name as the book file is created
+4. A folder with the same name as the book file is created with VBA files.
    - Example: `MyBook.xlsm` → `MyBook_xlsm/bas` folder
 
 ### Edit VBA
 
-Edit VBA files in VS Code.
+Edit VBA files (.bas, .cls, .frm) in VS Code.
 
 ### Compare VBA
 
 1. Select the book file in Explorer View
 2. Select **Compare VBA with Excel Book** from the editor title
-3. Differences with the book file are displayed
+3. The differences with the book file are displayed in a diff view.
 
 ### Save VBA
 
 1. Select the book file in Explorer View
 2. Select **Save VBA to Excel Book** from the editor title
-3. Changes are saved to the book file
-   - For .xlam files, you cannot save directly from the extension. Save from the VB Editor toolbar.
+3. The changes are saved to the book file.
+   - Note: For .xlam files, you cannot save directly from the extension. Save from the VB Editor toolbar.
 
 ### Run Sub Procedure
 
@@ -137,26 +139,26 @@ Edit VBA files in VS Code.
 2. Place the cursor inside the Sub procedure you want to run
 3. Select **Run VBA Sub at Cursor** from the editor title
 4. The following processes are executed automatically:
-   - Save changes to the book file
+   - Save any changes to the book file
    - Execute the Sub procedure in Excel
 
 ### Load CustomUI
 
 1. Select the book file in Explorer View
 2. Select **Load CustomUI from Excel Book** from the editor title
-3. A folder with the same name as the book file is created
+3. A folder with the same name as the book file is created with XML files.
    - Example: `MyAddin.xlam` → `MyAddin_xlam/xml` folder
    - CustomUI XML files (customUI.xml, customUI14.xml) are extracted directly into the folder
 
 ### Edit CustomUI
 
-Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code.
+Edit CustomUI XML files (customUI.xml, customUI14.xml) in VS Code using IntelliSense.
 
 ### Save CustomUI
 
 1. Select the book file in Explorer View
 2. Select **Save CustomUI to Excel Book** from the editor title
-3. Changes are saved to the book file's CustomUI
+3. The changes are saved to the book file's CustomUI.
 
 ### Create URL Shortcut
 
@@ -166,7 +168,7 @@ For Excel files stored on OneDrive or SharePoint:
 2. Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
 3. Search for and select **"Create URL Shortcut"**
 4. URL shortcut files (.url) are created in the workspace folder
-   - These act as markers for cloud-hosted Excel files
+   - These serve as markers for cloud-hosted Excel files
 
 **How it works:**
 
@@ -182,16 +184,21 @@ For Excel files stored on OneDrive or SharePoint:
 3. Hide gridlines and page breaks in the sheet if you don't want them in the image
 4. Select the book file in VS Code's Explorer View
 5. Select **Export Sheet as PNG** from the editor title
-6. A folder with the same name as the book file is created
+6. A folder with the same name as the book file is created with PNG images.
    - Example: `MyBook.xlsm` → `MyBook_xlsm/png` folder
    - PNG images are created for all sheets ending with `.png`
    - File names match the sheet names (e.g., `Dashboard.png`)
 
+### Open Sheet from PNG
+
+1. Select a PNG file in VS Code's Explorer View (created by Export Sheet as PNG)
+2. Right-click and select **Open Sheet from PNG**
+3. The original Excel book opens with the corresponding sheet automatically selected
+   - Example: `Dashboard.png` → Excel's `Dashboard.png` sheet is selected
+4. You can now edit the data from the PNG image
+
 ## Notes
 
-- **General**
-  - Files downloaded from the internet require unblocking access.
-  - Manage book files with a version control system in case they become corrupted.
 - **Add-in Files**
   - For .xlam files, they cannot be saved directly from the extension. Please save from the VB Editor toolbar.
 - **VBA Files**
@@ -273,9 +280,11 @@ VS Code で Excel VBA を開発するための拡張機能です。
    - `excel-vba-addin` の横のチェックボックスをチェックして有効化します。
 6. **OK** をクリックして設定を保存します。
 
-### コンテンツの有効化（ダイアログが表示された場合）
+### 留意事項
 
-拡張機能をインストール後、Excel ファイル（.xlsm、.xlam）を開いたときに、ウィンドウの上部に**コンテンツの有効化**ボタンが表示される場合があります。表示された場合は、**コンテンツの有効化** ボタンをクリックして、アドインが正しく機能するようにしてください。
+- ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
+- 拡張機能をインストール後、Excel ファイル（.xlsm、.xlam）を開いたときに、ウィンドウの上部に**コンテンツの有効化**ボタンが表示される場合があります。表示された場合、**コンテンツの有効化** ボタンをクリックして、アドインが正しく機能するようにしてください。
+- ブックファイルが壊れた場合に備えてバージョン管理システムで管理することをお勧めします。
 
 ## 使い方
 
@@ -393,20 +402,14 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
    - 例：`Dashboard.png` ファイル → Excel の `Dashboard.png` というシートが選択されます。
 4. PNG をクリックするだけで、元のデータの編集が可能になります。
 
-- **全般**
-  - ネットからダウンロードしたファイルはアクセスブロックの解除が必要です。
-  - 適切に動作するにはコンテンツの有効化が必要です。
-  - ブックファイルが壊れた場合に備えてバージョン管理システムで管理してください。
 - **アドインファイル**
   - .xlam の場合は拡張機能から直接保存することはできません。VBエディタのツールバーから保存してください。
 - **VBAファイル**
-  - VBAファイルの文字エンコーティングは Shift_JIS です。
-  - .frmに対応する.frxは自動生成されます。.frx を削除すると、.frmは保存できません。
+  - VBAファイルは Shift_JIS 文字エンコーディングを使用します。
+  - .frm に対応する .frx は自動生成されます。.frx を削除した場合、.frm は保存できません。
 - **CSVファイル**
-  - 名前に".csv"が付いたシートを処理対象とします。
-- **PNG ファイル**
-  - 名前に".png"が付いたシートを処理対象とします。
-- **追加**
-  - VBAファイルはVS Codeで新規追加することができます。
-  - CSVファイルはVS Codeで新規追加することができます。
-  - CustomUI XMLファイルは新規追加することはできません。事前にブックファイルに登録されている必要があります。
+  - 名前に ".csv" が付いたシートを処理対象とします。
+- **その他**
+  - VBAファイルは VS Code で新規作成できます。
+  - CSVファイルは VS Code で新規作成できます。
+  - CustomUI XMLファイルは新規作成できません。事前にブックファイルに登録されている必要があります。
