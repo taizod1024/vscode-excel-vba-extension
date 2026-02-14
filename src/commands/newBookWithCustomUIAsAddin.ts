@@ -5,8 +5,8 @@ import { CommandContext } from "../utils/types";
 import child_process from "child_process";
 import { Logger } from "../utils/logger";
 
-/** Create new Excel workbook with CustomUI as Macro template */
-export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
+/** Create new Excel book with CustomUI as Addin template */
+export async function newBookWithCustomUIAsAddinAsync(context: CommandContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     throw "No open workspace.";
@@ -15,7 +15,7 @@ export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
   const workspaceFolder = workspaceFolders[0].uri.fsPath;
 
   // Check if template file exists
-  const templatePath = path.join(context.extensionPath, "excel", "bookWithCustomUIAsMacro", "bookWithCustomUIAsMacro.xlsm");
+  const templatePath = path.join(context.extensionPath, "excel", "bookWithCustomUIAsAddin", "bookWithCustomUIAsAddin.xlam");
 
   if (!fs.existsSync(templatePath)) {
     throw "Template file not found.";
@@ -23,8 +23,8 @@ export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
 
   // Prompt for file name
   const inputPrompt = await vscode.window.showInputBox({
-    prompt: "Enter new macro name",
-    placeHolder: "Example: MyMacro (no extension)",
+    prompt: "Enter new addin name",
+    placeHolder: "Example: MyAddin (no extension)",
     validateInput: (value: string) => {
       if (value.length === 0) {
         return "File name cannot be empty";
@@ -40,7 +40,7 @@ export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
     return; // User cancelled
   }
 
-  const fileName = `${inputPrompt}.xlsm`;
+  const fileName = `${inputPrompt}.xlam`;
   const filePath = path.join(workspaceFolder, fileName);
 
   // Check if file already exists
@@ -48,7 +48,7 @@ export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
     throw "File already exists.";
   }
 
-  const commandName = `New Excel Book with CustomUI as Macro`;
+  const commandName = `New Excel Book with CustomUI as Addin`;
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -65,7 +65,7 @@ export async function newBookWithCustomUIAsMacroAsync(context: CommandContext) {
       // Copy template file
       fs.copyFileSync(templatePath, filePath);
 
-      logger.logSuccess("New workbook created with Custom UI");
+      logger.logSuccess("New addin created with Custom UI");
 
       // Reveal file in Explorer and open in VS Code
       const fileUri = vscode.Uri.file(filePath);

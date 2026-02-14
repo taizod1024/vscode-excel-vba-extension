@@ -14,7 +14,8 @@ import { saveCsvAsync } from "./commands/saveCsv";
 import { openBookAsync } from "./commands/openBook";
 import { runSubAsync } from "./commands/runSub";
 import { newBookAsync } from "./commands/newBook";
-import { newBookWithCustomUIAsync } from "./commands/newBookWithCustomUI";
+import { newBookWithCustomUIAsMacroAsync } from "./commands/newBookWithCustomUI";
+import { newBookWithCustomUIAsAddinAsync } from "./commands/newBookWithCustomUIAsAddin";
 import { createUrlShortcutAsync } from "./commands/createUrlShortcut";
 import { exportSheetsAsPngAsync } from "./commands/exportSheetAsImage";
 import { openSheetFromPngAsync } from "./commands/openSheetFromPng";
@@ -485,7 +486,19 @@ class ExcelVba {
       vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUI`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
         try {
-          await newBookWithCustomUIAsync(commandContext);
+          await newBookWithCustomUIAsMacroAsync(commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUIAsAddin`, async () => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        try {
+          await newBookWithCustomUIAsAddinAsync(commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);

@@ -28,7 +28,12 @@
       },
       {
         "command": "excel-vba.newBookWithCustomUI",
-        "title": "New Excel Book with CustomUI",
+        "title": "New Excel Book with CustomUI as Macro",
+        "icon": "$(empty-window)"
+      },
+      {
+        "command": "excel-vba.newBookWithCustomUIAsAddin",
+        "title": "New Excel Book with CustomUI as Addin",
         "icon": "$(empty-window)"
       },
       {
@@ -99,6 +104,9 @@
         },
         {
           "command": "excel-vba.newBookWithCustomUI"
+        },
+        {
+          "command": "excel-vba.newBookWithCustomUIAsAddin"
         }
       ],
       "commandPalette": [
@@ -158,72 +166,77 @@
       "editor/title": [
         {
           "command": "excel-vba.openBook",
-          "group": "navigation@1",
+          "group": "navigation@1.01",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.loadVba",
-          "group": "navigation@2",
+          "group": "navigation@1.02",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.saveVba",
-          "group": "navigation@3",
+          "group": "navigation@1.03",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.runSub",
-          "group": "navigation@4",
+          "group": "navigation@1.04",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.compareVba",
-          "group": "navigation@5",
+          "group": "navigation@1.05",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.loadCsv",
-          "group": "navigation@6",
+          "group": "navigation@1.06",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.saveCsv",
-          "group": "navigation@7",
+          "group": "navigation@1.07",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.exportSheetsAsPng",
-          "group": "navigation@8",
+          "group": "navigation@1.08",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.openSheetFromPng",
-          "group": "navigation@9",
+          "group": "navigation@1.09",
           "when": "resourceExtname =~ /\\.png$/i"
         },
         {
           "command": "excel-vba.newBook",
-          "group": "1/excel-vba@1",
+          "group": "1/excel-vba@1.01",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.newBookWithCustomUI",
-          "group": "1/excel-vba@2",
+          "group": "1/excel-vba@1.02",
+          "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
+        },
+        {
+          "command": "excel-vba.newBookWithCustomUIAsAddin",
+          "group": "1/excel-vba@1/03",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.createUrlShortcut",
-          "group": "1/excel-vba@3",
+          "group": "1/excel-vba@1.04",
           "when": "resourceExtname =~ /\\.(xlsx|xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.loadCustomUI",
-          "group": "1/excel-vba@4",
+          "group": "1/excel-vba@1.05",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         },
         {
           "command": "excel-vba.saveCustomUI",
-          "group": "1/excel-vba@5",
+          "group": "1/excel-vba@1.06",
           "when": "resourceExtname =~ /\\.(xlsm|xlam|url||bas|cls|frm|csv|xml)$/i"
         }
       ]

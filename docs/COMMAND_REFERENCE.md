@@ -64,13 +64,13 @@
 
 ---
 
-### 2. New Excel Book with CustomUI
+### 2. New Excel Book with CustomUI as Macro
 
 **コマンド ID**: `excel-vba.newBookWithCustomUI`
 
 **実行方法**
 
-- コマンドパレット → "New Excel Book with CustomUI"
+- コマンドパレット → "New Excel Book with CustomUI as Macro"
 
 **入力**
 
@@ -407,10 +407,10 @@
 
 ## コマンド早見表
 
-| #   | コマンド ID         | 説明                      | キー |
-| --- | ------------------- | ------------------------- | ---- |
-| 1   | newBook             | 新しい Excel ファイル作成 | −    |
-| 2   | newBookWithCustomUI | CustomUI 付き作成         | −    |
+| #   | コマンド ID         | 説明                          | キー |
+| --- | ------------------- | ----------------------------- | ---- |
+| 1   | newBook             | 新しい Excel ファイル作成     | −    |
+| 2   | newBookWithCustomUI | CustomUI as Macro 付き作成    | −    |
 | 3   | openBook            | Excel で開く              | −    |
 | 4   | loadVba             | VBA 抽出                  | −    |
 | 5   | saveVba             | VBA 保存                  | −    |

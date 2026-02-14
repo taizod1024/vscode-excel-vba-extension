@@ -1,12 +1,12 @@
 ﻿<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
     <ribbon>
         <tabs>
-            <tab id="TabSaple" label="TabSample">
-                <group id="GroupSample" label="GroupSample">
-                    <button id="ButtonSamplle" imageMso="FormControlButton" label="ButtonSample"
-                        onAction="Sample_onAction" getEnabled="Sample_getEnabled"
-                        screentip="サンプルボタン"
-                        supertip="サンプルボタンです。"
+            <tab id="TabSampleAddin" label="TabSampleAddin">
+                <group id="GroupSampleAddin" label="GroupSampleAddin">
+                    <button id="ButtonSamplle" imageMso="FormControlButton" label="ButtonSampleAddin"
+                        onAction="SampleAddin_onAction" getEnabled="SampleAddin_getEnabled"
+                        screentip="サンプルアドインボタン"
+                        supertip="サンプルアドインボタンです。"
                         showImage="true" size="normal" showLabel="true" visible="true" />
                 </group>
             </tab>

@@ -48,20 +48,21 @@ Excel COM API
 ````
 src/
   commands/
+    compareVba.ts
     createUrlShortcut.ts
+    exportSheetAsImage.ts
     loadCsv.ts
     loadCustomUI.ts
     loadVba.ts
     newBook.ts
     newBookWithCustomUI.ts
+    newBookWithCustomUIAsAddin.ts
     openBook.ts
     openSheetFromPng.ts
     runSub.ts
     saveCsv.ts
     saveCustomUI.ts
     saveVba.ts
-    compareVba.ts
-    exportSheetAsImage.ts
   utils/
     editorOperations.ts
     excelPath.ts

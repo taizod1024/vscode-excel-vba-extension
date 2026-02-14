@@ -18,6 +18,7 @@ VS Code から新しい Excel ファイルを作成する機能です。
 ### 入力仕様
 
 **ファイル名入力**
+
 - 拡張子なしの名前を入力
 - 日本語を含む各国語対応
 - 例: `MyBook`, `売上報告`, `Dashboard`
@@ -25,6 +26,7 @@ VS Code から新しい Excel ファイルを作成する機能です。
 ### 出力仕様
 
 **出力ファイル**
+
 ```
 {入力名}.xlsx
 ```
@@ -43,18 +45,19 @@ VS Code から新しい Excel ファイルを作成する機能です。
 **メイン処理**: `src/commands/newBook.ts`
 
 ```typescript
-export async function newBookAsync(context: CommandContext)
+export async function newBookAsync(context: CommandContext);
 ```
 
 **PowerShell**: `bin/New-Excel.ps1`
 
 処理内容：
+
 - Excel アプリケーションの取得（存在しない場合は新規作成）
 - 新規ブック作成
 - .xlsx 形式で保存
 - ブックの表示
 
-## 2. New Excel Book with CustomUI
+## 2. New Excel Book with CustomUI as Macro
 
 ### 概要
 
@@ -63,6 +66,7 @@ CustomUI（リボンカスタマイズ）のテンプレート付き Excel マ�
 ### 入力仕様
 
 **ファイル名入力**
+
 - 拡張子なしの名前を入力
 - 日本語を含む各国語対応
 - 例: `MyMacro`, `カスタムUI`, `Dashboard`
@@ -70,6 +74,7 @@ CustomUI（リボンカスタマイズ）のテンプレート付き Excel マ�
 ### 出力仕様
 
 **出力ファイル**
+
 ```
 {入力名}.xlsm
   ├── VBA (空のプロジェクト)
@@ -100,12 +105,13 @@ Office 2010 以降の新しいリボン定義
 **メイン処理**: `src/commands/newBookWithCustomUI.ts`
 
 ```typescript
-export async function newBookWithCustomUIAsync(context: CommandContext)
+export async function newBookWithCustomUIAsMacroAsync(context: CommandContext);
 ```
 
 **PowerShell**: `bin/New-Excel.ps1`
 
 処理内容：
+
 - テンプレートアドイン（.xlam）から新規ブック作成
 - CustomUI テンプレートのコピー
 - .xlsm 形式で保存
@@ -113,6 +119,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext)
 ### テンプレートファイル
 
 拡張機能に付属するテンプレート：
+
 ```
 excel/excel-vba-addin/excel-vba-addin.xlam
   ├── ModuleOpenVSCode.bas     # VS Code 連携用サンプルコード
@@ -123,11 +130,11 @@ excel/excel-vba-addin/excel-vba-addin.xlam
 
 ## エラーハンドリング
 
-| エラー条件 | メッセージ | 対応 |
-|---------|---------|------|
-| Excel が起動していない | − | 自動的に新規 Excel プロセスを起動 |
-| ファイル保存失敗 | ファイル保存に失敗しました | ディスク容量などを確認 |
-| テンプレート読み込み失敗 | テンプレートが見つかりません | 拡張機能のインストール状態を確認 |
+| エラー条件               | メッセージ                   | 対応                              |
+| ------------------------ | ---------------------------- | --------------------------------- |
+| Excel が起動していない   | −                            | 自動的に新規 Excel プロセスを起動 |
+| ファイル保存失敗         | ファイル保存に失敗しました   | ディスク容量などを確認            |
+| テンプレート読み込み失敗 | テンプレートが見つかりません | 拡張機能のインストール状態を確認  |
 
 ## セキュリティ
 
