@@ -39,6 +39,38 @@
 
 ---
 
+## 出力フォーマット
+
+すべてのコマンド実行で、VS Code の出力チャネルに以下のフォーマットで結果が表示されます：
+
+### メッセージ形式
+
+```
+## [コマンド名]
+- Output: [PowerShellの出力があれば表示]
+[SUCCESS] アクション説明 (コンテキスト詳細)
+```
+
+### 例表
+
+```
+## Load VBA from Excel Book
+- Output: VBA load completed
+[SUCCESS] VBA extracted (3 file(s)) to folder
+
+## Create URL Shortcut
+- Output: URL shortcuts created successfully
+[SUCCESS] URL shortcuts created (cloud file references saved)
+
+## Run VBA Sub at Cursor
+- Output: Sub execution completed
+[SUCCESS] Sub executed (TestSub)
+```
+
+詳細は [OUTPUT_FORMAT_SPEC.md](./OUTPUT_FORMAT_SPEC.md) を参照してください。
+
+---
+
 ## コマンド詳細
 
 ### 1. New Excel Book

@@ -88,6 +88,29 @@ bin/
 
 ## 共通仕様
 
+### 出力フォーマット
+
+全コマンドで統一された出力フォーマットを使用しています：
+
+1. **コマンド開始**
+   - 出力チャネルを自動表示（フォーカス有）
+   - コマンド名とタイムスタンプを記録
+
+2. **処理結果出力**
+   - PowerShell 出力は `Output:` として表示
+   - 末尾の空白は自動削除
+
+3. **成功メッセージ**
+   - 形式: `[SUCCESS] アクション説明 (コンテキスト詳細)`
+   - すべてのコマンドで統一
+   - 例: `[SUCCESS] VBA extracted (3 file(s)) to folder`
+
+4. **エラーメッセージ**
+   - 形式: `[ERROR] エラー内容`
+   - 出力チャネルに記録 + ダイアログで通知
+
+詳細は [OUTPUT_FORMAT_SPEC.md](./OUTPUT_FORMAT_SPEC.md) を参照してください。
+
 ### エラーハンドリング
 
 全コマンドで以下のエラーハンドリングが実装されています：
@@ -141,11 +164,13 @@ addin.xlam → addin_xlam/xml
 ## ドキュメント構成
 
 - [ALL_FEATURES_OVERVIEW.md](./ALL_FEATURES_OVERVIEW.md) - このドキュメント
+- [OUTPUT_FORMAT_SPEC.md](./OUTPUT_FORMAT_SPEC.md) - 出力フォーマット仕様書（新）
+- [COMMAND_REFERENCE.md](./COMMAND_REFERENCE.md) - コマンドリファレンス
 - [NEW_BOOK_SPEC.md](./NEW_BOOK_SPEC.md) - New Excel Book の仕様書
 - [LOAD_SAVE_VBA_SPEC.md](./LOAD_SAVE_VBA_SPEC.md) - VBA Load/Save/Compare の仕様書
 - [LOAD_SAVE_CSV_SPEC.md](./LOAD_SAVE_CSV_SPEC.md) - CSV Load/Save の仕様書
 - [LOAD_SAVE_CUSTOMUI_SPEC.md](./LOAD_SAVE_CUSTOMUI_SPEC.md) - CustomUI Load/Save の仕様書
 - [EXPORT_SHEET_AS_PNG_SPEC.md](./EXPORT_SHEET_AS_PNG_SPEC.md) - Export Sheet as PNG の仕様書
+- [OPEN_SHEET_FROM_PNG_SPEC.md](./OPEN_SHEET_FROM_PNG_SPEC.md) - Open Sheet from PNG の仕様書
 - [CLOUD_SUPPORT_SPEC.md](./CLOUD_SUPPORT_SPEC.md) - URL Shortcut とクラウドサポートの仕様書
-- [COMMAND_REFERENCE.md](./COMMAND_REFERENCE.md) - コマンドリファレンス
 ```
