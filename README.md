@@ -387,7 +387,7 @@ OneDrive または SharePoint に保存されている Excel ファイルを処�
 
 ### PNG から Sheet を開く
 
-1. VS Code のエクスプローラービューで PNG ファイルを選択します（Export Sheet as PNG で作成したファイル）。
+1. VS Code のエクスプローラービューで PNG ファイルを選択します。（Export Sheet as PNG で作成したファイル）
 2. 右クリックして **Open Sheet from PNG** を選択します。
 3. 元の Excel ブックが開かれて、PNG ファイル名に対応するシートが自動的に選択されます。
    - 例：`Dashboard.png` ファイル → Excel の `Dashboard.png` というシートが選択されます。
