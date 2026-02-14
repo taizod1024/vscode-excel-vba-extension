@@ -91,7 +91,7 @@ Office 2010 以降の新しいリボン定義
 1. コマンドパレット（Ctrl+Shift+P）を開く
 2. 「New Excel Book with CustomUI」を検索して実行
 3. ファイル名を入力
-4. Excel テンプレートファイル（`excel/addin/excel-vba-addin.xlam`）をコピー
+4. Excel テンプレートファイル（`excel/excel-vba-addin/excel-vba-addin.xlam`）をコピー
 5. ファイルを .xlsm に変換
 6. 新規ブックとして Excel で開く
 
@@ -114,7 +114,7 @@ export async function newBookWithCustomUIAsync(context: CommandContext)
 
 拡張機能に付属するテンプレート：
 ```
-excel/addin/excel-vba-addin.xlam
+excel/excel-vba-addin/excel-vba-addin.xlam
   ├── ModuleOpenVSCode.bas     # VS Code 連携用サンプルコード
   ├── Sheet1.cls
   ├── ThisWorkbook.cls

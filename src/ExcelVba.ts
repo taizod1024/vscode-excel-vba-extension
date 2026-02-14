@@ -339,7 +339,7 @@ class ExcelVba {
 
     // Copy Excel addin to AppData
     // Always copy on activation to ensure addin is up-to-date
-    const addinPath = path.join(context.extensionPath, "excel", "addin", "excel-vba-addin.xlam");
+    const addinPath = path.join(context.extensionPath, "excel", "excel-vba-addin", "excel-vba-addin.xlam");
     this.channel.appendLine(`[DEBUG] Attempting to copy addin from: ${addinPath}`);
     if (copyAddinToAppData(addinPath, this.channel)) {
       this.channel.appendLine(`[DEBUG] Addin copied successfully`);
