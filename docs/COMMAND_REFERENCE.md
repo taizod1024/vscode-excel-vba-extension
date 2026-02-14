@@ -407,22 +407,22 @@
 
 ## コマンド早見表
 
-| #   | コマンド ID         | 説明                          | キー |
-| --- | ------------------- | ----------------------------- | ---- |
-| 1   | newBook             | 新しい Excel ファイル作成     | −    |
-| 2   | newBookWithCustomUI | CustomUI as Macro 付き作成    | −    |
-| 3   | openBook            | Excel で開く              | −    |
-| 4   | loadVba             | VBA 抽出                  | −    |
-| 5   | saveVba             | VBA 保存                  | −    |
-| 6   | compareVba          | VBA 比較                  | −    |
-| 7   | runSub              | Sub 実行                  | −    |
-| 8   | loadCsv             | CSV 抽出                  | −    |
-| 9   | saveCsv             | CSV 保存                  | −    |
-| 10  | createUrlShortcut   | URL ショートカット作成    | −    |
-| 11  | loadCustomUI        | CustomUI 抽出             | −    |
-| 12  | saveCustomUI        | CustomUI 保存             | −    |
-| 13  | exportSheetsAsPng   | PNG エクスポート（複数）  | −    |
-| 14  | openSheetFromPng    | PNG から Sheet を開く     | −    |
+| #   | コマンド ID         | 説明                       | キー |
+| --- | ------------------- | -------------------------- | ---- |
+| 1   | newBook             | 新しい Excel ファイル作成  | −    |
+| 2   | newBookWithCustomUI | CustomUI as Macro 付き作成 | −    |
+| 3   | openBook            | Excel で開く               | −    |
+| 4   | loadVba             | VBA 抽出                   | −    |
+| 5   | saveVba             | VBA 保存                   | −    |
+| 6   | compareVba          | VBA 比較                   | −    |
+| 7   | runSub              | Sub 実行                   | −    |
+| 8   | loadCsv             | CSV 抽出                   | −    |
+| 9   | saveCsv             | CSV 保存                   | −    |
+| 10  | createUrlShortcut   | URL ショートカット作成     | −    |
+| 11  | loadCustomUI        | CustomUI 抽出              | −    |
+| 12  | saveCustomUI        | CustomUI 保存              | −    |
+| 13  | exportSheetsAsPng   | PNG エクスポート（複数）   | −    |
+| 14  | openSheetFromPng    | PNG から Sheet を開く      | −    |
 
 ---
 
