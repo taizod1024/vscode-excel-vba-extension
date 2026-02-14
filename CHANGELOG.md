@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.0...v0.2.1) (2026-02-14)
+
+
+### Features
+
+* Export-SheetAsImage.ps1をExport-SheetAsPng.ps1にリネームし、PNGエクスポート機能を実装 ([38d6dca](https://github.com/taizod1024/vscode-excel-vba-extension/commit/38d6dca1465e80718e26b171587993a49b2bf2f1))
+* Export-SheetAsPngコマンドのIDをexportSheetsAsPngに変更し、関連する関数名を更新 ([1d0f95a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1d0f95a863dce203b9c567e755ec7236ccf5bce4))
+* PNGエクスポート機能を追加し、PNGからシートを開く機能を実装 ([d3dd20e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/d3dd20e3b4ff56bd7780cb4322f94d4b7cbd9cfb))
+* PNGからシートを開く機能を追加 ([fe494fa](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fe494fa11fae5b6d1a6a9b4fab60d41ec10d9f9e))
+
+
+### Bug Fixes
+
+* Excelの一時ファイルを正しく無視するために.gitignoreを更新 ([b199880](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b199880a32f0bbfdd00c6fd84b741970d1356e48))
+* ExportSheetsAsPngサブルーチンのエラーメッセージを修正し、PowerShellスクリプトの存在確認を追加 ([fce0b76](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fce0b760e4e3cd0630bf428c4f52ac2614ec56a1))
+* PNGファイル選択時の説明文を修正 ([92f6507](https://github.com/taizod1024/vscode-excel-vba-extension/commit/92f6507f5658eb988b22a176bbaca83e7da98b84))
+* READMEを更新し、ExcelシートのPNGエクスポート機能を追加 ([572a77c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/572a77c208499c59c0acf704bd69ee8c8916053d))
+* READMEを更新し、重要な注意事項を追加 ([4caed37](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4caed373058e16e5447cef81107b4d964f46c7e7))
+* SampleMacroサブルーチンの構文を修正し、コマンド実行時に出力チャネルを表示するように更新 ([50724c5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/50724c58f94cc8034011eea9e1d99c907a793b1b))
+* コマンドの出力メッセージを改善し、URLショートカット作成時の詳細を追加 ([8f65318](https://github.com/taizod1024/vscode-excel-vba-extension/commit/8f653181fa34d7ec254830c88d9524defd3a5e02))
+* コマンドの条件をresourcePathに基づいて更新 ([1865641](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1865641ba9d20fcfa993480862d280f0e0af0654))
+* 修正されたエラーハンドリングの構文を改善 ([71fe7fa](https://github.com/taizod1024/vscode-excel-vba-extension/commit/71fe7fa3ca6d77e5cdab89e69522734e4756f468))
+* 不要なエクスポート機能のボタンをカスタムUIから削除 ([2512d1c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/2512d1c78aad2201468df8d195573f5aefa386a2))
+
 ## [0.2.0](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.1.23...v0.2.0) (2026-02-13)
 
 
