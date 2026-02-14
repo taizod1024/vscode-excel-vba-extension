@@ -9,13 +9,6 @@
                         supertip="Opens the workbook in VSCode"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
-                <group id="GroupExport" label="Export">
-                    <button id="ButtonExportSheetsAsPng" imageMso="PictureRecolorAutomatic" label="Export Sheets as PNG"
-                        onAction="ExportSheetsAsPng_onAction" getEnabled="ExportSheetsAsPng_getEnabled"
-                        screentip="Export Sheets as PNG"
-                        supertip="Export sheets ending with .png to PNG images"
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                </group>
             </tab>
         </tabs>
     </ribbon>
