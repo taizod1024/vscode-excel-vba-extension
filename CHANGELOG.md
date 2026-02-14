@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.1...v0.2.2) (2026-02-14)
+
+
+### Bug Fixes
+
+* READMEとCustomUIのラベルを更新し、Excel VBAの表記を修正 ([cec14d8](https://github.com/taizod1024/vscode-excel-vba-extension/commit/cec14d8c7735e01ac7ad9f24de49f2c0c884fab1))
+
 ### [0.2.1](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.0...v0.2.1) (2026-02-14)
 
 
