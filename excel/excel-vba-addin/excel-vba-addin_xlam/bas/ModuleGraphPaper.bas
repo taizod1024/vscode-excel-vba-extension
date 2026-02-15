@@ -18,9 +18,6 @@ Sub GraphPaper()
     Dim defaultFontName As String
     Dim defaultFontSize As Integer
     
-    ' Enable snap to grid
-    Application.SnapToGrid = True
-    
     ' Get default font name and size from Normal style
     defaultFontName = ActiveWorkbook.Styles("Normal").Font.Name
     defaultFontSize = ActiveWorkbook.Styles("Normal").Font.Size
