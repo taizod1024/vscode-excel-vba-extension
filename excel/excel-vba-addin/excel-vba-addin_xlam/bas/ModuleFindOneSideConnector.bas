@@ -18,6 +18,9 @@ Sub FindOneSideConnector()
     Dim shp As Shape    ' shape
     Dim flg As Boolean  ' flag
     
+    ' Enable snap to grid
+    Application.SnapToGrid = True
+    
     ' Loop through all shapes in the sheet
     For Each shp In ActiveSheet.Shapes
         
