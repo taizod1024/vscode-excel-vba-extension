@@ -2,11 +2,29 @@
     <ribbon>
         <tabs>
             <tab id="TabExcelVBA" label="Excel VBA">
-                <group id="GroupExcelVBA" label="VSCode">
+                <group id="GroupVSCode" label="VSCode">
                     <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
                         onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
                         screentip="Open in VSCode"
                         supertip="Opens the workbook in VSCode"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
+                <group id="GroupExcel" label="Excel">
+                    <button id="ButtonGraphPaper" imageMso="GridSettings" label="Graph Paper"
+                        onAction="GraphPaper_onAction" getEnabled="GraphPaper_getEnabled"
+                        screentip="Graph Paper"
+                        supertip="Applies graph paper format: Calibri 11pt font and 2-width columns."
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                    <button id="ButtonSnapToGrid" imageMso="SizeToGridAccess" label="Snap to Grid"
+                        onAction="SnapToGrid_onAction" getEnabled="SnapToGrid_getEnabled"
+                        screentip="Snap to Grid"
+                        supertip="Snaps shapes to grid lines. If no shapes are selected, all shapes will be snapped. Shapes that were repositioned will be selected."
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                    <button id="ButtonFindOneSideConnector" imageMso="VisioAngledConnector"
+                        label="Find One Side Connector" onAction="FindOneSideConnector_onAction"
+                        getEnabled="FindOneSideConnector_getEnabled"
+                        screentip="Find One Side Connector"
+                        supertip="Finds and selects a connector that is connected only on one side."
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
             </tab>
