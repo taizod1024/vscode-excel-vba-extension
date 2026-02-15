@@ -18,6 +18,11 @@ Sub FindOneSideConnector()
     Dim shp As Shape    ' shape
     Dim flg As Boolean  ' flag
     
+    ' SnapToGrid On
+    If Not Application.CommandBars.GetPressedMso("SnapToGrid") Then  
+        Application.CommandBars.ExecuteMso "SnapToGrid"
+    End If
+    
     ' Loop through all shapes in the sheet
     For Each shp In ActiveSheet.Shapes
         

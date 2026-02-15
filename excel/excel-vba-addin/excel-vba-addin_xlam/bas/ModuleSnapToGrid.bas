@@ -34,6 +34,11 @@ Sub SnapToGrid()
     Dim oShpRng As ShapeRange ' 操作対象の図形全体
     Dim sInfo As String     ' メッセージ
     
+    ' SnapToGrid On
+    If Not Application.CommandBars.GetPressedMso("SnapToGrid") Then  
+        Application.CommandBars.ExecuteMso "SnapToGrid"
+    End If
+    
     ' 実行前チェック
     If TypeName(Selection) <> "Range" Then
         Set oShpRng = Selection.ShapeRange
