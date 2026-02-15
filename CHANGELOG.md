@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.3...v0.2.4) (2026-02-15)
+
+
+### Features
+
+* 各モジュールに「Snap to Grid」を有効にする機能を追加 ([4464efd](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4464efdcb01085d2d3d6a33aab4747bfe9653b83))
+
 ### [0.2.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.2...v0.2.3) (2026-02-15)
 
 
