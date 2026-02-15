@@ -10,6 +10,11 @@
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupExcel" label="Excel">
+                    <button id="ButtonGraphPaper" imageMso="GridSettings" label="Graph Paper"
+                        onAction="GraphPaper_onAction" getEnabled="GraphPaper_getEnabled"
+                        screentip="Graph Paper"
+                        supertip="Applies graph paper format: Calibri 11pt font and 2-width columns."
+                        showImage="true" size="large" showLabel="true" visible="true" />
                     <button id="ButtonSnapToGrid" imageMso="SizeToGridAccess" label="Snap to Grid"
                         onAction="SnapToGrid_onAction" getEnabled="SnapToGrid_getEnabled"
                         screentip="Snap to Grid"
