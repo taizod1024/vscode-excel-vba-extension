@@ -7,22 +7,10 @@ Sub SnapToGrid_onAction(constrol As IRibbonControl)
 
 End Sub
 
-Sub FindOneSideConnector_onAction(constrol As IRibbonControl)
-
-    FindOneSideConnector
-
-End Sub
-
 Sub SnapToGrid_getEnabled(control As IRibbonControl, ByRef enabled)
 
     enabled = Not (ActiveWindow Is Nothing)
     
-End Sub
-
-Sub FindOneSideConnector_getEnabled(control As IRibbonControl, ByRef enabled)
-
-    enabled = Not (ActiveWindow Is Nothing)
-
 End Sub
 
 Sub SnapToGrid()
@@ -50,7 +38,7 @@ Sub SnapToGrid()
     If TypeName(Selection) <> "Range" Then
         Set oShpRng = Selection.ShapeRange
         ' 実行確認
-        Select Case MsgBox("この操作は元に戻せません" + vbCrLf + "選択されている" & oShpRng.Count & "個の図形をグリッド線に揃えますか？", _
+        Select Case MsgBox("This operation cannot be undone." + vbCrLf + "Snap " & oShpRng.Count & " selected shape(s) to grid?", _
             vbOKCancel + vbExclamation)
         Case vbOK
         Case vbCancel
@@ -58,7 +46,7 @@ Sub SnapToGrid()
         End Select
     Else
         ' 実行確認
-        Select Case MsgBox("この操作は元に戻せません" + vbCrLf + "すべての図形をグリッド線に揃えますか？", _
+        Select Case MsgBox("This operation cannot be undone." + vbCrLf + "Snap all shapes to grid?", _
             vbOKCancel + vbExclamation)
         Case vbOK
         Case vbCancel
@@ -66,7 +54,7 @@ Sub SnapToGrid()
         End Select
         ' 選択して図形があることを確認
         If ActiveSheet.Shapes.Count = 0 Then
-            MsgBox "図形はありません", vbInformation
+            MsgBox "No shapes found.", vbInformation
             Exit Sub
         End If
         ActiveSheet.Shapes.SelectAll
@@ -126,7 +114,7 @@ Sub SnapToGrid()
         Set oShp = oShpRng.Item(lCnt)
         
         ' メッセージ
-        Application.StatusBar = "全" + CStr(oShpRng.Count) + "個の図形の" + CStr(lCnt) + "番目を調整中 ..."
+        Application.StatusBar = "Adjusting " + CStr(lCnt) + " of " + CStr(oShpRng.Count) + " shapes ..."
         DoEvents
         
         bChg = False
@@ -232,7 +220,7 @@ Sub SnapToGrid()
                         ActiveSheet.Cells(lIdxRow, lIdxCol).Activate
                     End If
                     ActiveSheet.Shapes(.Name).Select False
-                    sInfo = "左:" & CStr(.Left) & " 上:" & CStr(.Top) & " 幅:" & CStr(.Width) & " 高さ:" & CStr(.Height)
+                    sInfo = "Left: " & CStr(.Left) & " Top: " & CStr(.Top) & " Width: " & CStr(.Width) & " Height: " & CStr(.Height)
                     lChg = lChg + 1
                 End If
             End With
@@ -244,43 +232,11 @@ Sub SnapToGrid()
     
     ' 最後のメッセージ
     If lShp = 0 Then
-        MsgBox "図形はありません", vbInformation
+        MsgBox "No shapes found.", vbInformation
     ElseIf lChg <> 0 Then
-        MsgBox CStr(lChg) & "個の図形をグリッド線に揃えました" & vbCrLf & sInfo, vbInformation
+        MsgBox CStr(lChg) & " shape(s) snapped to grid." & vbCrLf & sInfo, vbInformation
     Else
-        MsgBox "すべての図形がグリッド線に揃っています", vbInformation
+        MsgBox "All shapes are already snapped to grid.", vbInformation
     End If
-    
-End Sub
-
-Sub FindOneSideConnector()
-
-    Dim shp As Shape    ' shape
-    Dim flg As Boolean  ' flag
-    
-    ' スライドの図形一覧
-    For Each shp In ActiveSheet.Shapes
-        
-        If shp.Connector Then
-        
-            flg = False
-            
-            ' 片側コネクタのチェック
-            If shp.ConnectorFormat.BeginConnected And Not shp.ConnectorFormat.EndConnected Then flg = True
-            If shp.ConnectorFormat.EndConnected And Not shp.ConnectorFormat.BeginConnected Then flg = True
-            
-            ' 片側接続のコネクタが見つかったら終了
-            If flg Then
-                shp.Select
-                Exit Sub
-            End If
-            
-        End If
-        
-    Next
-    
-    ' 片側接続のコネクタが見つからなかったことを通知
-    MsgBox "片側接続のコネクタはありません。", vbInformation
-    Exit Sub
     
 End Sub
