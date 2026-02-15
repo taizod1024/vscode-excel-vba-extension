@@ -34,6 +34,9 @@ Sub SnapToGrid()
     Dim oShpRng As ShapeRange ' 操作対象の図形全体
     Dim sInfo As String     ' メッセージ
     
+    ' Enable snap to grid
+    Application.SnapToGrid = True
+    
     ' 実行前チェック
     If TypeName(Selection) <> "Range" Then
         Set oShpRng = Selection.ShapeRange
