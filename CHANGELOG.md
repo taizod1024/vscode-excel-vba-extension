@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.2...v0.2.3) (2026-02-15)
+
+
+### Features
+
+* FindOneSideConnector機能を追加し、カスタムUIに統合 ([cd25fbe](https://github.com/taizod1024/vscode-excel-vba-extension/commit/cd25fbefd92271a699a56ff1f2f09e03a89879ec))
+* Graph Paper機能を追加し、カスタムUIにボタンを統合 ([0f9330c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/0f9330c4e8dcb4001c6cac6acc45ce48f21b37a5))
+* 新しいボタン「Snap to Grid」と「Find One Side Connector」をカスタムUIに追加 ([12e3e67](https://github.com/taizod1024/vscode-excel-vba-extension/commit/12e3e67511994352f9c83c50173ab82330101de6))
+
 ### [0.2.2](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.1...v0.2.2) (2026-02-14)
 
 
