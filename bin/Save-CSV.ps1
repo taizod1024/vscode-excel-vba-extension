@@ -343,7 +343,7 @@ try {
             }
             
             # Set table style
-            $Sheet.ListObjects(1).TableStyle = "TableStyleLight1"
+            $Sheet.ListObjects(1).TableStyle = "TableStyleLight4"
             
             # Set freeze panes
             Set-FreezePanes -Sheet $Sheet
