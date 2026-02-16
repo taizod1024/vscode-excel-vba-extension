@@ -19,7 +19,7 @@ Const VSCODE_COMMAND As String = "code "
 ''' –ß‚è’l: Boolean - true ‚Å—LŒø
 ''' ================================================================================
 Sub OpenVSCode_getEnabled(control As IRibbonControl, ByRef enabled)
-    enabled = True
+    enabled = Not (ActiveWindow Is Nothing)
 End Sub
 
 ''' ================================================================================
