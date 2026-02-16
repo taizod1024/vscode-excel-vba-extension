@@ -24,8 +24,8 @@ Sub GraphPaper()
     End If
     
     ' Get default font name and size from Normal style
-    defaultFontName = ActiveWorkbook.Styles("Normal").Font.Name
-    defaultFontSize = ActiveWorkbook.Styles("Normal").Font.Size
+    defaultFontName = Application.StandardFont
+    defaultFontSize = Application.StandardFontSize
     
     ' Set font to default
     ActiveSheet.Cells.Font.Name = defaultFontName
