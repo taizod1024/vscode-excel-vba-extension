@@ -2,13 +2,6 @@
     <ribbon>
         <tabs>
             <tab id="TabExcelVBA" label="Excel VBA">
-                <group id="GroupVSCode" label="VSCode">
-                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
-                        onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
-                        screentip="Open in VSCode"
-                        supertip="Opens the workbook in VSCode"
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                </group>
                 <group id="GroupExcel" label="Shape">
                     <button id="ButtonGraphPaper" imageMso="GridSettings" label="Graph Paper"
                         onAction="GraphPaper_onAction" getEnabled="GraphPaper_getEnabled"
@@ -53,19 +46,19 @@
                         getEnabled="TableInsert_getEnabled"
                         screentip="Insert Above"
                         supertip="Inserts above the selected cells."
-                        showImage="true" size="large" showLabel="true" visible="true" />
+                        showImage="true" size="normal" showLabel="true" visible="true" />
                     <button id="ButtonDeleteRows" imageMso="TableRowsDelete"
                         label="Delete Rows" onAction="TableDeleteRows_onAction"
                         getEnabled="TableInsert_getEnabled"
                         screentip="Delete Rows"
                         supertip="Deletes the selected rows."
-                        showImage="true" size="large" showLabel="true" visible="true" />
+                        showImage="true" size="normal" showLabel="true" visible="true" />
                     <button id="ButtonInsertRowsBelow" imageMso="TableInsertRowsBelow"
                         label="Insert Below" onAction="TableInsertRowsBelow_onAction"
                         getEnabled="TableInsert_getEnabled"
                         screentip="Insert Below"
                         supertip="Inserts below the selected cells."
-                        showImage="true" size="large" showLabel="true" visible="true" />
+                        showImage="true" size="normal" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupSheet" label="Sheet">
                     <button id="ButtonCopyToNewSheet" imageMso="SheetInsert"
@@ -73,6 +66,13 @@
                         getEnabled="TableInsert_getEnabled"
                         screentip="Copy to New Sheet"
                         supertip="Copies the selected range to a new sheet named Sheet*.png."
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
+                <group id="GroupVSCode" label="VSCode">
+                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
+                        onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
+                        screentip="Open in VSCode"
+                        supertip="Opens the workbook in VSCode"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
             </tab>

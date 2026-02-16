@@ -111,4 +111,6 @@ Sub CopyToNewSheet_onAction(control As IRibbonControl)
     newSheet.Range("A1").Select
     
     On Error GoTo 0
+    
+    MsgBox "Copied to new sheet: " & sheetName, vbInformation
 End Sub
