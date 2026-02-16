@@ -57,6 +57,7 @@ export async function exportSheetsAsPngAsync(bookPath: string, context: CommandC
         const firstFile = path.join(imageDir, files[0]);
         const fileUri = vscode.Uri.file(firstFile);
         await vscode.commands.executeCommand("revealInExplorer", fileUri);
+        await vscode.commands.executeCommand("vscode.open", fileUri);
       }
     },
   );
