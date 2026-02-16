@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.6...v0.2.7) (2026-02-16)
+
+
+### Features
+
+* PNGエクスポート後にファイルをエクスプローラーで表示し、開くコマンドを追加 ([6e20dbe](https://github.com/taizod1024/vscode-excel-vba-extension/commit/6e20dbe4106d39408708ef78a5e59740558dd3bf))
+* シートの形状を考慮してエクスポート範囲を調整する機能を追加 ([410d89a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/410d89a93882e69cad7b3ca4acb9c3a36d028092))
+* 新しいシートにコピーした後のメッセージボックスを追加し、VSCodeグループを再配置 ([702e62a](https://github.com/taizod1024/vscode-excel-vba-extension/commit/702e62a03b2b4204d08a99cfd6962df9624dadf7))
+* 新しい行と列の挿入および削除機能を追加 ([de613a9](https://github.com/taizod1024/vscode-excel-vba-extension/commit/de613a90a102ab72b4e81d50a2eeabe9fd088825))
+
+
+### Bug Fixes
+
+* excel-vba-addin.xlamのバイナリファイルを更新 ([3bafc59](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3bafc5988d918a514e212a1ab32d66473af3142c))
+* グラフ用紙のデフォルトフォント名とサイズを「Normal」スタイルから標準フォントに変更 ([7c1319c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/7c1319c2b1719047baaa21c2a08a2f0539574b0e))
+* ワークブックが読み取り専用の場合にCSVおよびVBAコードの保存を防ぐチェックを追加 ([341f850](https://github.com/taizod1024/vscode-excel-vba-extension/commit/341f850a038ee7e641d4bf32c12bef3461d870fe))
+
 ### [0.2.6](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.5...v0.2.6) (2026-02-15)
 
 
