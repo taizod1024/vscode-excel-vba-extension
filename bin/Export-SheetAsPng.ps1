@@ -129,7 +129,44 @@ try {
                         Write-Host "    - Using maximum vertical page break column: $maxCol"
                     }
 
-                    # Fall back to UsedRange if no page breaks
+                    # Check shapes extent
+                    if ($sheet.Shapes.Count -gt 0) {
+                        Write-Host "    - Sheet has $($sheet.Shapes.Count) shapes"
+                        foreach ($shape in $sheet.Shapes) {
+                            try {
+                                $shapeBottom = $shape.Top + $shape.Height
+                                $shapeRight = $shape.Left + $shape.Width
+                                
+                                # Find the row at the bottom of the shape
+                                for ($r = 1; $r -le 1000; $r++) {
+                                    $cell = $sheet.Cells.Item($r, 1)
+                                    if ($cell.Top -gt $shapeBottom) {
+                                        $shapeRow = $r - 1
+                                        if ($shapeRow -lt 1) { $shapeRow = 1 }
+                                        if ($shapeRow -gt $maxRow) { $maxRow = $shapeRow }
+                                        break
+                                    }
+                                }
+                                
+                                # Find the column at the right of the shape
+                                for ($c = 1; $c -le 256; $c++) {
+                                    $cell = $sheet.Cells.Item(1, $c)
+                                    if ($cell.Left -gt $shapeRight) {
+                                        $shapeCol = $c - 1
+                                        if ($shapeCol -lt 1) { $shapeCol = 1 }
+                                        if ($shapeCol -gt $maxCol) { $maxCol = $shapeCol }
+                                        break
+                                    }
+                                }
+                            }
+                            catch {
+                                # Skip shapes that can't be processed
+                            }
+                        }
+                        Write-Host "    - Shapes extend to row: $maxRow, column: $maxCol"
+                    }
+
+                    # Fall back to UsedRange if no page breaks and no shapes
                     $usedRange = $sheet.UsedRange
                     if ($null -ne $usedRange) {
                         $usedMaxRow = $usedRange.Row + $usedRange.Rows.Count - 1
