@@ -47,6 +47,12 @@ try {
     $vbProject = $result.VBProject
     $macro = $result.Workbook
     $isAddIn = $macroInfo.IsAddIn
+    
+    # Check if workbook is read-only
+    if ($macro.ReadOnly) {
+        throw "Workbook is read-only. Cannot save VBA code."
+    }
+    
     if (Test-Path $vbaSourcePath) {
         $vbaFiles = Get-ChildItem -Path $vbaSourcePath -Recurse -Include *.bas, *.cls, *.frm | ForEach-Object { $_.FullName }
     }

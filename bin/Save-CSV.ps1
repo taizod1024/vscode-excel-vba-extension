@@ -197,6 +197,11 @@ try {
         }
     }
     
+    # Check if workbook is read-only
+    if ($workbook.ReadOnly) {
+        throw "Workbook is read-only. Cannot save CSV data."
+    }
+    
     # Get all CSV files from input path
     $csvFiles = Get-ChildItem -Path $csvInputPath -Filter "*.csv" -File | Sort-Object -Property BaseName
 
