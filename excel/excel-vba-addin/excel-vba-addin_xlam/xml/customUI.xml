@@ -20,26 +20,6 @@
                         supertip="Finds and selects a connector that is connected only on one side."
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
-                <group id="GroupColumns" label="Columns">
-                    <button id="ButtonInsertColumnsLeft" imageMso="TableInsertColumnsLeft"
-                        label="Insert Left" onAction="TableInsertColumnsLeft_onAction"
-                        getEnabled="TableInsert_getEnabled"
-                        screentip="Insert Left"
-                        supertip="Inserts to the left of the selected cells."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                    <button id="ButtonDeleteColumns" imageMso="TableColumnsDelete"
-                        label="Delete Columns" onAction="TableDeleteColumns_onAction"
-                        getEnabled="TableInsert_getEnabled"
-                        screentip="Delete Columns"
-                        supertip="Deletes the selected columns."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                    <button id="ButtonInsertColumnsRight" imageMso="TableInsertColumnsRight"
-                        label="Insert Right" onAction="TableInsertColumnsRight_onAction"
-                        getEnabled="TableInsert_getEnabled"
-                        screentip="Insert Right"
-                        supertip="Inserts to the right of the selected cells."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                </group>
                 <group id="GroupRows" label="Rows">
                     <button id="ButtonInsertRowsAbove" imageMso="TableInsertRowsAbove"
                         label="Insert Above" onAction="TableInsertRowsAbove_onAction"
@@ -58,6 +38,26 @@
                         getEnabled="TableInsert_getEnabled"
                         screentip="Insert Below"
                         supertip="Inserts below the selected cells."
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                </group>
+                <group id="GroupColumns" label="Columns">
+                    <button id="ButtonInsertColumnsLeft" imageMso="TableInsertColumnsLeft"
+                        label="Insert Left" onAction="TableInsertColumnsLeft_onAction"
+                        getEnabled="TableInsert_getEnabled"
+                        screentip="Insert Left"
+                        supertip="Inserts to the left of the selected cells."
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                    <button id="ButtonDeleteColumns" imageMso="TableColumnsDelete"
+                        label="Delete Columns" onAction="TableDeleteColumns_onAction"
+                        getEnabled="TableInsert_getEnabled"
+                        screentip="Delete Columns"
+                        supertip="Deletes the selected columns."
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                    <button id="ButtonInsertColumnsRight" imageMso="TableInsertColumnsRight"
+                        label="Insert Right" onAction="TableInsertColumnsRight_onAction"
+                        getEnabled="TableInsert_getEnabled"
+                        screentip="Insert Right"
+                        supertip="Inserts to the right of the selected cells."
                         showImage="true" size="normal" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupSheet" label="Sheet">
