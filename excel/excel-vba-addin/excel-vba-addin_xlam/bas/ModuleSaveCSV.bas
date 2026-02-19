@@ -86,9 +86,6 @@ Sub SaveCSV()
               scriptPath & """ """ & bookPath & """ """ & csvPath & """"
     shell.Run command, 0, True
     
-    ' 出力フォルダをエクスプローラで開く
-    OpenFolderInExplorer csvPath
-    
     ' 完了通知ダイアログを表示
     MsgBox "CSV saved successfully." & vbCrLf & "Folder: " & csvPath, vbInformation, "Save Completed"
     

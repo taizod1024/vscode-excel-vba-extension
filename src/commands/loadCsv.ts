@@ -27,6 +27,7 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       const bookDir = path.dirname(bookPath);
       const { fileNameWithoutExt, excelExt } = getFileNameParts(bookPath);
       const csvDir = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "csv");
+      const tmpPath = path.join(bookDir, `${fileNameWithoutExt}_${excelExt}`, "csv~");
       const scriptPath = `${context.extensionPath}\\bin\\Load-CSV.ps1`;
 
       logger.logCommandStart(commandName, {
@@ -35,7 +36,7 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       });
 
       // exec command
-      const result = execPowerShell(scriptPath, [bookPath, csvDir]);
+      const result = execPowerShell(scriptPath, [bookPath, tmpPath]);
 
       // output result
       if (result.stdout) logger.logDetail("Output", result.stdout.trim());
@@ -46,6 +47,23 @@ export async function loadCsvAsync(bookPath: string, context: CommandContext) {
       }
 
       logger.logSuccess(`CSV extracted (${path.basename(path.dirname(csvDir))}/csv folder)`);
+
+      // Organize loaded files
+      const parentFolderName = `${fileNameWithoutExt}_${excelExt}`;
+      const parentPath = path.join(bookDir, parentFolderName);
+
+      // Remove existing folder if it exists
+      if (fs.existsSync(csvDir)) {
+        fs.rmSync(csvDir, { recursive: true, force: true });
+      }
+
+      // Create parent folder if needed
+      if (!fs.existsSync(parentPath)) {
+        fs.mkdirSync(parentPath, { recursive: true });
+      }
+
+      // Move tmpPath to new location
+      fs.renameSync(tmpPath, csvDir);
 
       // Create parent folder if it doesn't exist
       const parentDir = path.dirname(csvDir);

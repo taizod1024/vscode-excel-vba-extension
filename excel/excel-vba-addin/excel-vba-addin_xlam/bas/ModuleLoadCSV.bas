@@ -78,19 +78,39 @@ Sub LoadCSV()
     baseName = GetActualFileNameWithoutExt(bookPath)
     
     Dim csvPath As String
-    csvPath = GetParentFolder(bookPath) & "\" & baseName & "_" & fileExt & "\csv"
+    csvPath = GetParentFolder(bookPath) & "\" & baseName & "_" & fileExt & "\csv~"
     
     ' PowerShell スクリプト実行
     Set shell = CreateObject("WScript.Shell")
     command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & _
               scriptPath & """ """ & bookPath & """ """ & csvPath & """"
-    shell.Run command, 0, True
+    
+    Dim exitCode As Long
+    exitCode = shell.Run(command, 0, True)
+    
+    ' 実行失敗時はエラー表示
+    If exitCode <> 0 Then
+        MsgBox "Error: PowerShell execution failed (Exit code: " & exitCode & ")", vbExclamation
+        Application.Cursor = xlDefault
+        Exit Sub
+    End If
+    
+    ' 成功時：csv~ を csv にリネーム
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Dim finalPath As String
+    finalPath = Left(csvPath, Len(csvPath) - 1)  ' csv~ から ~ を削除
+    
+    If fso.FolderExists(finalPath) Then
+        fso.DeleteFolder finalPath
+    End If
+    fso.MoveFolder csvPath, finalPath
     
     ' 出力フォルダをエクスプローラで開く
-    OpenFolderInExplorer csvPath
-    
     ' 完了通知ダイアログを表示
-    MsgBox "CSV loaded successfully." & vbCrLf & "Folder: " & csvPath, vbInformation, "Load Completed"
+    MsgBox "CSV loaded successfully." & vbCrLf & "Folder: " & finalPath, vbInformation, "Load Completed"
+    
+    OpenFolderInExplorer finalPath
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault

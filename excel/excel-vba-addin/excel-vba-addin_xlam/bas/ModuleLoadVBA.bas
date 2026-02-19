@@ -84,15 +84,36 @@ Sub LoadVBA()
     Set shell = CreateObject("WScript.Shell")
     command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & _
               scriptPath & """ """ & bookPath & """ """ & tmpPath & """"
-    shell.Run command, 0, True
+    
+    Dim exitCode As Long
+    exitCode = shell.Run(command, 0, True)
+    
+    ' 実行失敗時はエラー表示
+    If exitCode <> 0 Then
+        MsgBox "Error: PowerShell execution failed (Exit code: " & exitCode & ")", vbExclamation
+        Application.Cursor = xlDefault
+        Exit Sub
+    End If
+    
+    ' 成功時：bas~ を bas にリネーム
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Dim finalPath As String
+    finalPath = Left(tmpPath, Len(tmpPath) - 1)  ' bas~ から ~ を削除
+    
+    If fso.FolderExists(finalPath) Then
+        fso.DeleteFolder finalPath
+    End If
+    fso.MoveFolder tmpPath, finalPath
     
     ' 出力フォルダをエクスプローラで開く
     Dim parentFolder As String
-    parentFolder = GetParentFolder(tmpPath)
-    OpenFolderInExplorer parentFolder
+    parentFolder = GetParentFolder(finalPath)
     
     ' 完了通知ダイアログを表示
     MsgBox "VBA loaded successfully." & vbCrLf & "Folder: " & parentFolder, vbInformation, "Load Completed"
+    
+    OpenFolderInExplorer parentFolder
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault

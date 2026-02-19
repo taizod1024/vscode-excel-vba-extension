@@ -104,6 +104,13 @@
                         supertip="Copies the selected range to a new sheet named Sheet*.png."
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
+                <group id="GroupExplorer" label="Explorer">
+                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open Folder"
+                        onAction="OpenExplorer_onAction" getEnabled="OpenExplorer_getEnabled"
+                        screentip="Open folder"
+                        supertip="Open folder with explorer"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
             </tab>
         </tabs>
     </ribbon>

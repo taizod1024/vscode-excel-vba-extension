@@ -86,9 +86,6 @@ Sub SaveVBA()
               scriptPath & """ """ & bookPath & """ """ & saveSourcePath & """"
     shell.Run command, 0, True
     
-    ' 出力フォルダをエクスプローラで開く
-    OpenFolderInExplorer saveSourcePath
-    
     ' 完了通知ダイアログを表示
     MsgBox "VBA saved successfully." & vbCrLf & "Folder: " & saveSourcePath, vbInformation, "Save Completed"
     

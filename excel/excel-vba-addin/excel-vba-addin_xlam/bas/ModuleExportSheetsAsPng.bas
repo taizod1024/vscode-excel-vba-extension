@@ -82,10 +82,10 @@ Sub ExportSheetsAsPng()
     shell.Run command, 0, True
     
     ' 出力フォルダをエクスプローラで開く
-    OpenFolderInExplorer imageOutputPath
-    
     ' 完了通知ダイアログを表示
     MsgBox "PNG export completed." & vbCrLf & "Folder: " & imageOutputPath, vbInformation, "Export Completed"
+    
+    OpenFolderInExplorer imageOutputPath
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault
