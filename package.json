@@ -64,12 +64,17 @@
       {
         "command": "excel-vba.loadCsv",
         "title": "Load CSV from Excel Book",
-        "icon": "$(cloud-upload)"
+        "icon": "$(repo-push)"
       },
       {
         "command": "excel-vba.saveCsv",
         "title": "Save CSV to Excel Book",
-        "icon": "$(cloud-download)"
+        "icon": "$(repo-pull)"
+      },
+      {
+        "command": "excel-vba.compareCsv",
+        "title": "Compare CSV with Excel Book",
+        "icon": "$(compare-changes)"
       },
       {
         "command": "excel-vba.createUrlShortcut",
@@ -143,6 +148,10 @@
           "when": "false"
         },
         {
+          "command": "excel-vba.compareCsv",
+          "when": "false"
+        },
+        {
           "command": "excel-vba.createUrlShortcut",
           "when": "true"
         },
@@ -197,6 +206,11 @@
         {
           "command": "excel-vba.saveCsv",
           "group": "navigation@1.07",
+          "when": "resourcePath =~ /[._](xlsx|xlsm)/i"
+        },
+        {
+          "command": "excel-vba.compareCsv",
+          "group": "navigation@1.075",
           "when": "resourcePath =~ /[._](xlsx|xlsm)/i"
         },
         {
