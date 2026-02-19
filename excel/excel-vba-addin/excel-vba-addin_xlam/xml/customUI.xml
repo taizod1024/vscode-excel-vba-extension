@@ -2,6 +2,48 @@
     <ribbon>
         <tabs>
             <tab id="TabExcelVBA" label="Excel VBA">
+                <group id="GroupVSCode" label="VSCode">
+                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
+                        onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
+                        screentip="Open in VSCode"
+                        supertip="Opens the workbook in VSCode"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
+                <group id="GroupVBA" label="VBA">
+                    <button id="ButtonLoadVBA" imageMso="FileOpen" label="Load VBA"
+                        onAction="LoadVBA_onAction" getEnabled="LoadVBA_getEnabled"
+                        screentip="Load VBA"
+                        supertip="Load VBA from Excel workbook"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                    <button id="ButtonSaveVBA" imageMso="SaveSelectionToTableOfContentsGallery"
+                        label="Save VBA"
+                        onAction="SaveVBA_onAction" getEnabled="SaveVBA_getEnabled"
+                        screentip="Save VBA"
+                        supertip="Save VBA to Excel workbook"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
+                <group id="GroupCSV" label="CSV">
+                    <button id="ButtonLoadCSV" imageMso="FileOpen" label="Load CSV"
+                        onAction="LoadCSV_onAction" getEnabled="LoadCSV_getEnabled"
+                        screentip="Load CSV"
+                        supertip="Load CSV file to Excel workbook"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                    <button id="ButtonSaveCSV" imageMso="SaveSelectionToTableOfContentsGallery"
+                        label="Save CSV"
+                        onAction="SaveCSV_onAction" getEnabled="SaveCSV_getEnabled"
+                        screentip="Save CSV"
+                        supertip="Save Excel workbook to CSV file"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
+                <group id="GroupPNG" label="PNG">
+                    <button id="ButtonExportSheetsAsPng" imageMso="PictureRecolorAutomatic"
+                        label="Export Sheets"
+                        onAction="ExportSheetsAsPng_onAction"
+                        getEnabled="ExportSheetsAsPng_getEnabled"
+                        screentip="Export Sheets as PNG"
+                        supertip="Export sheets ending with .png to PNG images"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                </group>
                 <group id="GroupExcel" label="Shape">
                     <button id="ButtonGraphPaper" imageMso="GridSettings" label="Graph Paper"
                         onAction="GraphPaper_onAction" getEnabled="GraphPaper_getEnabled"
@@ -19,28 +61,6 @@
                         screentip="Find One Side Connector"
                         supertip="Finds and selects a connector that is connected only on one side."
                         showImage="true" size="large" showLabel="true" visible="true" />
-                </group>
-                <group id="GroupColumns" label="Columns">
-                    <button id="ButtonInsertColumnsLeft" imageMso="TableInsertColumnsLeft"
-                        label="Insert Left" onAction="TableInsertColumnsLeft_onAction"
-                        getEnabled="TableInsert_getEnabled"
-                        screentip="Insert Left"
-                        supertip="Inserts to the left of the selected cells."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                    <button id="ButtonDeleteColumns" imageMso="TableColumnsDelete"
-                        label="Delete Columns" onAction="TableDeleteColumns_onAction"
-                        getEnabled="TableInsert_getEnabled"
-                        screentip="Delete Columns"
-                        supertip="Deletes the selected columns."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                    <button id="ButtonInsertColumnsRight" imageMso="TableInsertColumnsRight"
-                        label="Insert Right" onAction="TableInsertColumnsRight_onAction"
-                        getEnabled="TableInsert_getEnabled"
-                        screentip="Insert Right"
-                        supertip="Inserts to the right of the selected cells."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                </group>
-                <group id="GroupRows" label="Rows">
                     <button id="ButtonInsertRowsAbove" imageMso="TableInsertRowsAbove"
                         label="Insert Above" onAction="TableInsertRowsAbove_onAction"
                         getEnabled="TableInsert_getEnabled"
@@ -59,8 +79,24 @@
                         screentip="Insert Below"
                         supertip="Inserts below the selected cells."
                         showImage="true" size="normal" showLabel="true" visible="true" />
-                </group>
-                <group id="GroupSheet" label="Sheet">
+                    <button id="ButtonInsertColumnsLeft" imageMso="TableInsertColumnsLeft"
+                        label="Insert Left" onAction="TableInsertColumnsLeft_onAction"
+                        getEnabled="TableInsert_getEnabled"
+                        screentip="Insert Left"
+                        supertip="Inserts to the left of the selected cells."
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                    <button id="ButtonDeleteColumns" imageMso="TableColumnsDelete"
+                        label="Delete Columns" onAction="TableDeleteColumns_onAction"
+                        getEnabled="TableInsert_getEnabled"
+                        screentip="Delete Columns"
+                        supertip="Deletes the selected columns."
+                        showImage="true" size="normal" showLabel="true" visible="true" />
+                    <button id="ButtonInsertColumnsRight" imageMso="TableInsertColumnsRight"
+                        label="Insert Right" onAction="TableInsertColumnsRight_onAction"
+                        getEnabled="TableInsert_getEnabled"
+                        screentip="Insert Right"
+                        supertip="Inserts to the right of the selected cells."
+                        showImage="true" size="normal" showLabel="true" visible="true" />
                     <button id="ButtonCopyToNewSheet" imageMso="SheetInsert"
                         label="Copy to New Sheet" onAction="CopyToNewSheet_onAction"
                         getEnabled="TableInsert_getEnabled"
@@ -68,11 +104,11 @@
                         supertip="Copies the selected range to a new sheet named Sheet*.png."
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
-                <group id="GroupVSCode" label="VSCode">
-                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
-                        onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
-                        screentip="Open in VSCode"
-                        supertip="Opens the workbook in VSCode"
+                <group id="GroupExplorer" label="Explorer">
+                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open Folder"
+                        onAction="OpenExplorer_onAction" getEnabled="OpenExplorer_getEnabled"
+                        screentip="Open folder"
+                        supertip="Open folder with explorer"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
             </tab>

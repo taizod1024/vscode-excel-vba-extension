@@ -11,6 +11,7 @@ import { loadCustomUIAsync } from "./commands/loadCustomUI";
 import { saveCustomUIAsync } from "./commands/saveCustomUI";
 import { loadCsvAsync } from "./commands/loadCsv";
 import { saveCsvAsync } from "./commands/saveCsv";
+import { compareCsvAsync } from "./commands/compareCsv";
 import { openBookAsync } from "./commands/openBook";
 import { runSubAsync } from "./commands/runSub";
 import { newBookAsync } from "./commands/newBook";
@@ -472,6 +473,20 @@ class ExcelVba {
         try {
           const bookPath = this.resolveBookPath(uri.fsPath);
           await saveCsvAsync(bookPath, commandContext);
+        } catch (reason) {
+          this.channel.appendLine(`ERROR: ${reason}`);
+          vscode.window.showErrorMessage(`${reason}`);
+        }
+      }),
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(`${this.appId}.compareCsv`, async (uri: vscode.Uri) => {
+        const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
+        this.channel.show(false);
+        try {
+          const bookPath = this.resolveBookPath(uri.fsPath);
+          await compareCsvAsync(bookPath, commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
