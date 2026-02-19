@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.7...v0.2.8) (2026-02-19)
+
+
+### Features
+
+* CSVおよびVBAのロードとセーブ機能を追加し、リボンにボタンを配置 ([3327e77](https://github.com/taizod1024/vscode-excel-vba-extension/commit/3327e77db5043988e409a49af8887e98a1a78c25))
+* CSVファイルとExcelブックを比較する機能を追加 ([5a5968c](https://github.com/taizod1024/vscode-excel-vba-extension/commit/5a5968c367841cf302b6f612fa7249abb746733e))
+* pngエクスポート機能のためのリボンボタンを追加 ([458043b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/458043b9d10dd41db5d60557423103541d6ccbdc))
+* PowerShellスクリプトの実行結果を確認し、エクスプローラーでフォルダーを開く機能を追加 ([fd23bd5](https://github.com/taizod1024/vscode-excel-vba-extension/commit/fd23bd5d18802f01c30e9ac454d9f7fcfe7d3e52))
+* 最近ファイルのURLを作成する機能を追加 ([4853432](https://github.com/taizod1024/vscode-excel-vba-extension/commit/4853432ff2ada2cde73279eec3b90e6276c48f25))
+* 列グループのボタンを再配置し、エクスポート範囲を調整 ([d51f281](https://github.com/taizod1024/vscode-excel-vba-extension/commit/d51f281ae5432531367ec5e5b26e8d265708d3ba))
+
 ### [0.2.7](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.6...v0.2.7) (2026-02-16)
 
 
