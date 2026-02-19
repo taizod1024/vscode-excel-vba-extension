@@ -57,10 +57,16 @@ Sub OpenVSCode()
     
     ' Webから開いている場合（URLの場合）は、Recentフォルダから.urlを探す
     If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
+        Dim originalUrl As String
+        originalUrl = bookPath
         bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
         If bookPath = "" Then
-            MsgBox "Recent file not found: " & ActiveWorkbook.Name & ".url", vbExclamation
-            Exit Sub
+            ' .urlファイルを作成する
+            bookPath = CreateRecentUrlFile(ActiveWorkbook.Name & ".url", originalUrl)
+            If bookPath = "" Then
+                MsgBox "Failed to create recent file: " & ActiveWorkbook.Name & ".url", vbExclamation
+                Exit Sub
+            End If
         End If
     End If
     
@@ -221,6 +227,53 @@ Private Function GetRecentFilePath(fileName As String) As String
     
 ErrorHandler:
     GetRecentFilePath = ""
+End Function
+
+''' ================================================================================
+''' 関数: CreateRecentUrlFile
+''' 説明: Recentフォルダに.urlファイルを作成
+''' パラメータ:
+'''   fileName As String - 作成するファイル名
+'''   urlContent As String - URLの内容
+''' 戻り値: String - 作成したファイルのパス、失敗した場合は空文字列
+''' ================================================================================
+Private Function CreateRecentUrlFile(fileName As String, urlContent As String) As String
+    Dim shell As Object
+    Dim userAppDataPath As String
+    Dim recentPath As String
+    Dim fileSystemObj As Object
+    Dim filePath As String
+    Dim fileHandle As Object
+    
+    On Error GoTo ErrorHandler
+    
+    ' APPDATAフォルダのパスを取得
+    Set shell = CreateObject("WScript.Shell")
+    userAppDataPath = shell.ExpandEnvironmentStrings("%APPDATA%")
+    
+    ' Recentフォルダのパスを構築
+    recentPath = userAppDataPath & "\Microsoft\Office\Recent"
+    filePath = recentPath & "\" & fileName
+    
+    Set fileSystemObj = CreateObject("Scripting.FileSystemObject")
+    
+    ' Recentフォルダが存在しなければ作成
+    If Not fileSystemObj.FolderExists(recentPath) Then
+        fileSystemObj.CreateFolder recentPath
+    End If
+    
+    ' .urlファイルを作成
+    Set fileHandle = fileSystemObj.CreateTextFile(filePath, True)
+    fileHandle.WriteLine "[InternetShortcut]"
+    fileHandle.WriteLine "URL=" & urlContent
+    fileHandle.Close
+    
+    CreateRecentUrlFile = filePath
+    
+    Exit Function
+    
+ErrorHandler:
+    CreateRecentUrlFile = ""
 End Function
 
 ''' ================================================================================
