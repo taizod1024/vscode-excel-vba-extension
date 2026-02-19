@@ -1,38 +1,35 @@
-Attribute VB_Name = "ModuleExportSheetsAsPng"
+Attribute VB_Name = "ModuleSaveVBA"
 Option Explicit
 
 ' ================================================================================
-' モジュール: ModuleExportSheetsAsPng
-' 説明: PNG エクスポート機能（リボンボタンコールバック）
+' モジュール: ModuleSaveVBA
+' 説明: VBA セーブ機能（リボンボタンコールバック）
 ' ================================================================================
 
-Sub ExportSheetsAsPng_getEnabled(control As IRibbonControl, ByRef enabled)
-    enabled = Not (ActiveWindow Is Nothing)
+Sub SaveVBA_getEnabled(control As IRibbonControl, ByRef enabled)
+    enabled = Not (ActiveWorkbook Is Nothing)
 End Sub
 
 ''' ================================================================================
-''' サブルーチン: ExportSheetsAsPng_onAction (リボンコールバック)
+''' サブルーチン: SaveVBA_onAction (リボンコールバック)
 ''' 説明: リボンボタンから呼ばれるコールバック
 ''' 戻り値: なし
 ''' ================================================================================
-Sub ExportSheetsAsPng_onAction(control As IRibbonControl)
-    ExportSheetsAsPng
+Sub SaveVBA_onAction(control As IRibbonControl)
+    SaveVBA
 End Sub
 
 ''' ================================================================================
-''' サブルーチン: ExportSheetsAsPng
-''' 説明: .png で終わるシートを PNG にエクスポート
+''' サブルーチン: SaveVBA
+''' 説明: VBA を Excel ワークブックにセーブ
 ''' パラメータ: なし
 ''' 戻り値: なし
 ''' ================================================================================
-Sub ExportSheetsAsPng()
+Sub SaveVBA()
     Dim shell As Object
-    Dim fso As Object
     Dim bookPath As String
     Dim extensionPath As String
     Dim scriptPath As String
-    Dim imageOutputPath As String
-    Dim fileExt As String
     Dim command As String
     
     On Error GoTo ErrorHandler
@@ -43,6 +40,7 @@ Sub ExportSheetsAsPng()
     ' ワークブックの確認と初期化
     If ActiveWorkbook Is Nothing Then
         MsgBox "No workbook open.", vbInformation
+        Application.Cursor = xlDefault
         Exit Sub
     End If
     
@@ -53,6 +51,7 @@ Sub ExportSheetsAsPng()
         bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
         If bookPath = "" Then
             MsgBox "Recent file not found: " & ActiveWorkbook.Name & ".url", vbExclamation
+            Application.Cursor = xlDefault
             Exit Sub
         End If
     End If
@@ -61,31 +60,37 @@ Sub ExportSheetsAsPng()
     extensionPath = GetExtensionPath()
     If extensionPath = "" Then
         MsgBox "Excel VBA Extension not found.", vbExclamation
+        Application.Cursor = xlDefault
         Exit Sub
     End If
     
-    scriptPath = extensionPath & "\bin\Export-SheetAsPng.ps1"
+    scriptPath = extensionPath & "\bin\Save-VBA.ps1"
     If Dir(scriptPath) = "" Then
         MsgBox "PowerShell script not found: " & scriptPath, vbExclamation
+        Application.Cursor = xlDefault
         Exit Sub
     End If
     
     ' 出力パスの構築
+    Dim fileExt As String
     fileExt = GetActualFileExtension(bookPath)
-    imageOutputPath = GetParentFolder(bookPath) & "\" & GetActualFileNameWithoutExt(bookPath) & _
-                      "_" & fileExt & "\png"
+    Dim baseName As String
+    baseName = GetActualFileNameWithoutExt(bookPath)
+    
+    Dim saveSourcePath As String
+    saveSourcePath = GetParentFolder(bookPath) & "\" & baseName & "_" & fileExt & "\bas"
     
     ' PowerShell スクリプト実行
     Set shell = CreateObject("WScript.Shell")
     command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & _
-              scriptPath & """ """ & bookPath & """ """ & imageOutputPath & """"
+              scriptPath & """ """ & bookPath & """ """ & saveSourcePath & """"
     shell.Run command, 0, True
     
     ' 出力フォルダをエクスプローラで開く
-    OpenFolderInExplorer imageOutputPath
+    OpenFolderInExplorer saveSourcePath
     
     ' 完了通知ダイアログを表示
-    MsgBox "PNG export completed." & vbCrLf & "Folder: " & imageOutputPath, vbInformation, "Export Completed"
+    MsgBox "VBA saved successfully." & vbCrLf & "Folder: " & saveSourcePath, vbInformation, "Save Completed"
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault
@@ -95,5 +100,5 @@ Sub ExportSheetsAsPng()
 ErrorHandler:
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault
-    MsgBox "Failed to export sheets as PNG: " & Err.description, vbExclamation
+    MsgBox "Failed to save VBA: " & Err.description, vbExclamation
 End Sub

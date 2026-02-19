@@ -201,3 +201,122 @@ Function GetFileNameWithoutExt(filePath As String) As String
         GetFileNameWithoutExt = fileName
     End If
 End Function
+
+''' ================================================================================
+''' 関数: GetActualFileExtension
+''' 説明: ファイルパスから実際の拡張子を取得（.url の場合は除去）
+''' パラメータ: filePath - ファイルの完全パス
+''' 戻り値: String - ファイルの拡張子（ドット抜き）
+''' ================================================================================
+Function GetActualFileExtension(filePath As String) As String
+    Dim actualPath As String
+    
+    ' .url の場合は除去して実際の拡張子を取得
+    If Right(filePath, 4) = ".url" Then
+        actualPath = Left(filePath, Len(filePath) - 4)
+    Else
+        actualPath = filePath
+    End If
+    
+    ' ドットの位置から拡張子を抽出
+    GetActualFileExtension = Mid(actualPath, InStrRev(actualPath, ".") + 1)
+End Function
+
+''' ================================================================================
+''' 関数: GetActualFileNameWithoutExt
+''' 説明: ファイルパスからファイル名（拡張子なし）を取得（.url の場合は除去）
+''' パラメータ: filePath - ファイルの完全パス
+''' 戻り値: String - ファイル名（拡張子なし）
+''' ================================================================================
+Function GetActualFileNameWithoutExt(filePath As String) As String
+    Dim actualPath As String
+    
+    ' .url の場合は除去
+    If Right(filePath, 4) = ".url" Then
+        actualPath = Left(filePath, Len(filePath) - 4)
+    Else
+        actualPath = filePath
+    End If
+    
+    ' ファイル名から拡張子を除去
+    GetActualFileNameWithoutExt = GetFileNameWithoutExt(actualPath)
+End Function
+
+''' ================================================================================
+''' サブルーチン: OpenFolderInExplorer
+''' 説明: フォルダをエクスプローラで開く（既に開いている場合はアクティベート、
+'''        フォルダが存在しない場合は親フォルダを開く）
+''' パラメータ:
+'''   folderPath As String - 開くフォルダのパス
+''' 戻り値: なし
+''' ================================================================================
+Sub OpenFolderInExplorer(folderPath As String)
+    Dim shell As Object
+    Dim fso As Object
+    Dim parentFolder As String
+    Dim windows As Object
+    Dim window As Object
+    Dim found As Boolean
+    
+    On Error GoTo ErrorHandler
+    
+    Set shell = CreateObject("WScript.Shell")
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    found = False
+    
+    ' 指定されたフォルダが存在する場合
+    If fso.FolderExists(folderPath) Then
+        ' Shell.Application で既に開いているエクスプローラを検索
+        Set windows = CreateObject("Shell.Application").Windows
+        On Error Resume Next
+        For Each window In windows
+            If window.Document.Folder.Self.Path = folderPath Then
+                ' 既に開いている場合はアクティベート
+                window.Activate
+                found = True
+                Exit For
+            End If
+        Next window
+        On Error GoTo ErrorHandler
+        
+        ' 開いている場合は処理終了
+        If found Then Exit Sub
+        
+        ' 見つからないので新規で開く
+        shell.Run "explorer """ & folderPath & """", 1, False
+    Else
+        ' 親フォルダが存在する場合は親フォルダを開く
+        parentFolder = GetParentFolder(folderPath)
+        If parentFolder <> "" Then
+            ' 親フォルダも同様にチェック
+            Set windows = CreateObject("Shell.Application").Windows
+            On Error Resume Next
+            For Each window In windows
+                If window.Document.Folder.Self.Path = parentFolder Then
+                    window.Activate
+                    found = True
+                    Exit For
+                End If
+            Next window
+            On Error GoTo ErrorHandler
+            
+            ' 見つからないので新規で開く
+            If Not found Then
+                shell.Run "explorer """ & parentFolder & """", 1, False
+            End If
+        End If
+    End If
+    
+    Exit Sub
+    
+ErrorHandler:
+    ' エラー時は通常のexplorerを開く
+    If fso.FolderExists(folderPath) Then
+        shell.Run "explorer """ & folderPath & """", 1, False
+    Else
+        parentFolder = GetParentFolder(folderPath)
+        If parentFolder <> "" Then
+            shell.Run "explorer """ & parentFolder & """", 1, False
+        End If
+    End If
+End Sub
