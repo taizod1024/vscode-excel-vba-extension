@@ -106,14 +106,11 @@ Sub LoadVBA()
     End If
     fso.MoveFolder tmpPath, finalPath
     
-    ' 出力フォルダをエクスプローラで開く
-    Dim parentFolder As String
-    parentFolder = GetParentFolder(finalPath)
-    
     ' 完了通知ダイアログを表示
-    MsgBox "VBA loaded successfully." & vbCrLf & "Folder: " & parentFolder, vbInformation, "Load Completed"
+    MsgBox "VBA loaded successfully." & vbCrLf & "Folder: " & finalPath, vbInformation, "Load Completed"
     
-    OpenFolderInExplorer parentFolder
+    ' 出力フォルダをエクスプローラで開く
+    OpenFolderInExplorer finalPath
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault

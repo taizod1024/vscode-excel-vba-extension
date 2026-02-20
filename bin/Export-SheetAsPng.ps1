@@ -105,10 +105,10 @@ try {
 
                     # Get all horizontal page break positions
                     if ($hPageBreaks -gt 0) {
-                        for ($i = 1; $i -le $hPageBreaks; $i++) {
-                            $pageBreak = $sheet.HPageBreaks($i)
+                        for ($hpIdx = 1; $hpIdx -le $hPageBreaks; $hpIdx++) {
+                            $pageBreak = $sheet.HPageBreaks($hpIdx)
                             $breakRow = $pageBreak.Location.Row
-                            Write-Host "    - Horizontal page break $i at row: $breakRow"
+                            Write-Host "    - Horizontal page break $hpIdx at row: $breakRow"
                             if ($breakRow -gt $maxRow) {
                                 $maxRow = $breakRow
                             }
@@ -118,10 +118,10 @@ try {
 
                     # Get all vertical page break positions
                     if ($vPageBreaks -gt 0) {
-                        for ($i = 1; $i -le $vPageBreaks; $i++) {
-                            $pageBreak = $sheet.VPageBreaks($i)
+                        for ($vpIdx = 1; $vpIdx -le $vPageBreaks; $vpIdx++) {
+                            $pageBreak = $sheet.VPageBreaks($vpIdx)
                             $breakCol = $pageBreak.Location.Column
-                            Write-Host "    - Vertical page break $i at column: $breakCol"
+                            Write-Host "    - Vertical page break $vpIdx at column: $breakCol"
                             if ($breakCol -gt $maxCol) {
                                 $maxCol = $breakCol
                             }
