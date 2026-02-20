@@ -105,7 +105,7 @@
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupExplorer" label="Explorer">
-                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open Folder"
+                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open in Explorer"
                         onAction="OpenExplorer_onAction" getEnabled="OpenExplorer_getEnabled"
                         screentip="Open folder"
                         supertip="Open folder with explorer"
