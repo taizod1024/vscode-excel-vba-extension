@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.8...v0.2.9) (2026-02-20)
+
+
+### Features
+
+* VBAロード後にエクスプローラーでフォルダーを開く機能を追加 ([a673ced](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a673ced2dad46cd8758cddaeb07df95d04335bcc))
+
+
+### Bug Fixes
+
+* エクスプローラーでのファイル表示機能を削除 ([e8b1f74](https://github.com/taizod1024/vscode-excel-vba-extension/commit/e8b1f745b9c26b75514565ae02ac095a03d56f43))
+* 修正されたページ区切りのインデックス変数名を更新 ([b54e5bb](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b54e5bbc96db37f29720b2854d82e8e490af163f))
+
 ### [0.2.8](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.7...v0.2.8) (2026-02-19)
 
 
