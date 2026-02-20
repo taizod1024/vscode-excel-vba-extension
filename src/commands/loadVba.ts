@@ -88,8 +88,6 @@ export async function loadVbaAsync(bookPath: string, context: CommandContext) {
           const firstFile = path.join(newPath, files[0]);
           const uri = vscode.Uri.file(firstFile);
           await vscode.commands.executeCommand("vscode.open", uri);
-          // Reveal the file in explorer at the correct folder level (bas folder)
-          await vscode.commands.executeCommand("_revealInExplorer", uri);
         }
       }
 
