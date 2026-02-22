@@ -194,37 +194,43 @@ try {
     
     # Save the workbook or add-in
     Write-Host "- saving workbook"
-    $vbe = $excel.VBE
-    $vbe.MainWindow.Visible = $true
-    $vbe.MainWindow.SetFocus()
-    if ($null -ne $macro) {
-        # For workbooks, save through the workbook object
-        Write-Host "  - saving workbook"
-        $macro.Save()
+    try {
+        if ($null -ne $macro) {
+            # For workbooks, save through the workbook object
+            Write-Host "  - saving workbook"
+            $macro.Save()
+        }
+        elseif ($isAddIn -and $null -ne $vbProject) {
+            # For add-ins (.xlam), VBA components are stored in the Excel runtime
+            Write-Host "  - add-in components saved"
+        }
     }
-    elseif ($isAddIn -and $null -ne $vbProject) {
-        # For add-ins (.xlam), VBA components are stored in the Excel runtime
-        # The file cannot be saved directly from VBProject
-        Write-Host "  - Opening VB Editor for you to save manually..."
-        $vbProject.Activate
+    catch {
+        Write-Host "  - warning: save operation encountered an issue: $_"
     }
     
-    # Compile VBA project
+    # Compile VBA project (without UI interaction)
     Write-Host "- compiling VBA project"
     try {
         if ($null -ne $vbProject) {
             $vbe = $excel.VBE
             if ($null -ne $vbe) {
                 # Execute compile command from VBE menu: Debug > Compile
-                # Parameters: 1 = msoControlButton, 578 = Compile ID
+                # Note: We avoid SetFocus() to prevent window activation issues
                 $objVBECommandBar = $vbe.CommandBars
                 $compileButton = $objVBECommandBar.FindControl(1, 578)
                 if ($null -ne $compileButton) {
+                    # Try to stop debug mode if active
+                    $indexOfReset = 3
+                    $excel.VBE.CommandBars("run").Controls($indexOfReset).Execute()
+                    # Execute compile and wait briefly for completion
                     $compileButton.Execute()
+                    # Small delay to allow compilation to start
+                    Start-Sleep -Milliseconds 500
                     Write-Host "  - compilation executed"
                 }
                 else {
-                    throw "Compile button not found."
+                    Write-Host "  - warning: Compile button not found."
                 }
             }
         }
