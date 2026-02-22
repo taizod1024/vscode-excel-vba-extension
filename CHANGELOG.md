@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.11](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.10...v0.2.11) (2026-02-22)
+
+
+### Bug Fixes
+
+* PowerShell実行時のエラーハンドリングを追加 ([9adf421](https://github.com/taizod1024/vscode-excel-vba-extension/commit/9adf421eda5a40b3d43f34c1eb5cad99d377f9ba))
+
 ### [0.2.10](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.9...v0.2.10) (2026-02-22)
 
 
