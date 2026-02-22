@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.9...v0.2.10) (2026-02-22)
+
+
+### Bug Fixes
+
+* Excelインスタンス取得時にデバッグ停止コマンドを追加 ([b16b72d](https://github.com/taizod1024/vscode-excel-vba-extension/commit/b16b72dab9336cff1f1048d016e5a2edafb35a7c))
+* デバッグ停止コマンドのコメントを追加 ([0ca3eec](https://github.com/taizod1024/vscode-excel-vba-extension/commit/0ca3eec380b9fe203e82122cdf6f1b824b475d89))
+
 ### [0.2.9](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.8...v0.2.9) (2026-02-20)
 
 
