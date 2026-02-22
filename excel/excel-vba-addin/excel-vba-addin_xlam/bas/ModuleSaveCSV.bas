@@ -84,7 +84,16 @@ Sub SaveCSV()
     Set shell = CreateObject("WScript.Shell")
     command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & _
               scriptPath & """ """ & bookPath & """ """ & csvPath & """"
-    shell.Run command, 0, True
+    
+    Dim exitCode As Long
+    exitCode = shell.Run(command, 0, True)
+    
+    ' 実行失敗時はエラー表示
+    If exitCode <> 0 Then
+        Application.Cursor = xlDefault
+        MsgBox "Error: PowerShell execution failed (Exit code: " & exitCode & ")", vbExclamation
+        Exit Sub
+    End If
     
     ' 完了通知ダイアログを表示
     MsgBox "CSV saved successfully." & vbCrLf & "Folder: " & csvPath, vbInformation, "Save Completed"

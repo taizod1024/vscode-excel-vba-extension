@@ -42,6 +42,7 @@ Sub ExportSheetsAsPng()
     
     ' ワークブックの確認と初期化
     If ActiveWorkbook Is Nothing Then
+        Application.Cursor = xlDefault
         MsgBox "No workbook open.", vbInformation
         Exit Sub
     End If
@@ -52,6 +53,7 @@ Sub ExportSheetsAsPng()
     If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
         bookPath = GetRecentFilePath(ActiveWorkbook.Name & ".url")
         If bookPath = "" Then
+            Application.Cursor = xlDefault
             MsgBox "Recent file not found: " & ActiveWorkbook.Name & ".url", vbExclamation
             Exit Sub
         End If
@@ -60,12 +62,14 @@ Sub ExportSheetsAsPng()
     ' Azure拡張機能のパスを取得
     extensionPath = GetExtensionPath()
     If extensionPath = "" Then
+        Application.Cursor = xlDefault
         MsgBox "Excel VBA Extension not found.", vbExclamation
         Exit Sub
     End If
     
     scriptPath = extensionPath & "\bin\Export-SheetAsPng.ps1"
     If Dir(scriptPath) = "" Then
+        Application.Cursor = xlDefault
         MsgBox "PowerShell script not found: " & scriptPath, vbExclamation
         Exit Sub
     End If
