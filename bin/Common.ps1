@@ -18,11 +18,14 @@ function Get-ExcelInstance {
     $excel = $null
     try {
         $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+        ' stop debug'
+        $indexOfReset = 3
+        $excel.VBE.CommandBars("run").Controls($indexOfReset).Execute()
     }
     catch {
         throw "Excel not running."
     }
-    
+
     return $excel
 }
 
