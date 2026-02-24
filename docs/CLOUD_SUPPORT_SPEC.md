@@ -9,42 +9,42 @@ graph TB
         URLShortcut["Create URL<br/>Shortcut"]
         OpenBook["Open Excel Book"]
     end
-    
+
     subgraph Common["共通ユーティリティ"]
         Resolve["ResolveWebBookPath"]
         GetFolder["GetParentFolder"]
         CreateURL["CreateRecentUrlFile"]
         GetRecent["GetRecentFilePath"]
     end
-    
+
     subgraph VBAModule["VBA モジュール"]
         OpenVSCode["ModuleOpenWithVSCode"]
         OpenExp["ModuleOpenWithExplorer"]
         ModuleCommon["ModuleCommon"]
     end
-    
+
     subgraph Data["処理対象"]
         LocFile["ローカルファイル<br/>.xlsx/.xlsm"]
         WebFile["Web ファイル<br/>https://..."]
         URLFile[".url ファイル<br/>Recent フォルダ"]
     end
-    
+
     Open -.->|使用| Resolve
     Open -.->|使用| GetFolder
     URLShortcut -.->|使用| CreateURL
     OpenBook -.->|使用| GetRecent
-    
+
     Resolve <-->|実装| ModuleCommon
     GetFolder <-->|実装| ModuleCommon
     CreateURL <-->|実装| ModuleCommon
     GetRecent <-->|実装| ModuleCommon
-    
+
     OpenVSCode <-->|呼び出し| ModuleCommon
     OpenExp <-->|呼び出し| ModuleCommon
-    
+
     Open <-->|実装| OpenVSCode
     Open <-->|実装| OpenExp
-    
+
     LocFile <-->|処理| Open
     WebFile <-->|変換| URLFile
     URLFile <-->|参照| Open

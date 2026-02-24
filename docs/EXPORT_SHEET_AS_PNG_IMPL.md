@@ -8,36 +8,36 @@ graph TB
         Command["コマンド<br/>exportSheetsAsPngAsync"]
         Output["出力チャネル<br/>ログ表示"]
     end
-    
+
     subgraph TypeScript["TypeScript 層"]
         PathUtils["pathResolution.ts<br/>パス解析"]
         FileOps["fileOperations.ts<br/>ファイル操作"]
     end
-    
+
     subgraph PowerShell["PowerShell 層"]
         PSScript["Export-SheetAsPng.ps1<br/>画像処理"]
     end
-    
+
     subgraph Excel["Excel 層"]
         ExcelApp["Excel COM<br/>VBA 実行"]
         PrintArea["印刷範囲<br/>イメージング"]
     end
-    
+
     subgraph FileSystem["ファイルシステム"]
         OutputFolder["{name}.png/"]
         PNGFile["*.png ファイル"]
     end
-    
+
     Command <-->|制御| PathUtils
     PathUtils <-->|検索| FileOps
     FileOps <-->|出力| OutputFolder
-    
+
     Command <-->|実行| PSScript
     PSScript <-->|制御| ExcelApp
     ExcelApp <-->|処理| PrintArea
     PrintArea <-->|出力| PNGFile
     PNGFile <-->|保存| OutputFolder
-    
+
     PSScript <-->|ログ| Output
     ExcelApp <-->|ログ| Output
 ```

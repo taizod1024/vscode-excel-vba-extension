@@ -8,58 +8,58 @@ graph TB
         NewXLSX["New Excel Book<br/>(.xlsx)"]
         NewXLSM["New Excel Book<br/>with CustomUI<br/>(.xlsm)"]
     end
-    
+
     subgraph Extract["抽出"]
         LoadVBA["Load VBA"]
         LoadCSV["Load CSV"]
         LoadCustomUI["Load CustomUI"]
         ExportPNG["Export PNG"]
     end
-    
+
     subgraph Edit["編集"]
         VBAEdit["VBA<br/>(Module.bas)"]
         CSVEdit["CSV<br/>データ"]
         XMLEdit["CustomUI<br/>(customUI14.xml)"]
     end
-    
+
     subgraph Save["保存"]
         SaveVBA["Save VBA"]
         SaveCSV["Save CSV"]
         SaveUI["Save CustomUI"]
     end
-    
+
     subgraph Analysis["分析/実行"]
         Compare["Compare VBA"]
         RunSub["Run Sub"]
     end
-    
+
     subgraph Navigation["ナビゲーション"]
         OpenVSCode["Open with VS Code"]
         OpenExplorer["Open with Explorer"]
         OpenBook["Open Excel Book"]
         OpenPNG["Open Sheet from PNG"]
     end
-    
+
     Create <-->|生成| LoadVBA
     Create <-->|生成| LoadCSV
     Create <-->|生成| LoadCustomUI
-    
+
     LoadVBA <-->|抽出| VBAEdit
     LoadCSV <-->|抽出| CSVEdit
     LoadCustomUI <-->|抽出| XMLEdit
     ExportPNG <-->|生成| Extract
-    
+
     VBAEdit <-->|編集| SaveVBA
     CSVEdit <-->|編集| SaveCSV
     XMLEdit <-->|編集| SaveUI
-    
+
     SaveVBA <-->|反映| Create
     SaveCSV <-->|反映| Create
     SaveUI <-->|反映| Create
-    
+
     VBAEdit <-->|比較| Compare
     VBAEdit <-->|実行| RunSub
-    
+
     OpenVSCode <-->|開く| VBAEdit
     OpenExplorer <-->|開く| VBAEdit
     OpenBook <-->|開く| Create

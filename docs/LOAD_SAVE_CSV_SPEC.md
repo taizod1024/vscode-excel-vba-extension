@@ -8,30 +8,30 @@ graph TB
         Load["Load CSV"]
         Save["Save CSV"]
     end
-    
+
     subgraph Source["ソースファイル"]
         ExcelSheet["Excel ブック<br/>(.csv シート)"]
         CSVFile["CSV ファイル<br/>data.csv"]
         BackupCSV["バックアップ<br/>data.csv~"]
     end
-    
+
     subgraph Storage["ストレージ"]
         FileSys["ファイルシステム<br/>{name}.csv/"]
         VersionCtrl["バージョン管理<br/>Git/SVN"]
     end
-    
+
     subgraph Editor["編集環境"]
         VSCode["VS Code<br/>テキストエディタ"]
     end
-    
+
     Load <-->|抽出| ExcelSheet
     Load <-->|生成| CSVFile
     CSVFile <-->|保存| FileSys
     FileSys <-->|管理| VersionCtrl
-    
+
     CSVFile <-->|編集| VSCode
     BackupCSV <-->|バックアップ| Save
-    
+
     Save <-->|検索| ExcelSheet
     CSVFile <-->|読取| Save
     Save <-->|更新| ExcelSheet

@@ -7,36 +7,36 @@ graph TB
     subgraph Feature["New Excel Book"]
         NewBook["新規作成<br/>コマンド"]
     end
-    
+
     subgraph Template["テンプレート"]
         BasicTpl["基本テンプレート"]
         CustomUITpl["CustomUI<br/>テンプレート"]
         AddinTpl["アドイン<br/>テンプレート"]
     end
-    
+
     subgraph Output["出力ファイル"]
         XLSX["Excel Book<br/>(.xlsx)"]
         XLSM["Excel Book<br/>with CustomUI<br/>(.xlsm)"]
         XLAM["Excel Add-in<br/>(.xlam)"]
     end
-    
+
     subgraph Config["設定要素"]
         FileSys["ファイルシステム"]
         Metadata["メタデータ<br/>バージョン等"]
     end
-    
+
     NewBook <-->|選択| BasicTpl
     NewBook <-->|選択| CustomUITpl
     NewBook <-->|選択| AddinTpl
-    
+
     BasicTpl <-->|生成| XLSX
     CustomUITpl <-->|生成| XLSM
     AddinTpl <-->|生成| XLAM
-    
+
     XLSX <-->|保存| FileSys
     XLSM <-->|保存| FileSys
     XLAM <-->|保存| FileSys
-    
+
     FileSys <-->|含む| Metadata
 ```
 
