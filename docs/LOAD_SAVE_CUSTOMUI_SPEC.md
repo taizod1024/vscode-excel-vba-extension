@@ -1,5 +1,48 @@
 # CustomUI 機能仕様書 (Load / Save)
 
+## 機能関連図
+
+```mermaid
+graph TB
+    subgraph Features["CustomUI 機能"]
+        Load["Load CustomUI"]
+        Save["Save CustomUI"]
+    end
+
+    subgraph Source["ソースファイル"]
+        Addin["Excel アドイン<br/>(.xlam)"]
+        XMLFile["CustomUI XML<br/>customUI14.xml"]
+        BackupXML["バックアップ<br/>customUI14.xml~"]
+    end
+
+    subgraph Storage["ストレージ"]
+        FileSys["ファイルシステム<br/>{name}.xml/"]
+    end
+
+    subgraph Editor["編集環境"]
+        VSCode["VS Code<br/>XML エディタ"]
+        Intellisense["IntelliSense<br/>スキーマ補完"]
+    end
+
+    subgraph UI["ユーザーインターフェース"]
+        Ribbon["Excel リボン<br/>カスタマイズ"]
+    end
+
+    Load <-->|抽出| Addin
+    Load <-->|生成| XMLFile
+    XMLFile <-->|保存| FileSys
+
+    XMLFile <-->|編集| VSCode
+    Intellisense <-->|支援| VSCode
+    BackupXML <-->|バックアップ| Save
+
+    Save <-->|検索| Addin
+    XMLFile <-->|読取| Save
+    Save <-->|更新| Addin
+
+    Addin <-->|反映| Ribbon
+```
+
 ## 概要
 
 Excel のリボンをカスタマイズする CustomUI XML ファイルを VS Code で編集する機能です。

@@ -90,8 +90,8 @@ Sub SaveCSV()
     
     ' 実行失敗時はエラー表示
     If exitCode <> 0 Then
-        Application.Cursor = xlDefault
         MsgBox "Error: PowerShell execution failed (Exit code: " & exitCode & ")", vbExclamation
+        Application.Cursor = xlDefault
         Exit Sub
     End If
     

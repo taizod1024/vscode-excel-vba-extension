@@ -110,7 +110,7 @@ Sub LoadVBA()
     MsgBox "VBA loaded successfully." & vbCrLf & "Folder: " & finalPath, vbInformation, "Load Completed"
     
     ' 出力フォルダをエクスプローラで開く
-    OpenFolderInExplorer finalPath
+    OpenFolderWithExplorer finalPath
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault

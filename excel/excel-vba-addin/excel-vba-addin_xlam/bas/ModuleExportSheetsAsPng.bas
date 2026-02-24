@@ -83,13 +83,22 @@ Sub ExportSheetsAsPng()
     Set shell = CreateObject("WScript.Shell")
     command = "powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File """ & _
               scriptPath & """ """ & bookPath & """ """ & imageOutputPath & """"
-    shell.Run command, 0, True
+    
+    Dim exitCode As Long
+    exitCode = shell.Run(command, 0, True)
+    
+    ' 実行失敗時はエラー表示
+    If exitCode <> 0 Then
+        MsgBox "Error: PowerShell execution failed (Exit code: " & exitCode & ")", vbExclamation
+        Application.Cursor = xlDefault
+        Exit Sub
+    End If
     
     ' 出力フォルダをエクスプローラで開く
     ' 完了通知ダイアログを表示
     MsgBox "PNG export completed." & vbCrLf & "Folder: " & imageOutputPath, vbInformation, "Export Completed"
     
-    OpenFolderInExplorer imageOutputPath
+    OpenFolderWithExplorer imageOutputPath
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault

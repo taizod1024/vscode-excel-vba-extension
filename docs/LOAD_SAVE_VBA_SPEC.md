@@ -1,5 +1,50 @@
 # VBA 機能仕様書 (Load / Save / Compare / Run Sub)
 
+## 機能関連図
+
+```mermaid
+graph TB
+    subgraph Features["VBA 機能"]
+        Load["Load VBA"]
+        Save["Save VBA"]
+        Compare["Compare VBA"]
+        Run["Run Sub"]
+    end
+
+    subgraph Source["ソースファイル"]
+        ExcelBook["Excel ブック<br/>(.xlsm/.xlam)"]
+        VBAFile["VBA ファイル<br/>Module.bas"]
+        BackupFile["バックアップ<br/>Module.bas~"]
+    end
+
+    subgraph Editor["編集環境"]
+        VSCode["VS Code"]
+        FileSys["ファイルシステム<br/>{name}.bas/"]
+    end
+
+    subgraph Execution["実行環境"]
+        ExcelApp["Excel アプリ<br/>VBA エンジン"]
+        Output["実行結果"]
+    end
+
+    Load <-->|抽出| ExcelBook
+    Load <-->|生成| VBAFile
+    VBAFile <-->|保存| FileSys
+
+    VBAFile <-->|編集| VSCode
+    BackupFile <-->|バックアップ| Save
+
+    Save <-->|検索| ExcelBook
+    Save <-->|反映| ExcelBook
+    VBAFile <-->|読取| Save
+
+    Compare <-->|差分表示| VBAFile
+    Compare <-->|比較| ExcelBook
+
+    Run <-->|実行| ExcelApp
+    ExcelApp <-->|出力| Output
+```
+
 ## 概要
 
 Excel VBA コードと VS Code を連携させる機能です。

@@ -243,14 +243,14 @@ Function GetActualFileNameWithoutExt(filePath As String) As String
 End Function
 
 ''' ================================================================================
-''' サブルーチン: OpenFolderInExplorer
+''' サブルーチン: OpenFolderWithExplorer
 ''' 説明: フォルダをエクスプローラで開く（既に開いている場合はアクティベート、
 '''        フォルダが存在しない場合は親フォルダを開く）
 ''' パラメータ:
 '''   folderPath As String - 開くフォルダのパス
 ''' 戻り値: なし
 ''' ================================================================================
-Sub OpenFolderInExplorer(folderPath As String)
+Sub OpenFolderWithExplorer(folderPath As String)
     Dim shell As Object
     Dim fso As Object
     Dim parentFolder As String
@@ -320,3 +320,81 @@ ErrorHandler:
         End If
     End If
 End Sub
+
+''' ================================================================================
+''' 関数: ResolveWebBookPath
+''' 説明: ワークブックパスを解決（Web対応）
+''' パラメータ:
+'''   bookPath As String - ワークブックのフルパス（URLの可能性あり）
+'''   bookName As String - ワークブック名
+''' 戻り値: String - 解決されたファイルパス、失敗した場合は空文字列
+''' ================================================================================
+Function ResolveWebBookPath(bookPath As String, bookName As String) As String
+    Dim resolvedPath As String
+    resolvedPath = bookPath
+    
+    ' Webから開いている場合（URLの場合）は、Recentフォルダから.urlを探す
+    If Left(bookPath, 7) = "http://" Or Left(bookPath, 8) = "https://" Then
+        Dim originalUrl As String
+        originalUrl = bookPath
+        resolvedPath = GetRecentFilePath(bookName & ".url")
+        If resolvedPath = "" Then
+            ' .urlファイルを作成する
+            resolvedPath = CreateRecentUrlFile(bookName & ".url", originalUrl)
+            If resolvedPath = "" Then
+                MsgBox "Failed to create recent file: " & bookName & ".url", vbExclamation
+                ResolveWebBookPath = ""
+                Exit Function
+            End If
+        End If
+    End If
+    
+    ResolveWebBookPath = resolvedPath
+End Function
+
+''' ================================================================================
+''' 関数: CreateRecentUrlFile
+''' 説明: Recentフォルダに.urlファイルを作成
+''' パラメータ:
+'''   fileName As String - 作成するファイル名
+'''   urlContent As String - URLの内容
+''' 戻り値: String - 作成したファイルのパス、失敗した場合は空文字列
+''' ================================================================================
+Function CreateRecentUrlFile(fileName As String, urlContent As String) As String
+    Dim shell As Object
+    Dim userAppDataPath As String
+    Dim recentPath As String
+    Dim fileSystemObj As Object
+    Dim filePath As String
+    Dim fileHandle As Object
+    
+    On Error GoTo ErrorHandler
+    
+    ' APPDATAフォルダのパスを取得
+    Set shell = CreateObject("WScript.Shell")
+    userAppDataPath = shell.ExpandEnvironmentStrings("%APPDATA%")
+    
+    ' Recentフォルダのパスを構築
+    recentPath = userAppDataPath & "\Microsoft\Office\Recent"
+    filePath = recentPath & "\" & fileName
+    
+    Set fileSystemObj = CreateObject("Scripting.FileSystemObject")
+    
+    ' Recentフォルダが存在しなければ作成
+    If Not fileSystemObj.FolderExists(recentPath) Then
+        fileSystemObj.CreateFolder recentPath
+    End If
+    
+    ' .urlファイルを作成
+    Set fileHandle = fileSystemObj.CreateTextFile(filePath, True)
+    fileHandle.WriteLine "[InternetShortcut]"
+    fileHandle.WriteLine "URL=" & urlContent
+    fileHandle.Close
+    
+    CreateRecentUrlFile = filePath
+    
+    Exit Function
+    
+ErrorHandler:
+    CreateRecentUrlFile = ""
+End Function

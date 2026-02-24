@@ -15,6 +15,9 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 
 **Key Benefits:**
 
+- Get started without configuration
+  - Install the extension and start using it immediately
+  - No complex setup required
 - Editing in VS Code
   - Edit, add, update, and delete VBA files
   - Edit, add, update, and delete Excel CSV
@@ -24,12 +27,18 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 - Integration with VS Code
   - Version control for VBA files, Excel CSV, and CustomUI XML files
   - Apply generative AI to VBA files, Excel CSV, and CustomUI XML files
+- Operations from Excel
+  - Export and import VBA files
+  - Export and import Excel sheets
+  - Export sheets as PNG images
 
-![excel-vba-extension](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension.png?raw=true)
+![excel-vba-extension_1](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_1.png?raw=true)
+
+![excel-vba-extension_2](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_2.png?raw=true)
 
 ![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
-## Features
+## Features - Excel VBA Extension
 
 | Feature                                   | Description                                                                   |
 | ----------------------------------------- | ----------------------------------------------------------------------------- |
@@ -48,6 +57,24 @@ A VS Code extension for developing Excel VBA / CSV / CustomUI.
 | **Save CustomUI to Excel Book**           | Save CustomUI edited in VS Code to book files.                                |
 | **Export Sheets as PNG**                  | Export sheets with print area as PNG images.                                  |
 | **Open Sheet from PNG**                   | Open the original Excel sheet from a PNG image file.                          |
+
+## Features - Excel VBA Add-in
+
+| Feature                | Description                                                |
+| ---------------------- | ---------------------------------------------------------- |
+| **Open with VS Code**  | Open the workbook folder in VS Code from Excel.            |
+| **Open with Explorer** | Open the workbook folder in Windows Explorer from Excel.   |
+| **Load VBA**           | Extract VBA files (.bas, .cls, .frm) from the active book. |
+| **Save VBA**           | Save VBA files back to the active book.                    |
+| **Load CSV**           | Export sheets as CSV files from the active book.           |
+| **Save CSV**           | Save CSV files back as sheets in the active book.          |
+| **Export PNG**         | Export sheets with print area as PNG images.               |
+| **Graph Paper**        | Display gridlines as graph paper on the sheet.             |
+| **Snap to Grid**       | Snap object positions to the grid.                         |
+| **One Side Connector** | Draw connectors between shapes.                            |
+| **Row Operation**      | Insert/delete/duplicate rows.                              |
+| **Column Operation**   | Insert/delete/duplicate columns.                           |
+| **Copy to New Sheet**  | Copy selected data to a new sheet.                         |
 
 ## Setup
 
@@ -237,21 +264,30 @@ VS Code で Excel VBA を開発するための拡張機能です。
 
 **主な利点：**
 
+- 設定なしで始められる
+  - 拡張機能をインストールすればすぐに使い始められる
+  - 複雑なセットアップは不要
 - VS Codeでの編集
   - VBA ファイルの編集、追加・更新・削除
   - Excel シートの編集、追加・更新・削除
-  - Excel シートのPNGとしてエクスポート
+  - Excel シートのPNGとしてのエクスポート
   - CustomUI XML ファイルの編集、更新
   - VBA ファイルの Sub プロシージャの VS Code からの実行
 - VS Codeとの統合
   - VBA ファイル、Excelシート、CustomUI XMLファイルのバージョン管理
   - VBA ファイル、Excelシート、CustomUI XMLファイルへの生成AIの適用
+- Excelからの操作
+  - VBA ファイルの出力、取込
+  - Excel シートの出力、取込
+  - Excel シートのPNGとしてのエクスポート
 
-![excel-vba-extension](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension.png?raw=true)
+![excel-vba-extension_1](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_1.png?raw=true)
+
+![excel-vba-extension_2](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_2.png?raw=true)
 
 ![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
-## 機能
+## 機能 - Excel VBA Extension
 
 | 機能                                      | 説明                                                                                               |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
@@ -270,6 +306,24 @@ VS Code で Excel VBA を開発するための拡張機能です。
 | **Save CustomUI to Excel Book**           | VS Code で編集した CustomUIのXMLファイルをブックファイルに保存します。                             |
 | **Export Sheets as PNG**                  | シートの印刷範囲を PNG 画像ファイルにエクスポートします。                                          |
 | **Open Sheet from PNG**                   | PNG 画像ファイルから元の Excel シートを開きます。                                                  |
+
+## 機能 - Excel VBA Add-in
+
+| 機能                   | 説明                                                                  |
+| ---------------------- | --------------------------------------------------------------------- |
+| **Open with VS Code**  | Excel からワークブックフォルダを VS Code で開きます。                 |
+| **Open with Explorer** | Excel からワークブックフォルダを エクスプローラーで開きます。         |
+| **Load VBA**           | アクティブなブックから VBA ファイル（.bas、.cls、.frm）を抽出します。 |
+| **Save VBA**           | 編集した VBA ファイルをアクティブなブックに保存します。               |
+| **Load CSV**           | アクティブなブックからシートを CSV ファイルにエクスポートします。     |
+| **Save CSV**           | CSV ファイルをアクティブなブックのシートに保存します。                |
+| **Export PNG**         | 印刷範囲付きシートを PNG 画像にエクスポートします。                   |
+| **Graph Paper**        | シートにグラフ用紙のグリッドを表示します。                            |
+| **Snap to Grid**       | オブジェクトの位置をグリッドにスナップします。                        |
+| **One Side Connector** | 図形間にコネクタを描画します。                                        |
+| **Row Operation**      | 行の挿入・削除・複製を行います。                                      |
+| **Column Operation**   | 列の挿入・削除・複製を行います。                                      |
+| **Copy to New Sheet**  | 選択したデータを新しいシートにコピーします。                          |
 
 ## 準備
 
