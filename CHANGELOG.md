@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.13](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.12...v0.2.13) (2026-02-24)
+
+
+### Bug Fixes
+
+* OpenExplorerとOpenVSCodeの機能をOpenWithExplorerとOpenWithVSCodeに変更し、関連するエラーハンドリングを追加 ([221b76b](https://github.com/taizod1024/vscode-excel-vba-extension/commit/221b76bc383fc36bcc5fbf51de4fcf731a283a79))
+
 ### [0.2.12](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.11...v0.2.12) (2026-02-22)
 
 
