@@ -122,7 +122,7 @@ export async function newBookWithCustomUIAsMacroAsync(context: CommandContext);
 
 ```
 excel/excel-vba-addin/excel-vba-addin.xlam
-  ├── ModuleOpenVSCode.bas     # VS Code 連携用サンプルコード
+  ├── ModuleOpenWithVSCode.bas     # VS Code 連携用サンプルコード
   ├── Sheet1.cls
   ├── ThisWorkbook.cls
   └── customUI.xml, customUI14.xml

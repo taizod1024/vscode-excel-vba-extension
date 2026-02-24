@@ -110,7 +110,7 @@ Sub LoadCSV()
     ' 完了通知ダイアログを表示
     MsgBox "CSV loaded successfully." & vbCrLf & "Folder: " & finalPath, vbInformation, "Load Completed"
     
-    OpenFolderInExplorer finalPath
+    OpenFolderWithExplorer finalPath
     
     ' カーソルを通常状態に戻す
     Application.Cursor = xlDefault

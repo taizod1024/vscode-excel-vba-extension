@@ -3,10 +3,10 @@
         <tabs>
             <tab id="TabExcelVBA" label="Excel VBA">
                 <group id="GroupVSCode" label="VSCode">
-                    <button id="ButtonOpenVSCode" imageMso="CodeEdit" label="Open in VSCode"
-                        onAction="OpenVSCode_onAction" getEnabled="OpenVSCode_getEnabled"
-                        screentip="Open in VSCode"
-                        supertip="Opens the workbook in VSCode"
+                    <button id="ButtonOpenWithVSCode" imageMso="CodeEdit" label="Open with VSCode"
+                        onAction="OpenWithVSCode_onAction" getEnabled="OpenWithVSCode_getEnabled"
+                        screentip="Open with VSCode"
+                        supertip="Opens the workbook with VSCode"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupVBA" label="VBA">
@@ -105,10 +105,11 @@
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupExplorer" label="Explorer">
-                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open in Explorer"
-                        onAction="OpenExplorer_onAction" getEnabled="OpenExplorer_getEnabled"
-                        screentip="Open folder"
-                        supertip="Open folder with explorer"
+                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open with Explorer"
+                        onAction="OpenWithExplorer_onAction"
+                        getEnabled="OpenWithExplorer_getEnabled"
+                        screentip="Open folder with Explorer"
+                        supertip="Open folder with Explorer"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
             </tab>
