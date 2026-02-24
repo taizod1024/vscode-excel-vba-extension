@@ -1,5 +1,46 @@
 # Export Sheets as PNG 機能仕様書
 
+## 機能関連図
+
+```mermaid
+graph TB
+    subgraph Feature["Export Sheet as PNG"]
+        Export["PNG エクスポート"]
+    end
+    
+    subgraph Source["ソース"]
+        ExcelBook["Excel ブック<br/>(.xlsx/.xlsm)"]
+        Sheet["シート<br/>(*.png)"]
+    end
+    
+    subgraph Processing["処理"]
+        Detect["シート検出"]
+        PrintArea["印刷範囲取得"]
+        Render["PNG 画像<br/>レンダリング"]
+    end
+    
+    subgraph Output["出力"]
+        PNGFile["PNG ファイル<br/>workbook.png/"]
+    end
+    
+    subgraph Usage["利用"]
+        VersionCtrl["バージョン管理"]
+        Review["コード・ビュー"]
+        Archive["アーカイブ"]
+    end
+    
+    Export <-->|対象| ExcelBook
+    Sheet <-->|検出| Export
+    Export <-->|実行| Detect
+    Detect <-->|取得| PrintArea
+    PrintArea <-->|変換| Render
+    Render <-->|生成| PNGFile
+    
+    PNGFile <-->|使用| VersionCtrl
+    PNGFile <-->|確認| Review
+    PNGFile <-->|保管| Archive
+```
+
 ## 概要
 
 Excel ブックの指定シートの印刷範囲を PNG 画像にエクスポートする機能です。

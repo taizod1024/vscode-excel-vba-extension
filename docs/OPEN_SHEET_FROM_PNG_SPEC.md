@@ -1,5 +1,42 @@
 # Open Sheet from PNG 機能仕様書
 
+## 機能関連図
+
+```mermaid
+graph TB
+    subgraph Feature["Open Sheet from PNG"]
+        Open["PNG から開く"]
+    end
+    
+    subgraph Input["入力"]
+        PNGFile["PNG ファイル<br/>Dashboard.png"]
+    end
+    
+    subgraph Analysis["解析"]
+        Analyze["ファイル名解析"]
+        ExtractName["シート名抽出"]
+    end
+    
+    subgraph Search["検索・検出"]
+        FolderSearch["フォルダ検索<br/>Dashboard.png/"]
+        FindBook["Excel ブック検出"]
+    end
+    
+    subgraph Output["出力"]
+        ExcelBook["Excel ブック<br/>(.xlsm/.xlam)"]
+        Sheet["対応シート<br/>(アクティベート)"]
+    end
+    
+    Open <-->|対象| PNGFile
+    PNGFile <-->|処理| Analyze
+    Analyze <-->|解析| ExtractName
+    ExtractName <-->|送信| FolderSearch
+    FolderSearch <-->|検索| FindBook
+    
+    FindBook <-->|発見| ExcelBook
+    ExcelBook <-->|開く| Sheet
+```
+
 ## 概要
 
 PNG 画像ファイルから元の Excel ワークブックを開き、対応するシートをアクティベートする機能です。

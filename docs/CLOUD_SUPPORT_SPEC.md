@@ -1,5 +1,55 @@
 # クラウド対応・その他機能仕様書
 
+## 機能関連図
+
+```mermaid
+graph TB
+    subgraph Core["コア機能"]
+        Open["Open Workbook<br/>with VS Code/Explorer"]
+        URLShortcut["Create URL<br/>Shortcut"]
+        OpenBook["Open Excel Book"]
+    end
+    
+    subgraph Common["共通ユーティリティ"]
+        Resolve["ResolveWebBookPath"]
+        GetFolder["GetParentFolder"]
+        CreateURL["CreateRecentUrlFile"]
+        GetRecent["GetRecentFilePath"]
+    end
+    
+    subgraph VBAModule["VBA モジュール"]
+        OpenVSCode["ModuleOpenWithVSCode"]
+        OpenExp["ModuleOpenWithExplorer"]
+        ModuleCommon["ModuleCommon"]
+    end
+    
+    subgraph Data["処理対象"]
+        LocFile["ローカルファイル<br/>.xlsx/.xlsm"]
+        WebFile["Web ファイル<br/>https://..."]
+        URLFile[".url ファイル<br/>Recent フォルダ"]
+    end
+    
+    Open -.->|使用| Resolve
+    Open -.->|使用| GetFolder
+    URLShortcut -.->|使用| CreateURL
+    OpenBook -.->|使用| GetRecent
+    
+    Resolve <-->|実装| ModuleCommon
+    GetFolder <-->|実装| ModuleCommon
+    CreateURL <-->|実装| ModuleCommon
+    GetRecent <-->|実装| ModuleCommon
+    
+    OpenVSCode <-->|呼び出し| ModuleCommon
+    OpenExp <-->|呼び出し| ModuleCommon
+    
+    Open <-->|実装| OpenVSCode
+    Open <-->|実装| OpenExp
+    
+    LocFile <-->|処理| Open
+    WebFile <-->|変換| URLFile
+    URLFile <-->|参照| Open
+```
+
 ## 概要
 
 クラウドホストの Excel ファイルをサポートする機能、およびその他の補助機能です。
@@ -8,6 +58,7 @@
 
 1. **Create URL Shortcut** - クラウドホストの Excel ファイル用 URL ショートカットを作成
 2. **Open Excel Book** - Excel ファイルを Excel で開く
+3. **Open Workbook with VS Code / Explorer** - アクティブなワークブックを VS Code またはエクスプローラで開く（Web 対応）
 
 ---
 
@@ -141,12 +192,13 @@ test.url 選択時:
 **メイン処理**: `src/commands/createUrlShortcut.ts`
 
 ```typescript
-export async function createUrlShortcutAsync(context: CommandContext)
+export async function createUrlShortcutAsync(context: CommandContext);
 ```
 
 **PowerShell**: `bin/Create-UrlShortcuts.ps1`
 
 処理内容：
+
 1. Excel.Workbooks を列挙
 2. 各ブックの Full Path を取得
 3. .url ファイル生成
@@ -219,12 +271,13 @@ test.xlsx をローカルで検索
 **メイン処理**: `src/commands/openBook.ts`
 
 ```typescript
-export async function openBookAsync(bookPath: string, context: CommandContext)
+export async function openBookAsync(bookPath: string, context: CommandContext);
 ```
 
 **PowerShell**: bin/Open-Book.ps1 相当
 
 処理内容：
+
 1. ファイルパス解析（pathResolution.ts）
 2. 関連 Excel ファイルを検出
 3. Excel.exe を起動
@@ -246,28 +299,28 @@ export async function openBookAsync(bookPath: string, context: CommandContext)
 
 ## ファイル拡張子と自動検出
 
-| 入力ファイル | 検出ロジック | 開くファイル |
-|---------|----------|----------|
-| test.xlsx | 直接 | test.xlsx |
-| test.bas/*.bas | 親フォルダ「.bas」→ test.xlsx | test.xlsx |
-| test.csv/*.csv | 親フォルダ「.csv」→ test.xlsx | test.xlsx |
-| test.xml/*.xml | 親フォルダ「.xml」→ test.xlam | test.xlam |
-| test.url | ショートカット → test.xlsx |test.xlsx |
+| 入力ファイル    | 検出ロジック                  | 開くファイル |
+| --------------- | ----------------------------- | ------------ |
+| test.xlsx       | 直接                          | test.xlsx    |
+| test.bas/\*.bas | 親フォルダ「.bas」→ test.xlsx | test.xlsx    |
+| test.csv/\*.csv | 親フォルダ「.csv」→ test.xlsx | test.xlsx    |
+| test.xml/\*.xml | 親フォルダ「.xml」→ test.xlam | test.xlam    |
+| test.url        | ショートカット → test.xlsx    | test.xlsx    |
 
 ## エラーハンドリング
 
-| エラー条件 | 対応 |
-|---------|------|
-| Excel が起動していない | 自動起動 |
-| ファイルが見つからない | エラーメッセージ表示 |
-| Excel がファイルをロック中 | エラーメッセージ表示 |
-| URL ショートカットが無効 | ブラウザで開くか、エラー |
+| エラー条件                 | 対応                     |
+| -------------------------- | ------------------------ |
+| Excel が起動していない     | 自動起動                 |
+| ファイルが見つからない     | エラーメッセージ表示     |
+| Excel がファイルをロック中 | エラーメッセージ表示     |
+| URL ショートカットが無効   | ブラウザで開くか、エラー |
 
 ## パフォーマンス
 
-| 操作 | 処理時間 |
-|------|--------|
-| URL ショートカット作成 | < 1 秒（複数ファイル） |
+| 操作                    | 処理時間                 |
+| ----------------------- | ------------------------ |
+| URL ショートカット作成  | < 1 秒（複数ファイル）   |
 | ファイルを Excel で開く | 1-5 秒（Excel 起動含む） |
 
 ## 制限事項
@@ -276,3 +329,117 @@ export async function openBookAsync(bookPath: string, context: CommandContext)
 2. クラウドホストのファイルは常にサーバーから読み込む
 3. オフライン時は利用不可
 4. SharePoint の権限は OS 認証を使用
+
+## 3. Open Workbook with VS Code / Explorer
+
+### 概要
+
+アクティブなワークブックを VS Code またはエクスプローラで開く機能です。クラウドホストの Excel ファイルに対応し、自動的に URL ショートカットを検出・作成します。
+
+### 用途
+
+**シナリオ 1: ローカルファイルを開く場合**
+
+```
+Excel でローカルファイルを編集中
+    ↓
+リボン「Open with VS Code」をクリック
+    ↓
+そのファイルが保存されているフォルダで VS Code を起動
+```
+
+**シナリオ 2: クラウドホストファイルを開く場合**
+
+```
+Excel で OneDrive/SharePoint ファイルを編集中
+    ↓
+リボン「Open with Explorer」をクリック
+    ↓
+自動的に .url ファイルを検出または作成
+    ↓
+対応するフォルダをエクスプローラで開く
+```
+
+### 機能
+
+#### Open with VS Code
+
+- **リボン配置**: カスタム UI のボタン
+- **動作対象**: アクティブなワークブック
+- **出力**: VS Code でワークブックのフォルダを開く
+- **Web 対応**: URL ファイルを自動検出・作成
+
+#### Open with Explorer
+
+- **リボン配置**: カスタム UI のボタン
+- **動作対象**: アクティブなワークブック
+- **出力**: エクスプローラでワークブックのフォルダを開く
+- **Web 対応**: URL ファイルを自動検出・作成
+
+### 仕組み
+
+#### パス解決ロジック
+
+```
+ActiveWorkbook.FullName
+    ↓
+[URL か確認]
+    ↓
+URL の場合:
+  - Recent フォルダから .url ファイルを検索
+  - 見つからなければ自動作成
+  - .url ファイルのフォルダを取得
+    ↓
+ローカルファイルの場合:
+  - ファイルのフォルダを直接取得
+    ↓
+フォルダを VS Code / Explorer で起動
+```
+
+### ご利用例
+
+**例 1: ローカル VBA ファイルを編集**
+
+```
+1. C:\project\workbook.xlsm を Excel で開く
+2. リボン「Open with VS Code」を押す
+3. C:\project\ フォルダで VS Code が起動
+4. VBA, CSV, CustomUI ファイルを編集可能
+```
+
+**例 2: OneDrive の VBA ファイルを編集**
+
+```
+1. https://onedrive.com/...project.xlsm を Excel で開く
+2. リボン「Open with Explorer」を押す
+3. 自動的に Recent フォルダに project.xlsm.url が作成される
+4. %APPDATA%\Microsoft\Office\Recent\ をエクスプローラで開く
+5. project.xlsm.bas/ フォルダで VBA を管理
+```
+
+### エラーハンドリング
+
+| 状況                            | 動作                 |
+| ------------------------------- | -------------------- |
+| ワークブックが開かれていない    | 警告メッセージ表示   |
+| ファイルが保存されていない      | メッセージ表示       |
+| Recent フォルダへのアクセス失敗 | エラーメッセージ表示 |
+| VS Code / Explorer 起動に失敗   | エラーメッセージ表示 |
+
+### 内部実装
+
+**共通関数** (ModuleCommon.bas)
+
+- `ResolveWebBookPath()` - Web ファイルパスの解決
+  - HTTP/HTTPS 検出
+  - Recent フォルダの .url ファイル検索
+  - .url ファイルの自動作成
+
+- `GetParentFolder()` - ファイルパスから親フォルダを取得
+
+- `CreateRecentUrlFile()` - Recent フォルダに .url ファイルを作成
+
+**VBA モジュール**
+
+- `ModuleOpenWithVSCode.bas` - VS Code 連携
+- `ModuleOpenWithExplorer.bas` - エクスプローラ連携
