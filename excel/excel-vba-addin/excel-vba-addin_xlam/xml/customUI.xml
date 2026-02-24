@@ -2,11 +2,17 @@
     <ribbon>
         <tabs>
             <tab id="TabExcelVBA" label="Excel VBA">
-                <group id="GroupVSCode" label="VSCode">
+                <group id="GroupLaunch" label="Launch">
                     <button id="ButtonOpenWithVSCode" imageMso="CodeEdit" label="Open with VSCode"
                         onAction="OpenWithVSCode_onAction" getEnabled="OpenWithVSCode_getEnabled"
                         screentip="Open with VSCode"
                         supertip="Opens the workbook with VSCode"
+                        showImage="true" size="large" showLabel="true" visible="true" />
+                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open with Explorer"
+                        onAction="OpenWithExplorer_onAction"
+                        getEnabled="OpenWithExplorer_getEnabled"
+                        screentip="Open folder with Explorer"
+                        supertip="Open folder with Explorer"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
                 <group id="GroupVBA" label="VBA">
@@ -102,14 +108,6 @@
                         getEnabled="TableInsert_getEnabled"
                         screentip="Copy to New Sheet"
                         supertip="Copies the selected range to a new sheet named Sheet*.png."
-                        showImage="true" size="large" showLabel="true" visible="true" />
-                </group>
-                <group id="GroupExplorer" label="Explorer">
-                    <button id="ButtonExplorer" imageMso="RightArrow2" label="Open with Explorer"
-                        onAction="OpenWithExplorer_onAction"
-                        getEnabled="OpenWithExplorer_getEnabled"
-                        screentip="Open folder with Explorer"
-                        supertip="Open folder with Explorer"
                         showImage="true" size="large" showLabel="true" visible="true" />
                 </group>
             </tab>
