@@ -400,7 +400,7 @@ try {
         
         # Create new sheet at the end
         $lastSheet = $workbook.Sheets($workbook.Sheets.Count)
-        $newSheet = $workbook.Sheets.Add($null, $lastSheet)
+        $newSheet = $workbook.Sheets.Add([Type]::Missing, $lastSheet)
         $newSheet.Name = $csvFileName
         
         # Reset freeze panes for new sheet
