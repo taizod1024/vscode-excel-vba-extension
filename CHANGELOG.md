@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.14](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.13...v0.2.14) (2026-02-26)
+
+
+### Bug Fixes
+
+* "Sheets クラスの Add プロパティを取得できません"への対処 ([1859bdd](https://github.com/taizod1024/vscode-excel-vba-extension/commit/1859bdde4479ae4a1b17715bb5e3b81836e7713f))
+
 ### [0.2.13](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.12...v0.2.13) (2026-02-24)
 
 
