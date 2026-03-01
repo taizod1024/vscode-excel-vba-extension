@@ -1,23 +1,23 @@
-# Excel VBA‚ðVS Code‚Å•ÒW‚·‚é - Excel VBA Addin
+# Excel VBAã‚’VS Codeã§ç·¨é›†ã™ã‚‹ - Excel VBA Addin
 
-## ‚Í‚¶‚ß‚É
+## ã¯ã˜ã‚ã«
 
-Excel VBA‚ðVS Code‚Å•ÒW‚·‚é‚½‚ß‚ÌŠg’£‹@”\‚ðì¬‚µ‚Ü‚µ‚½B
-‰½”Ô÷‚¶‚ÌŠg’£‹@”\‚©•ª‚©‚è‚Ü‚¹‚ñ‚ªŽ©•ª‚ªŽg‚¢‚â‚·‚¢‚æ‚¤‚Éì‚Á‚Ä‚Ý‚Ü‚µ‚½B
+Excel VBAã‚’VS Codeã§ç·¨é›†ã™ã‚‹ãŸã‚ã®æ‹¡å¼µæ©Ÿèƒ½ã‚’ä½œæˆã—ã¾ã—ãŸã€‚
+ä½•ç•ªç…Žã˜ã®æ‹¡å¼µæ©Ÿèƒ½ã‹åˆ†ã‹ã‚Šã¾ã›ã‚“ãŒè‡ªåˆ†ãŒä½¿ã„ã‚„ã™ã„ã‚ˆã†ã«ä½œã£ã¦ã¿ã¾ã—ãŸã€‚
 
-**Šù‘¶‚ÌŠg’£‹@”\**
+**æ—¢å­˜ã®æ‹¡å¼µæ©Ÿèƒ½**
 
 - [XVBA - Live Server VBA](https://marketplace.visualstudio.com/items?itemName=local-smart.excel-live-server)
 - [excel-vba-sync](https://marketplace.visualstudio.com/items?itemName=9kv8xiyi.excel-vba-sync)
 - [Barretta](https://marketplace.visualstudio.com/items?itemName=Mikoshiba-Kyu.vscode-barretta)
 
-## Žå‚È—˜“_
+## ä¸»ãªåˆ©ç‚¹
 
-- Excel VBA‚ðVS Code‚©‚ç•ÒW‰Â”\‚Å‚·B
-- Excel VBA‚ðGit‚Å‚Ìƒo[ƒWƒ‡ƒ“ŠÇ—‰Â”\‚Å‚·B
-- Excel VBA‚ð¶¬AI‚ÅŽx‰‡‰Â”\‚Å‚·B
-- Šg’£‹@”\ŒÅ—L‚ÌÝ’è–³‚µ‚Å‚·‚®‚É—˜—p‰Â”\‚Å‚·B
-- “¯Žž‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚éExcel VBA Addin‚É‚æ‚èExcel‘¤‚©‚ç‚à‘€ì‰Â”\‚Å‚·B
+- Excel VBAã‚’VS Codeã‹ã‚‰ç·¨é›†å¯èƒ½ã§ã™ã€‚
+- Excel VBAã‚’Gitã§ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç®¡ç†å¯èƒ½ã§ã™ã€‚
+- Excel VBAã‚’ç”ŸæˆAIã§æ”¯æ´å¯èƒ½ã§ã™ã€‚
+- æ‹¡å¼µæ©Ÿèƒ½å›ºæœ‰ã®è¨­å®šç„¡ã—ã§ã™ãã«åˆ©ç”¨å¯èƒ½ã§ã™ã€‚
+- åŒæ™‚ã«ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã‚‹Excel VBA Addinã«ã‚ˆã‚ŠExcelå´ã‹ã‚‰ã‚‚æ“ä½œå¯èƒ½ã§ã™ã€‚
 
 ![excel-vba-extension_1](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_1.png?raw=true)
 
@@ -25,26 +25,26 @@ Excel VBA‚ðVS Code‚Å•ÒW‚·‚é‚½‚ß‚ÌŠg’£‹@”\‚ðì¬‚µ‚Ü‚µ‚½B
 
 ![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
-## ‹@”\
+## æ©Ÿèƒ½
 
 - VS Code - Excel VBA Extension
-  - **Load VBA / Save VBAA** - VBA‚ð“ÇžE•ÒWE•Û‘¶‚ª‚Å‚«‚Ü‚·B
-  - **Load CSV / Save CSV** - CSV“ÇžE•ÒWE•Û‘¶‚ª‚Å‚«‚Ü‚·B
-  - **Load CustomUI / Save CustomUI** - “ÇžE•ÒWE•Û‘¶‚ª‚Å‚«‚Ü‚·B
-  - **Run Sub** - VS Code‚©‚çSub ƒvƒƒV[ƒWƒƒ‚ðŽÀs‚Å‚«‚Ü‚·B
-  - **Compare VBA / Compare CSV** - ƒGƒNƒXƒ|[ƒg‚µ‚½ƒtƒ@ƒCƒ‹‚ÆExcel VBAAExcel CSVƒV[ƒg‚Ì·•ª‚ðŠm”F‚Å‚«‚Ü‚·B
+  - **Load VBA / Save VBAA** - VBAã‚’èª­è¾¼ãƒ»ç·¨é›†ãƒ»ä¿å­˜ãŒã§ãã¾ã™ã€‚
+  - **Load CSV / Save CSV** - CSVèª­è¾¼ãƒ»ç·¨é›†ãƒ»ä¿å­˜ãŒã§ãã¾ã™ã€‚
+  - **Load CustomUI / Save CustomUI** - èª­è¾¼ãƒ»ç·¨é›†ãƒ»ä¿å­˜ãŒã§ãã¾ã™ã€‚
+  - **Run Sub** - VS Codeã‹ã‚‰Sub ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’å®Ÿè¡Œã§ãã¾ã™ã€‚
+  - **Compare VBA / Compare CSV** - ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¨Excel VBAã€Excel CSVã‚·ãƒ¼ãƒˆã®å·®åˆ†ã‚’ç¢ºèªã§ãã¾ã™ã€‚
 - Excel - Excel VBA Addin
-  - **Open with VS Code** - Excel ‚©‚çƒtƒHƒ‹ƒ_‚ð VS Code ‚ÅŠJ‚«‚Ü‚·B
-  - **Open with Explorer** - Excel ‚©‚çƒtƒHƒ‹ƒ_‚ð Explorer ‚ÅŠJ‚«‚Ü‚·B
-  - **Load VBA / Save VBA** - Excel ‚©‚çExcel VBA ‚ð“ÇžE•Û‘¶‚Å‚«‚Ü‚·B
-  - **Load CSV / Save CSV** - Excel ‚©‚çƒV[ƒg‚ð CSV ‚Æ‚µ‚Ä“ÇžE•Û‘¶‚Å‚«‚Ü‚·B
-  - ‚»‚Ì‘¼‹@”\
-    - **Graph Paper** - ‘I‘ðƒV[ƒg‚ð•ûŠáŽ†‚É‚µ‚Ü‚·B
-    - **Snap to Grid** - ƒIƒuƒWƒFƒNƒg‚ðƒOƒŠƒbƒh‚É‹z’…‚³‚¹‚Ü‚·B
-    - **One Side Connector** - •Ð‘¤‚Ì‚ÝÚ‘±‚³‚ê‚Ä‚¢‚È‚¢ƒRƒlƒNƒ^‚ðŒŸo‚µ‚Ü‚·B
-    - **Export PNG** - ƒV[ƒg‚ð‰æ‘œ‚ÅƒGƒNƒXƒ|[ƒg
+  - **Open with VS Code** - Excel ã‹ã‚‰ãƒ•ã‚©ãƒ«ãƒ€ã‚’ VS Code ã§é–‹ãã¾ã™ã€‚
+  - **Open with Explorer** - Excel ã‹ã‚‰ãƒ•ã‚©ãƒ«ãƒ€ã‚’ Explorer ã§é–‹ãã¾ã™ã€‚
+  - **Load VBA / Save VBA** - Excel ã‹ã‚‰Excel VBA ã‚’èª­è¾¼ãƒ»ä¿å­˜ã§ãã¾ã™ã€‚
+  - **Load CSV / Save CSV** - Excel ã‹ã‚‰ã‚·ãƒ¼ãƒˆã‚’ CSV ã¨ã—ã¦èª­è¾¼ãƒ»ä¿å­˜ã§ãã¾ã™ã€‚
+  - ãã®ä»–æ©Ÿèƒ½
+    - **Graph Paper** - é¸æŠžã‚·ãƒ¼ãƒˆã‚’æ–¹çœ¼ç´™ã«ã—ã¾ã™ã€‚
+    - **Snap to Grid** - ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚°ãƒªãƒƒãƒ‰ã«å¸ç€ã•ã›ã¾ã™ã€‚
+    - **One Side Connector** - ç‰‡å´ã®ã¿æŽ¥ç¶šã•ã‚Œã¦ã„ãªã„ã‚³ãƒã‚¯ã‚¿ã‚’æ¤œå‡ºã—ã¾ã™ã€‚
+    - **Export PNG** - ã‚·ãƒ¼ãƒˆã‚’ç”»åƒã§ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆ
 
-## ‹@”\ŠÖ˜A}
+## æ©Ÿèƒ½é–¢é€£å›³
 
 ```mermaid
 graph RL
@@ -57,8 +57,8 @@ graph RL
                 UserForm["UserForm"]
             end
             subgraph Sheets["Sheets"]
-                CSV["Sheet1.csv<br/>(ƒV[ƒg)"]
-                PNG["Sheet2.png<br/>(ƒV[ƒg)"]
+                CSV["Sheet1.csv<br/>(ã‚·ãƒ¼ãƒˆ)"]
+                PNG["Sheet2.png<br/>(ã‚·ãƒ¼ãƒˆ)"]
             end
             CustomUI["customUI.xml"]
         end
@@ -85,7 +85,7 @@ graph RL
         Extension["Excel VBA Extension"]
     end
 
-    Extension <-->|‘ŠŒÝ˜AŒg| Addin
+    Extension <-->|ç›¸äº’é€£æº| Addin
     BAS <-->|Load/Save VBA| Module1
     CLS <-->|Load/Save VBA| ThisWorkbook
     FRM <-->|Load/Save VBA| UserForm
@@ -96,81 +96,81 @@ graph RL
 
 ```
 
-## ƒCƒ“ƒXƒg[ƒ‹‚ÆƒZƒbƒgƒAƒbƒv
+## ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã¨ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 
-### ƒXƒeƒbƒv 1FVS Code‚ÅŠg’£‹@”\‚ÌƒCƒ“ƒXƒg[ƒ‹
+### ã‚¹ãƒ†ãƒƒãƒ— 1ï¼šVS Codeã§æ‹¡å¼µæ©Ÿèƒ½ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
 
-VS Code ‚ÅŠg’£‹@”\‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·B
+VS Code ã§æ‹¡å¼µæ©Ÿèƒ½ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¾ã™ã€‚
 
-1. VS Code ‚ð‹N“®
-2. `Ctrl+Shift+X` ‚ÅŠg’£‹@”\‚ðŒŸõ
-3. `Excel VBA Extension`‚Æ“ü—Í
-4. [ƒCƒ“ƒXƒg[ƒ‹] ‚ðƒNƒŠƒbƒN
-   - Excel VBA Extension‚Ì—LŒø‰»ˆ—‚ÅExcel VBA Addin‚ªOfficeƒAƒhƒCƒ“ƒtƒHƒ‹ƒ_‚ÉƒRƒs[‚³‚ê‚Ü‚·BˆÈŒãAVS Code‚ª‹N“®‚³‚ê‚é‚½‚Ñ‚ÉExcel VBA Addin‚ªOfficeƒAƒhƒCƒ“ƒtƒHƒ‹ƒ_‚ÉƒRƒs[‚³‚ê‚Ü‚·B
+1. VS Code ã‚’èµ·å‹•
+2. `Ctrl+Shift+X` ã§æ‹¡å¼µæ©Ÿèƒ½ã‚’æ¤œç´¢
+3. `Excel VBA Extension`ã¨å…¥åŠ›
+4. [ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«] ã‚’ã‚¯ãƒªãƒƒã‚¯
+   - Excel VBA Extensionã®æœ‰åŠ¹åŒ–å‡¦ç†ã§Excel VBA AddinãŒOfficeã‚¢ãƒ‰ã‚¤ãƒ³ãƒ•ã‚©ãƒ«ãƒ€ã«ã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã™ã€‚ä»¥å¾Œã€VS CodeãŒèµ·å‹•ã•ã‚Œã‚‹ãŸã³ã«Excel VBA AddinãŒOfficeã‚¢ãƒ‰ã‚¤ãƒ³ãƒ•ã‚©ãƒ«ãƒ€ã«ã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã™ã€‚
 
 ![image01](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image01.png?raw=true)
 
-### ƒXƒeƒbƒv 2FExcel ‚ÌÝ’è
+### ã‚¹ãƒ†ãƒƒãƒ— 2ï¼šExcel ã®è¨­å®š
 
-Excel VBA Extension‚©‚çExcel‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ü‚·B
+Excel VBA Extensionã‹ã‚‰Excelã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã—ã¾ã™ã€‚
 
-1. Excel ‚ð‹N“®
-2. [ƒtƒ@ƒCƒ‹] ¨ [ƒIƒvƒVƒ‡ƒ“] ¨ [ƒgƒ‰ƒXƒgƒZƒ“ƒ^[]
-3. [ƒgƒ‰ƒXƒgƒZƒ“ƒ^[‚ÌÝ’è]‚ðƒNƒŠƒbƒN
-4. [ƒ}ƒNƒÝ’è]‚Å[VBA ƒvƒƒWƒFƒNƒg ƒIƒuƒWƒFƒNƒg ƒ‚ƒfƒ‹‚Ö‚ÌƒAƒNƒZƒX‚ðM—Š‚·‚é]‚ðƒ`ƒFƒbƒN
-5. [OK] ‚ðƒNƒŠƒbƒN
+1. Excel ã‚’èµ·å‹•
+2. [ãƒ•ã‚¡ã‚¤ãƒ«] â†’ [ã‚ªãƒ—ã‚·ãƒ§ãƒ³] â†’ [ãƒˆãƒ©ã‚¹ãƒˆã‚»ãƒ³ã‚¿ãƒ¼]
+3. [ãƒˆãƒ©ã‚¹ãƒˆã‚»ãƒ³ã‚¿ãƒ¼ã®è¨­å®š]ã‚’ã‚¯ãƒªãƒƒã‚¯
+4. [ãƒžã‚¯ãƒ­è¨­å®š]ã§[VBA ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ãƒ¢ãƒ‡ãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ã‚’ä¿¡é ¼ã™ã‚‹]ã‚’ãƒã‚§ãƒƒã‚¯
+5. [OK] ã‚’ã‚¯ãƒªãƒƒã‚¯
 
 ![image02](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image02.png?raw=true)
 
 ![image03](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image03.png?raw=true)
 
-### ƒXƒeƒbƒv 3FŠJ”­ƒ^ƒu‚Ì•\Ž¦
+### ã‚¹ãƒ†ãƒƒãƒ— 3ï¼šé–‹ç™ºã‚¿ãƒ–ã®è¡¨ç¤º
 
-Excel VBA Addin‚ð—LŒø‰»‚·‚é‚½‚ß‚ÉExcel ‚ÌŠJ”­ƒ^ƒu‚ð•\Ž¦‚µ‚Ü‚·B
+Excel VBA Addinã‚’æœ‰åŠ¹åŒ–ã™ã‚‹ãŸã‚ã«Excel ã®é–‹ç™ºã‚¿ãƒ–ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚
 
-1. [ƒtƒ@ƒCƒ‹] ¨ [ƒIƒvƒVƒ‡ƒ“] ‚ðƒNƒŠƒbƒN
-2. [ƒŠƒ{ƒ“‚Ìƒ†[ƒU[Ý’è] ‚ðƒNƒŠƒbƒN
-3. ‰E‘¤‚Ì [ƒƒCƒ“ƒ^ƒu] ƒŠƒXƒg‚Å [ŠJ”­] ‚Éƒ`ƒFƒbƒN‚ð“ü‚ê‚é
-4. [OK] ‚ðƒNƒŠƒbƒN
+1. [ãƒ•ã‚¡ã‚¤ãƒ«] â†’ [ã‚ªãƒ—ã‚·ãƒ§ãƒ³] ã‚’ã‚¯ãƒªãƒƒã‚¯
+2. [ãƒªãƒœãƒ³ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼è¨­å®š] ã‚’ã‚¯ãƒªãƒƒã‚¯
+3. å³å´ã® [ãƒ¡ã‚¤ãƒ³ã‚¿ãƒ–] ãƒªã‚¹ãƒˆã§ [é–‹ç™º] ã«ãƒã‚§ãƒƒã‚¯ã‚’å…¥ã‚Œã‚‹
+4. [OK] ã‚’ã‚¯ãƒªãƒƒã‚¯
 
-![image04](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image04.png?raw=true)
+![image101](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image101.png?raw=true)
 
-### ƒXƒeƒbƒv 4FExcel VBA Addin ‚Ì—LŒø‰»
+### ã‚¹ãƒ†ãƒƒãƒ— 4ï¼šExcel VBA Addin ã®æœ‰åŠ¹åŒ–
 
-‘±‚¢‚Ä Excel VBA Addin ‚ð—LŒø‚É‚µ‚Ü‚·B
+ç¶šã„ã¦ Excel VBA Addin ã‚’æœ‰åŠ¹ã«ã—ã¾ã™ã€‚
 
-1. [ŠJ”­] ƒ^ƒu‚©‚ç [Excel ƒAƒhƒCƒ“] ‚ð‘I‘ð
-2. [ŽQÆ] ‚ðƒNƒŠƒbƒN‚µ‚Ä `Excel-Vba-Addin` ‚ð‘I‘ð
-3. [OK] ‚ðƒNƒŠƒbƒN
+1. [é–‹ç™º] ã‚¿ãƒ–ã‹ã‚‰ [Excel ã‚¢ãƒ‰ã‚¤ãƒ³] ã‚’é¸æŠž
+2. [å‚ç…§] ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦ `Excel-Vba-Addin` ã‚’é¸æŠž
+3. [OK] ã‚’ã‚¯ãƒªãƒƒã‚¯
 
-![image05](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image05.png?raw=true)
+![image102](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image102.png?raw=true)
 
-ˆÈã‚ÅƒCƒ“ƒXƒg[ƒ‹‚ÆƒZƒbƒgƒAƒbƒv‚ÍŠ®—¹‚Å‚·B
+ä»¥ä¸Šã§ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã¨ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã¯å®Œäº†ã§ã™ã€‚
 
-## Excel VBA Extension Žg—p—á
+## Excel VBA Extension ä½¿ç”¨ä¾‹
 
-### Žg—p—á 1FVS Code‚Å‹ó‚Ìƒ}ƒNƒƒtƒ@ƒCƒ‹‚ðì¬‚·‚é
+### ä½¿ç”¨ä¾‹ 1ï¼šVS Codeã§ç©ºã®ãƒžã‚¯ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹
 
-1. `Ctrl+Shift+P` ‚ÅƒRƒ}ƒ“ƒhƒpƒŒƒbƒg‚ðŠJ‚­
-2. `Create: New File`‚ð‘I‘ð
-3. `Excel: New Excel Book with CustomUI as Macro`‚ð‘I‘ð
-4. ƒtƒ@ƒCƒ‹–¼‚ð“ü—Í
-5. .xlsmƒtƒ@ƒCƒ‹‚ªì¬‚³‚ê‚é
-6. .xlxmƒtƒ@ƒCƒ‹‚ð‘I‘ð‚µ‚Äƒ^ƒCƒgƒ‹‚ÌƒAƒCƒRƒ“‚ðƒNƒŠƒbƒN
+1. `Ctrl+Shift+P` ã§ã‚³ãƒžãƒ³ãƒ‰ãƒ‘ãƒ¬ãƒƒãƒˆã‚’é–‹ã
+2. `Create: New File`ã‚’é¸æŠž
+3. `Excel: New Excel Book with CustomUI as Macro`ã‚’é¸æŠž
+4. ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›
+5. .xlsmãƒ•ã‚¡ã‚¤ãƒ«ãŒä½œæˆã•ã‚Œã‚‹
+6. .xlxmãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠžã—ã¦ã‚¿ã‚¤ãƒˆãƒ«ã®ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯
 
-### Žg—p—á 2FƒuƒbƒN‚É’Ç‰Á‚µ‚½CSVƒV[ƒg‚ðƒtƒ@ƒCƒ‹‚Éo—Í‚·‚é
+### ä½¿ç”¨ä¾‹ 2ï¼šãƒ–ãƒƒã‚¯ã«è¿½åŠ ã—ãŸCSVã‚·ãƒ¼ãƒˆã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›ã™ã‚‹
 
-1. ƒRƒ}ƒ“ƒhƒpƒŒƒbƒg ¨ uExcel: Load CSV from Excel Bookv
-2. Excel ƒtƒ@ƒCƒ‹‚ð‘I‘ð
-3. CSV ƒtƒ@ƒCƒ‹‚ª’Šo‚³‚ê‚é
-4. VS Code ‚Å CSV ‚ð•ÒW
-5. ƒRƒ}ƒ“ƒhƒpƒŒƒbƒg ¨ uExcel: Save CSV to Excel Bookv‚Å Excel ‚É•Û‘¶
+1. ã‚³ãƒžãƒ³ãƒ‰ãƒ‘ãƒ¬ãƒƒãƒˆ â†’ ã€ŒExcel: Load CSV from Excel Bookã€
+2. Excel ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠž
+3. CSV ãƒ•ã‚¡ã‚¤ãƒ«ãŒæŠ½å‡ºã•ã‚Œã‚‹
+4. VS Code ã§ CSV ã‚’ç·¨é›†
+5. ã‚³ãƒžãƒ³ãƒ‰ãƒ‘ãƒ¬ãƒƒãƒˆ â†’ ã€ŒExcel: Save CSV to Excel Bookã€ã§ Excel ã«ä¿å­˜
 
-### Žg—p—á 3FSub ƒvƒƒV[ƒWƒƒ‚ðŽÀs
+### ä½¿ç”¨ä¾‹ 3ï¼šSub ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’å®Ÿè¡Œ
 
-1. VS Code ‚Å VBA ƒtƒ@ƒCƒ‹‚ðŠJ‚­
-2. ŽÀs‘ÎÛ‚Ì Sub ‚Ìs‚ÉƒJ[ƒ\ƒ‹‚ð’u‚­
-3. ƒRƒ}ƒ“ƒhƒpƒŒƒbƒg ¨ uExcel: Run VBA Sub at Cursorv
-4. Excel ‚ªŽÀs‚·‚é
+1. VS Code ã§ VBA ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+2. å®Ÿè¡Œå¯¾è±¡ã® Sub ã®è¡Œã«ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç½®ã
+3. ã‚³ãƒžãƒ³ãƒ‰ãƒ‘ãƒ¬ãƒƒãƒˆ â†’ ã€ŒExcel: Run VBA Sub at Cursorã€
+4. Excel ãŒå®Ÿè¡Œã™ã‚‹
 
-## Excel VBA Addin Žg—p—á
+## Excel VBA Addin ä½¿ç”¨ä¾‹

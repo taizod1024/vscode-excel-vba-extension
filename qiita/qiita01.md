@@ -1,50 +1,50 @@
-# Excel VBA‚ğVS Code‚Å•ÒW‚·‚é - Excel VBA Extension
+# Excel VBAã‚’VS Codeã§ç·¨é›†ã™ã‚‹ - Excel VBA Extension
 
-## ‚Í‚¶‚ß‚É
+## ã¯ã˜ã‚ã«
 
-Excel VBA‚ğVS Code‚Å•ÒW‚·‚é‚½‚ß‚ÌŠg’£‹@”\‚ğì¬‚µ‚Ü‚µ‚½B
-‰½”Ô÷‚¶‚ÌŠg’£‹@”\‚©•ª‚©‚è‚Ü‚¹‚ñ‚ª©•ª‚ªg‚¢‚â‚·‚¢‚æ‚¤‚Éì‚Á‚Ä‚İ‚Ü‚µ‚½B
+Excel VBAã‚’VS Codeã§ç·¨é›†ã™ã‚‹ãŸã‚ã®æ‹¡å¼µæ©Ÿèƒ½ã‚’ä½œæˆã—ã¾ã—ãŸã€‚
+ä½•ç•ªç…ã˜ã®æ‹¡å¼µæ©Ÿèƒ½ã‹åˆ†ã‹ã‚Šã¾ã›ã‚“ãŒè‡ªåˆ†ãŒä½¿ã„ã‚„ã™ã„ã‚ˆã†ã«ä½œã£ã¦ã¿ã¾ã—ãŸã€‚
 
-**Šù‘¶‚ÌŠg’£‹@”\**
+**æ—¢å­˜ã®æ‹¡å¼µæ©Ÿèƒ½**
 
 - [XVBA - Live Server VBA](https://marketplace.visualstudio.com/items?itemName=local-smart.excel-live-server)
 - [excel-vba-sync](https://marketplace.visualstudio.com/items?itemName=9kv8xiyi.excel-vba-sync)
 - [Barretta](https://marketplace.visualstudio.com/items?itemName=Mikoshiba-Kyu.vscode-barretta)
 
-## å‚È—˜“_
+## ä¸»ãªåˆ©ç‚¹
 
-- Excel VBA‚ğVS Code‚©‚ç•ÒW‰Â”\‚Å‚·B
-- Excel VBA‚ğGit‚Å‚Ìƒo[ƒWƒ‡ƒ“ŠÇ—‰Â”\‚Å‚·B
-- Excel VBA‚ğ¶¬AI‚Åx‰‡‰Â”\‚Å‚·B
-- Šg’£‹@”\ŒÅ—L‚Ìİ’è–³‚µ‚Å‚·‚®‚É—˜—p‰Â”\‚Å‚·B
-- “¯‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚éExcel VBA Addin‚É‚æ‚èExcel‘¤‚©‚ç‚à‘€ì‰Â”\‚Å‚·B
+- Excel VBAã‚’VS Codeã‹ã‚‰ç·¨é›†å¯èƒ½ã§ã™ã€‚
+- Excel VBAã‚’Gitã§ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç®¡ç†å¯èƒ½ã§ã™ã€‚
+- Excel VBAã‚’ç”ŸæˆAIã§æ”¯æ´å¯èƒ½ã§ã™ã€‚
+- æ‹¡å¼µæ©Ÿèƒ½å›ºæœ‰ã®è¨­å®šç„¡ã—ã§ã™ãã«åˆ©ç”¨å¯èƒ½ã§ã™ã€‚
+- åŒæ™‚ã«ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã‚‹Excel VBA Addinã«ã‚ˆã‚ŠExcelå´ã‹ã‚‰ã‚‚æ“ä½œå¯èƒ½ã§ã™ã€‚
 
-![excel-vba-extension_1](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_1.png?raw=true)
+![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_1.png?raw=true)
 
-![excel-vba-extension_2](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_2.png?raw=true)
+![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_2.png?raw=true)
 
-![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
+![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
-## ‹@”\
+## æ©Ÿèƒ½
 
 - VS Code - Excel VBA Extension
-  - **Load VBA / Save VBAA** - VBA‚ğ“ÇE•ÒWE•Û‘¶‚ª‚Å‚«‚Ü‚·B
-  - **Load CSV / Save CSV** - CSV“ÇE•ÒWE•Û‘¶‚ª‚Å‚«‚Ü‚·B
-  - **Load CustomUI / Save CustomUI** - “ÇE•ÒWE•Û‘¶‚ª‚Å‚«‚Ü‚·B
-  - **Run Sub** - VS Code‚©‚çSub ƒvƒƒV[ƒWƒƒ‚ğÀs‚Å‚«‚Ü‚·B
-  - **Compare VBA / Compare CSV** - ƒGƒNƒXƒ|[ƒg‚µ‚½ƒtƒ@ƒCƒ‹‚ÆExcel VBAAExcel CSVƒV[ƒg‚Ì·•ª‚ğŠm”F‚Å‚«‚Ü‚·B
+  - **Load VBA / Save VBAA** - VBAã‚’èª­è¾¼ãƒ»ç·¨é›†ãƒ»ä¿å­˜ãŒã§ãã¾ã™ã€‚
+  - **Load CSV / Save CSV** - CSVèª­è¾¼ãƒ»ç·¨é›†ãƒ»ä¿å­˜ãŒã§ãã¾ã™ã€‚
+  - **Load CustomUI / Save CustomUI** - èª­è¾¼ãƒ»ç·¨é›†ãƒ»ä¿å­˜ãŒã§ãã¾ã™ã€‚
+  - **Run Sub** - VS Codeã‹ã‚‰Sub ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’å®Ÿè¡Œã§ãã¾ã™ã€‚
+  - **Compare VBA / Compare CSV** - ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¨Excel VBAã€Excel CSVã‚·ãƒ¼ãƒˆã®å·®åˆ†ã‚’ç¢ºèªã§ãã¾ã™ã€‚
 - Excel - Excel VBA Addin
-  - **Open with VS Code** - Excel ‚©‚çƒtƒHƒ‹ƒ_‚ğ VS Code ‚ÅŠJ‚«‚Ü‚·B
-  - **Open with Explorer** - Excel ‚©‚çƒtƒHƒ‹ƒ_‚ğ Explorer ‚ÅŠJ‚«‚Ü‚·B
-  - **Load VBA / Save VBA** - Excel ‚©‚çExcel VBA ‚ğ“ÇE•Û‘¶‚Å‚«‚Ü‚·B
-  - **Load CSV / Save CSV** - Excel ‚©‚çƒV[ƒg‚ğ CSV ‚Æ‚µ‚Ä“ÇE•Û‘¶‚Å‚«‚Ü‚·B
-  - ‚»‚Ì‘¼‹@”\
-    - **Graph Paper** - ‘I‘ğƒV[ƒg‚ğ•ûŠá†‚É‚µ‚Ü‚·B
-    - **Snap to Grid** - ƒIƒuƒWƒFƒNƒg‚ğƒOƒŠƒbƒh‚É‹z’…‚³‚¹‚Ü‚·B
-    - **One Side Connector** - •Ğ‘¤‚Ì‚İÚ‘±‚³‚ê‚Ä‚¢‚È‚¢ƒRƒlƒNƒ^‚ğŒŸo‚µ‚Ü‚·B
-    - **Export PNG** - ƒV[ƒg‚ğ‰æ‘œ‚ÅƒGƒNƒXƒ|[ƒg
+  - **Open with VS Code** - Excel ã‹ã‚‰ãƒ•ã‚©ãƒ«ãƒ€ã‚’ VS Code ã§é–‹ãã¾ã™ã€‚
+  - **Open with Explorer** - Excel ã‹ã‚‰ãƒ•ã‚©ãƒ«ãƒ€ã‚’ Explorer ã§é–‹ãã¾ã™ã€‚
+  - **Load VBA / Save VBA** - Excel ã‹ã‚‰Excel VBA ã‚’èª­è¾¼ãƒ»ä¿å­˜ã§ãã¾ã™ã€‚
+  - **Load CSV / Save CSV** - Excel ã‹ã‚‰ã‚·ãƒ¼ãƒˆã‚’ CSV ã¨ã—ã¦èª­è¾¼ãƒ»ä¿å­˜ã§ãã¾ã™ã€‚
+  - ãã®ä»–æ©Ÿèƒ½
+    - **Graph Paper** - é¸æŠã‚·ãƒ¼ãƒˆã‚’æ–¹çœ¼ç´™ã«ã—ã¾ã™ã€‚
+    - **Snap to Grid** - ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚°ãƒªãƒƒãƒ‰ã«å¸ç€ã•ã›ã¾ã™ã€‚
+    - **One Side Connector** - ç‰‡å´ã®ã¿æ¥ç¶šã•ã‚Œã¦ã„ãªã„ã‚³ãƒã‚¯ã‚¿ã‚’æ¤œå‡ºã—ã¾ã™ã€‚
+    - **Export PNG** - ã‚·ãƒ¼ãƒˆã‚’ç”»åƒã§ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆ
 
-## ‹@”\ŠÖ˜A}
+## æ©Ÿèƒ½é–¢é€£å›³
 
 ```mermaid
 graph RL
@@ -57,8 +57,8 @@ graph RL
                 UserForm["UserForm"]
             end
             subgraph Sheets["Sheets"]
-                CSV["Sheet1.csv<br/>(ƒV[ƒg)"]
-                PNG["Sheet2.png<br/>(ƒV[ƒg)"]
+                CSV["Sheet1.csv<br/>(ã‚·ãƒ¼ãƒˆ)"]
+                PNG["Sheet2.png<br/>(ã‚·ãƒ¼ãƒˆ)"]
             end
             CustomUI["customUI.xml"]
         end
@@ -85,7 +85,7 @@ graph RL
         Extension["Excel VBA Extension"]
     end
 
-    Extension <-->|‘ŠŒİ˜AŒg| Addin
+    Extension <-->|ç›¸äº’é€£æº| Addin
     BAS <-->|Load/Save VBA| Module1
     CLS <-->|Load/Save VBA| ThisWorkbook
     FRM <-->|Load/Save VBA| UserForm
@@ -96,60 +96,110 @@ graph RL
 
 ```
 
-## ƒCƒ“ƒXƒg[ƒ‹‚ÆƒZƒbƒgƒAƒbƒv
+## ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã¨ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 
-### ƒXƒeƒbƒv 1FVS Code‚ÅŠg’£‹@”\‚ÌƒCƒ“ƒXƒg[ƒ‹
+### ã‚¹ãƒ†ãƒƒãƒ— 1ï¼šVS Codeã§æ‹¡å¼µæ©Ÿèƒ½ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
 
-VS Code ‚ÅŠg’£‹@”\‚ğƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·B
+VS Code ã§æ‹¡å¼µæ©Ÿèƒ½ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¾ã™ã€‚
 
-1. VS Code ‚ğ‹N“®
-2. `Ctrl+Shift+X` ‚ÅŠg’£‹@”\‚ğŒŸõ
-3. `Excel VBA Extension`‚Æ“ü—Í
-4. [ƒCƒ“ƒXƒg[ƒ‹] ‚ğƒNƒŠƒbƒN
-   - Excel VBA Extension‚Ì—LŒø‰»ˆ—‚ÅExcel VBA Addin‚ªOfficeƒAƒhƒCƒ“ƒtƒHƒ‹ƒ_‚ÉƒRƒs[‚³‚ê‚Ü‚·BˆÈŒãAVS Code‚ª‹N“®‚³‚ê‚é‚½‚Ñ‚ÉExcel VBA Addin‚ªOfficeƒAƒhƒCƒ“ƒtƒHƒ‹ƒ_‚ÉƒRƒs[‚³‚ê‚Ü‚·B
+1. VS Code ã‚’èµ·å‹•
+2. `Ctrl+Shift+X` ã§æ‹¡å¼µæ©Ÿèƒ½ã‚’æ¤œç´¢
+3. `Excel VBA Extension`ã¨å…¥åŠ›
+   ![image001](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image001.png?raw=true)
+4. [] ã‚’ã‚¯ãƒªãƒƒã‚¯
+   - Excel VBA Extensionã®æœ‰åŠ¹åŒ–å‡¦ç†ã§Excel VBA AddinãŒOfficeã‚¢ãƒ‰ã‚¤ãƒ³ãƒ•ã‚©ãƒ«ãƒ€ã«ã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã™ã€‚ä»¥å¾Œã€VS CodeãŒèµ·å‹•ã•ã‚Œã‚‹ãŸã³ã«Excel VBA AddinãŒOfficeã‚¢ãƒ‰ã‚¤ãƒ³ãƒ•ã‚©ãƒ«ãƒ€ã«ã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã™ã€‚
 
-![image01](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image01.png?raw=true)
+### ã‚¹ãƒ†ãƒƒãƒ— 2ï¼šExcel ã®è¨­å®š
 
-### ƒXƒeƒbƒv 2FExcel ‚Ìİ’è
+Excel VBA Extensionã‹ã‚‰Excelã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã—ã¾ã™ã€‚
 
-Excel VBA Extension‚©‚çExcel‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ü‚·B
+1. Excel ã‚’èµ·å‹•
+2. [ãƒ•ã‚¡ã‚¤ãƒ«] â†’ [ã‚ªãƒ—ã‚·ãƒ§ãƒ³] â†’ [ãƒˆãƒ©ã‚¹ãƒˆã‚»ãƒ³ã‚¿ãƒ¼]
+3. [ãƒˆãƒ©ã‚¹ãƒˆã‚»ãƒ³ã‚¿ãƒ¼ã®è¨­å®š]ã‚’ã‚¯ãƒªãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image002.png?raw=true)
+4. [ãƒã‚¯ãƒ­è¨­å®š]ã§[VBA ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ãƒ¢ãƒ‡ãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ã‚’ä¿¡é ¼ã™ã‚‹]ã‚’ãƒã‚§ãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image003.png?raw=true)
+5. [OK] ã‚’ã‚¯ãƒªãƒƒã‚¯
 
-1. Excel ‚ğ‹N“®
-2. [ƒtƒ@ƒCƒ‹] ¨ [ƒIƒvƒVƒ‡ƒ“] ¨ [ƒgƒ‰ƒXƒgƒZƒ“ƒ^[]
-3. [ƒgƒ‰ƒXƒgƒZƒ“ƒ^[‚Ìİ’è]‚ğƒNƒŠƒbƒN
-4. [ƒ}ƒNƒİ’è]‚Å[VBA ƒvƒƒWƒFƒNƒg ƒIƒuƒWƒFƒNƒg ƒ‚ƒfƒ‹‚Ö‚ÌƒAƒNƒZƒX‚ğM—Š‚·‚é]‚ğƒ`ƒFƒbƒN
-5. [OK] ‚ğƒNƒŠƒbƒN
+ä»¥ä¸Šã§ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã¨ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã¯å®Œäº†ã§ã™ã€‚
 
-![image02](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image02.png?raw=true)
+## Excel VBA Extension ä½¿ç”¨ä¾‹
 
-![image03](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image03.png?raw=true)
+### ä½¿ç”¨ä¾‹ 1ï¼šVS Codeã§ç©ºã®ãƒã‚¯ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹
 
-ˆÈã‚ÅƒCƒ“ƒXƒg[ƒ‹‚ÆƒZƒbƒgƒAƒbƒv‚ÍŠ®—¹‚Å‚·B
+1. `Ctrl+Shift+P` ã§ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ¬ãƒƒãƒˆã‚’é–‹ã
+2. `Create: New File`ã‚’é¸æŠ
+3. `New Excel Book with CustomUI as Macro`ã‚’é¸æŠ
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image004.png?raw=true)
+4. ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆæ‹¡å¼µå­ç„¡ã—ï¼‰ã‚’å…¥åŠ›ï¼ˆä¾‹ï¼šbookï¼‰
+5. `book.xlsm`ãŒä½œæˆã•ã‚Œã‚‹ã®ã§ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ãƒ“ãƒ¥ãƒ¼ã‹ã‚‰é¸æŠ
+6. `book.xlsm`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Open Excel Book`ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image005.png?raw=true)
+7. `book.xlsm`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Load VBA from Excel Book`ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image006.png?raw=true)
+8. `ModuleSampleMacro.bas`ã®MsgBoxã®å‡ºåŠ›æ–‡å­—åˆ—ã‚’ä¿®æ­£
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image007.png?raw=true)
+9. `ModuleSampleMacro.bas`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Save VBA to Excel Book`ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯
+10. Excelã®ã‚¿ãƒ–ã‹ã‚‰`ButtonSampleMacro`ã‚’ã‚¯ãƒªãƒƒã‚¯
+    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image008.png?raw=true)
 
-## Excel VBA Extension g—p—á
+### ä½¿ç”¨ä¾‹ 2ï¼šã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³ã‚’ä¿®æ­£ã—ã¦ã™ãã«å®Ÿè¡Œ
 
-### g—p—á 1FVS Code‚Å‹ó‚Ìƒ}ƒNƒƒtƒ@ƒCƒ‹‚ğì¬‚·‚é
+1. `ModuleSampleMacro.bas`ã®MsgBoxã®å‡ºåŠ›æ–‡å­—åˆ—ã‚’æ›´ã«ä¿®æ­£
+2. `SampleMacro`ã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³ã®ç¯„å›²ã«ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç½®ã
+3. `ModuleSampleMacro.bas`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Run VBA Sub at Cursor`ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯
+4. `SampleMacro`ã‚’å®Ÿè¡Œ
 
-1. `Ctrl+Shift+P` ‚ÅƒRƒ}ƒ“ƒhƒpƒŒƒbƒg‚ğŠJ‚­
-2. `Create: New File`‚ğ‘I‘ğ
-3. `Excel: New Excel Book with CustomUI as Macro`‚ğ‘I‘ğ
-4. ƒtƒ@ƒCƒ‹–¼‚ğ“ü—Í
-5. .xlsmƒtƒ@ƒCƒ‹‚ªì¬‚³‚ê‚é
-6. .xlxmƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚µ‚Äƒ^ƒCƒgƒ‹‚ÌƒAƒCƒRƒ“‚ğƒNƒŠƒbƒN
+### ä½¿ç”¨ä¾‹ 3ï¼šã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¨ã®æ¯”è¼ƒ
 
-### g—p—á 2FƒuƒbƒN‚É’Ç‰Á‚µ‚½CSVƒV[ƒg‚ğƒtƒ@ƒCƒ‹‚Éo—Í‚·‚é
+1. `ModuleSampleMacro.bas`ã®MsgBoxã®å‡ºåŠ›æ–‡å­—åˆ—ã‚’æ›´ã«ä¿®æ­£
+2. `ModuleSampleMacro.bas`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Compare VBA with Excel Book`ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image009.png?raw=true)
 
-1. ƒRƒ}ƒ“ƒhƒpƒŒƒbƒg ¨ uExcel: Load CSV from Excel Bookv
-2. Excel ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
-3. CSV ƒtƒ@ƒCƒ‹‚ª’Šo‚³‚ê‚é
-4. VS Code ‚Å CSV ‚ğ•ÒW
-5. ƒRƒ}ƒ“ƒhƒpƒŒƒbƒg ¨ uExcel: Save CSV to Excel Bookv‚Å Excel ‚É•Û‘¶
+### ä½¿ç”¨ä¾‹ 4ï¼šCustomUIã‚’ä¿®æ­£
 
-### g—p—á 3FSub ƒvƒƒV[ƒWƒƒ‚ğÀs
+1. `book.xlsm`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Load CustomUI from Excel Book`ã‚’ã‚¯ãƒªãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image010.png?raw=true)
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image011.png?raw=true)
+2. `customUI.xm`ã®ã‚¿ãƒ–ã€ã‚°ãƒ«ãƒ¼ãƒ—ã€ãƒœã‚¿ãƒ³ã®labelã‚’ä¿®æ­£
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image012.png?raw=true)
+3. `book.xlsm`ã‚’é–‰ã˜ã‚‹
+4. `book.xlsm`ã®ã‚¨ãƒ‡ã‚£ã‚¿ã‚¿ã‚¤ãƒˆãƒ«ã®`Save CustomUI to Excel Book (Close Excel first)`ã‚’ã‚¯ãƒªãƒƒã‚¯
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image013.png?raw=true)
+5. `book.xlsm`ã‚’é–‹ã
+6. ã‚¿ãƒ–ã€ã‚°ãƒ«ãƒ¼ãƒ—ã€ãƒœã‚¿ãƒ³ãŒå¤‰æ›´ã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèª
+   ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image014.png?raw=true)
 
-1. VS Code ‚Å VBA ƒtƒ@ƒCƒ‹‚ğŠJ‚­
-2. Às‘ÎÛ‚Ì Sub ‚Ìs‚ÉƒJ[ƒ\ƒ‹‚ğ’u‚­
-3. ƒRƒ}ƒ“ƒhƒpƒŒƒbƒg ¨ uExcel: Run VBA Sub at Cursorv
-4. Excel ‚ªÀs‚·‚é
+## è£œè¶³
 
-## Excel VBA Addin g—p—á
+### å¯¾è±¡ãƒ‡ãƒ¼ã‚¿ç¨®é¡åˆ¥
+
+- VBA
+- Save VBAã§ã¯ä¸€æ—¦ã™ã¹ã¦ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’å‰Šé™¤ã—ã¦ã‹ã‚‰ç™»éŒ²ã™ã‚‹ã€‚ä¸æ…®ã®äº‹æ•…ã‚’é¿ã‘ã‚‹ãŸã‚Load VBAã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¯æ§‹æˆç®¡ç†ã™ã‚‹ã“ã¨
+- VS Codeå´ã§.bas, .clsã‚’è¿½åŠ ã—ã¦Save VBAã™ã‚‹ã“ã¨ã¯å¯èƒ½
+- VS Codeå´ã§.frmã‚’è¿½åŠ ã—ã¦Save VBAã™ã‚‹ã“ã¨ã¯ä¸å¯èƒ½ã€‚.frmã¨.frxã¯ä¸€ç·’ã«ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå¿…è¦ãªãŸã‚
+- CSV
+- ã‚·ãƒ¼ãƒˆåãŒ.csvã§çµ‚ã‚ã‚‹ã¨CSVã‚·ãƒ¼ãƒˆã¨ã—ã¦æ‰±ã‚ã‚Œã€`Load CSV from Excel Book`, `Save CSV to Excel Book`ã®å¯¾è±¡ã¨ãªã‚‹
+- PNG
+- ã‚·ãƒ¼ãƒˆåãŒ.pngã§çµ‚ã‚ã‚‹ã¨PNGã‚·ãƒ¼ãƒˆã¨ã—ã¦æ‰±ã‚ã‚Œã€`Export PNG from Excel Book`ã®å¯¾è±¡ã¨ãªã‚‹
+- CustomUI.xml
+- CustomUI.xmlã‚’ç™»éŒ²æ¸ˆã¿ã®.xlsm / .xlamã§ã¯CustomUIã‚’`Load CustomUI from Excel Book`, `Save CustomUI from Excel Book`ãŒå¯èƒ½
+- ç´ ã® .xlsm / .xlamã«ã¯customUI.xmlã¯æ ¼ç´ã•ã‚Œã¦ã„ãªã„ãŸã‚ä½•ã‚‰ã‹ã®æ‰‹æ®µã§ç™»éŒ²ã™ã‚‹ã‹ã€`New Excel Book with CustomUI as Macro`ã‚’ä½¿ç”¨ã™ã‚‹ã“ã¨
+
+### Excelãƒ•ã‚¡ã‚¤ãƒ«ç¨®é¡åˆ¥å¯¾å¿œæ©Ÿèƒ½
+
+| æ©Ÿèƒ½                            | .xlsx | .xlsm | .xlam |
+| ------------------------------- | ----- | ----- | ----- |
+| `Load VBA from Excel Book`      | -     | â—‹     | â—‹     |
+| `Save VBA to Excel Book`        | -     | â—‹     | â—‹(1)  |
+| `Load CustomUI from Excel Book` | -     | â—‹     | â—‹     |
+| `Save CustomUI to Excel Book`   | -     | â—‹     | â—‹     |
+| `Load CSV from Excel Book`      | â—‹     | â—‹     | -     |
+| `Save CSV to Excel Book`        | â—‹     | â—‹     | -     |
+| `Export PNG from Excel Book`    | â—‹     | â—‹     | -     |
+
+(1) .xlamã®Save VBAã§ã¯ç›´æ¥ä¿å­˜ã§ããªã„ã€‚ã‚¢ãƒ‰ã‚¤ãƒ³ã®ãŸã‚Officeã‚¢ãƒ‰ã‚¤ãƒ³ãƒ•ã‚©ãƒ«ãƒ€ã«ä¿å­˜ã—ã‚ˆã†ã¨ã™ã‚‹ãŸã‚é–‹ç™ºã‚µã‚¤ã‚¯ãƒ«ãŒå›ã‚‰ãªã„ã€‚VBã‚¨ãƒ‡ã‚£ã‚¿ã®ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã‹ã‚‰ä¿å­˜ã™ã‚‹ã“ã¨ã€‚
+
+### æœªèª¬æ˜æ©Ÿèƒ½
+
+- Excel VBA Addinã«ã¤ã„ã¦ã¯åˆ¥é€”èª¬æ˜
