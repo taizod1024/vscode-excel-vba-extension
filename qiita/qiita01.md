@@ -105,7 +105,9 @@ VS Code で拡張機能をインストールします。
 1. VS Code を起動
 2. `Ctrl+Shift+X` で拡張機能を検索
 3. `Excel VBA Extension`と入力
+
    ![image001](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image001.png?raw=true)
+
 4. [インストール] をクリック
    - Excel VBA Extensionの有効化処理でExcel VBA AddinがOfficeアドインフォルダにコピーされます。以後、VS Codeが起動されるたびにExcel VBA AddinがOfficeアドインフォルダにコピーされます。
 
@@ -116,9 +118,13 @@ Excel VBA ExtensionからExcelにアクセスできるようにします。
 1. Excel を起動
 2. [ファイル] → [オプション] → [トラストセンター]
 3. [トラストセンターの設定]をクリック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image002.png?raw=true)
+
 4. [マクロ設定]で[VBA プロジェクト オブジェクト モデルへのアクセスを信頼する]をチェック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image003.png?raw=true)
+
 5. [OK] をクリック
 
 以上でインストールとセットアップは完了です。
@@ -130,17 +136,26 @@ Excel VBA ExtensionからExcelにアクセスできるようにします。
 1. `Ctrl+Shift+P` でコマンドパレットを開く
 2. `Create: New File`を選択
 3. `New Excel Book with CustomUI as Macro`を選択
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image004.png?raw=true)
+
 4. ファイル名（拡張子無し）を入力（例：book）
 5. `book.xlsm`が作成されるのでエクスプローラビューから選択
 6. `book.xlsm`のエディタタイトルの`Open Excel Book`アイコンをクリック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image005.png?raw=true)
+
 7. `book.xlsm`のエディタタイトルの`Load VBA from Excel Book`アイコンをクリック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image006.png?raw=true)
+
 8. `ModuleSampleMacro.bas`のMsgBoxの出力文字列を修正
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image007.png?raw=true)
+
 9. `ModuleSampleMacro.bas`のエディタタイトルの`Save VBA to Excel Book`アイコンをクリック
 10. Excelのタブから`ButtonSampleMacro`をクリック
+
     ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image008.png?raw=true)
 
 ### 使用例 2：サブルーチンを修正してすぐに実行
@@ -154,20 +169,29 @@ Excel VBA ExtensionからExcelにアクセスできるようにします。
 
 1. `ModuleSampleMacro.bas`のMsgBoxの出力文字列を更に修正
 2. `ModuleSampleMacro.bas`のエディタタイトルの`Compare VBA with Excel Book`アイコンをクリック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image009.png?raw=true)
 
 ### 使用例 4：CustomUIを修正
 
 1. `book.xlsm`のエディタタイトルの`Load CustomUI from Excel Book`をクリック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image010.png?raw=true)
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image011.png?raw=true)
+
 2. `customUI.xm`のタブ、グループ、ボタンのlabelを修正
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image012.png?raw=true)
+
 3. `book.xlsm`を閉じる
 4. `book.xlsm`のエディタタイトルの`Save CustomUI to Excel Book (Close Excel first)`をクリック
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image013.png?raw=true)
+
 5. `book.xlsm`を開く
 6. タブ、グループ、ボタンが変更されていることを確認
+
    ![](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image014.png?raw=true)
 
 ## 補足
