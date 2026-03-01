@@ -207,7 +207,7 @@ Excel VBA ExtensionからExcelにアクセスできるようにします。
 - PNG
   - シート名が.pngで終わるとPNGシートとして扱われ、`Export PNG from Excel Book`の対象となる
 - CustomUI.xml
-  - CustomUI.xmlを登録済みの.xlsm / .xlamではCustomUIを`Load CustomUI from Excel Book`, `Save CustomUI from Excel Book`が可能
+  - CustomUI.xmlを登録済みの.xlsm / .xlamでは`Load CustomUI from Excel Book`, `Save CustomUI from Excel Book`が可能
   - 素の .xlsm / .xlamにはcustomUI.xmlは格納されていないため何らかの手段で登録するか、`New Excel Book with CustomUI as Macro`を使用すること
 
 ### Excelファイル種類別対応機能
