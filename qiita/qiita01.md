@@ -106,7 +106,7 @@ VS Code で拡張機能をインストールします。
 2. `Ctrl+Shift+X` で拡張機能を検索
 3. `Excel VBA Extension`と入力
    ![image001](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image001.png?raw=true)
-4. [] をクリック
+4. [インストール] をクリック
    - Excel VBA Extensionの有効化処理でExcel VBA AddinがOfficeアドインフォルダにコピーされます。以後、VS Codeが起動されるたびにExcel VBA AddinがOfficeアドインフォルダにコピーされます。
 
 ### ステップ 2：Excel の設定
