@@ -1,4 +1,4 @@
-# Excel VBAをVS Codeで編集する - Excel VBA Extension
+# (2026年3月)Excel VBAをVS Codeで編集する - Excel VBA Extension
 
 ## はじめに
 
