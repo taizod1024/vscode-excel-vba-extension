@@ -14,3 +14,5 @@ src/**
 *.vsix
 *.zip
 *.js
+### qiita
+qiita/**
