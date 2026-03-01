@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.15](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.14...v0.2.15) (2026-03-01)
+
+
+### Features
+
+* qiita.mdを追加し、Excel VBA Extensionの概要と機能を記述 ([a20319e](https://github.com/taizod1024/vscode-excel-vba-extension/commit/a20319ee24d8f4208cbe3f8f1260ac9144f53d8b))
+
+
+### Bug Fixes
+
+* ensure channel visibility is restored after new book commands ([cc39cd7](https://github.com/taizod1024/vscode-excel-vba-extension/commit/cc39cd7da8704b08da898b82ecd59d0b1791cde4))
+
 ### [0.2.14](https://github.com/taizod1024/vscode-excel-vba-extension/compare/v0.2.13...v0.2.14) (2026-02-26)
 
 
