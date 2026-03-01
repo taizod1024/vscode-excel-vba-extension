@@ -51,7 +51,11 @@ graph RL
 
     subgraph Excel["Microsoft Excel"]
         subgraph Book["Book.xlsm"]
-            VBA["Excel VBA"]
+            subgraph VBAGroup["Excel VBA"]
+                Module1["Module1"]
+                ThisWorkbook["ThisWorkbook"]
+                UserForm["UserForm"]
+            end
             subgraph Sheets["Sheets"]
                 CSV["Sheet1.csv<br/>(シート)"]
                 PNG["Sheet2.png<br/>(シート)"]
@@ -82,10 +86,10 @@ graph RL
     end
 
     Extension <-->|相互連携| Addin
-    BAS <-->|Load/Save VBA| VBA
-    CLS <-->|Load/Save VBA| VBA
-    FRM <-->|Load/Save VBA| VBA
-    FRX <-->|Load/Save VBA| VBA
+    BAS <-->|Load/Save VBA| Module1
+    CLS <-->|Load/Save VBA| ThisWorkbook
+    FRM <-->|Load/Save VBA| UserForm
+    FRX <-->|Load/Save VBA| UserForm
     CSV2 <-->|Load/Save CSV| CSV
     PNG2 <---> |Export PNG/Open Sheet| PNG
     XML <-->|Load/Save CustomUI| CustomUI
@@ -100,8 +104,8 @@ VS Code で拡張機能をインストールします。
 
 1. VS Code を起動
 2. `Ctrl+Shift+X` で拡張機能を検索
-3. `Excel VBA Extension`を入力
-4. インストール
+3. `Excel VBA Extension`と入力
+4. [インストール] をクリック
    - Excel VBA Extensionの有効化処理でExcel VBA AddinがOfficeアドインフォルダにコピーされます。以後、VS Codeが起動されるたびにExcel VBA AddinがOfficeアドインフォルダにコピーされます。
 
 ![image01](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image01.png?raw=true)
@@ -143,6 +147,29 @@ Excel VBA Addinを有効化するためにExcel の開発タブを表示します。
 
 以上でインストールとセットアップは完了です。
 
-## 使用例
+## Excel VBA Extension 使用例
 
-※※※執筆中※※※
+### 使用例 1：VS Codeで空のマクロファイルを作成する
+
+1. `Ctrl+Shift+P` でコマンドパレットを開く
+2. `Create: New File`を選択
+3. `Excel: New Excel Book with CustomUI as Macro`を選択
+4. ファイル名を入力
+5. Excel ファイルと VBA フォルダが自動生成される
+
+### 使用例 2：ブックに追加したCSVシートをファイルに出力する
+
+1. コマンドパレット → 「Excel: Load CSV from Excel Book」
+2. Excel ファイルを選択
+3. CSV ファイルが抽出される
+4. VS Code で CSV を編集
+5. コマンドパレット → 「Excel: Save CSV to Excel Book」で Excel に保存
+
+### 使用例 3：Sub プロシージャを実行
+
+1. VS Code で VBA ファイルを開く
+2. 実行対象の Sub の行にカーソルを置く
+3. コマンドパレット → 「Excel: Run VBA Sub at Cursor」
+4. Excel が実行する
+
+## Excel VBA Addin 使用例

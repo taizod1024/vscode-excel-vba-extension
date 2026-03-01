@@ -497,12 +497,13 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.newBook`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
-        this.channel.show(false);
         try {
           await newBookAsync(commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
+        } finally {
+          this.channel.show(false);
         }
       }),
     );
@@ -510,12 +511,13 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUI`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
-        this.channel.show(false);
         try {
           await newBookWithCustomUIAsMacroAsync(commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
+        } finally {
+          this.channel.show(false);
         }
       }),
     );
@@ -523,12 +525,13 @@ class ExcelVba {
     context.subscriptions.push(
       vscode.commands.registerCommand(`${this.appId}.newBookWithCustomUIAsAddin`, async () => {
         const commandContext = { channel: this.channel, extensionPath: context.extensionPath };
-        this.channel.show(false);
         try {
           await newBookWithCustomUIAsAddinAsync(commandContext);
         } catch (reason) {
           this.channel.appendLine(`ERROR: ${reason}`);
           vscode.window.showErrorMessage(`${reason}`);
+        } finally {
+          this.channel.show(false);
         }
       }),
     );
