@@ -199,16 +199,16 @@ Excel VBA ExtensionからExcelにアクセスできるようにします。
 ### 対象データ種類別
 
 - VBA
-- Save VBAでは一旦すべてのモジュールを削除してから登録する。不慮の事故を避けるためLoad VBAしたファイルは構成管理すること
-- VS Code側で.bas, .clsを追加してSave VBAすることは可能
-- VS Code側で.frmを追加してSave VBAすることは不可能。.frmと.frxは一緒に登録することが必要なため
+  - Save VBAでは一旦すべてのモジュールを削除してから登録する。不慮の事故を避けるためLoad VBAしたファイルは構成管理すること
+  - VS Code側で.bas, .clsを追加してSave VBAすることは可能
+  - VS Code側で.frmを追加してSave VBAすることは不可能。.frmと.frxは一緒に登録することが必要なため
 - CSV
-- シート名が.csvで終わるとCSVシートとして扱われ、`Load CSV from Excel Book`, `Save CSV to Excel Book`の対象となる
+  - シート名が.csvで終わるとCSVシートとして扱われ、`Load CSV from Excel Book`, `Save CSV to Excel Book`の対象となる
 - PNG
-- シート名が.pngで終わるとPNGシートとして扱われ、`Export PNG from Excel Book`の対象となる
+  - シート名が.pngで終わるとPNGシートとして扱われ、`Export PNG from Excel Book`の対象となる
 - CustomUI.xml
-- CustomUI.xmlを登録済みの.xlsm / .xlamではCustomUIを`Load CustomUI from Excel Book`, `Save CustomUI from Excel Book`が可能
-- 素の .xlsm / .xlamにはcustomUI.xmlは格納されていないため何らかの手段で登録するか、`New Excel Book with CustomUI as Macro`を使用すること
+  - CustomUI.xmlを登録済みの.xlsm / .xlamではCustomUIを`Load CustomUI from Excel Book`, `Save CustomUI from Excel Book`が可能
+  - 素の .xlsm / .xlamにはcustomUI.xmlは格納されていないため何らかの手段で登録するか、`New Excel Book with CustomUI as Macro`を使用すること
 
 ### Excelファイル種類別対応機能
 
