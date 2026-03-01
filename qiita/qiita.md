@@ -19,9 +19,11 @@ Excel VBAをVS Codeで編集するための拡張機能を作成しました。
 - 設定無しですぐに利用可能です。
 - 同時にインストールされるExcel VBA AddinによりExcel側からも操作可能です。
 
-![test](test)
+![excel-vba-extension_1](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_1.png?raw=true)
 
-![test](test)
+![excel-vba-extension_2](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-extension_2.png?raw=true)
+
+![excel-vba-addin](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/images/excel-vba-addin.png?raw=true)
 
 ## 機能
 
@@ -45,36 +47,38 @@ Excel VBAをVS Codeで編集するための拡張機能を作成しました。
 ## 機能関連図
 
 ```mermaid
-graph LR
+graph RL
 
+    subgraph Excel["Microsoft Excel"]
+        subgraph Book["Book.xlsm"]
+            VBA["Excel VBA"]
+            subgraph Sheets["Sheets"]
+                CSV["Sheet1.csv<br/>(シート)"]
+                PNG["Sheet2.png<br/>(シート)"]
+            end
+            CustomUI["customUI.xml"]
+        end
+        Addin["Excel VBA Addin"]
+    end
     subgraph VSCode["VS Code"]
-        subgraph Folder["? Book_xlsm"]
-            subgraph BasFolder["? bas"]
+        subgraph Folder["Book_xlsm/"]
+            subgraph BasFolder["bas/"]
                 BAS["Module1.bas"]
                 CLS["ThisWorkbook.cls"]
                 FRM["UserForm.frm"]
                 FRX["UserForm.frx"]
             end
-            subgraph CsvFolder["? csv"]
+            subgraph CsvFolder["csv/"]
                 CSV2["Sheet1.csv"]
             end
-            subgraph XmlFolder["? xml"]
+            subgraph XmlFolder["xml/"]
                 XML["customUI.xml"]
             end
-            subgraph PngFolder["? png"]
+            subgraph PngFolder["png/"]
                 PNG2["Sheet2.png"]
             end
         end
         Extension["Excel VBA Extension"]
-    end
-    subgraph Excel["Microsoft Excel"]
-        subgraph Book["? Book.xlsm"]
-            VBA["Excel VBA"]
-            CSV["Sheet1.csv<br/>(シート)"]
-            PNG["Sheet2.png<br/>(シート)"]
-            CustomUI["customUI.xml"]
-        end
-        Addin["Excel VBA Addin"]
     end
 
     Extension <-->|相互連携| Addin
@@ -83,7 +87,7 @@ graph LR
     FRM <-->|Load/Save VBA| VBA
     FRX <-->|Load/Save VBA| VBA
     CSV2 <-->|Load/Save CSV| CSV
-    PNG2 <-->|Export PNG| PNG
+    PNG2 <---> |Export PNG/Open Sheet| PNG
     XML <-->|Load/Save CustomUI| CustomUI
 
 ```
@@ -98,8 +102,9 @@ VS Code で拡張機能をインストールします。
 2. `Ctrl+Shift+X` で拡張機能を検索
 3. `Excel VBA Extension`を入力
 4. インストール
-   - Excel VBA Extensionの有効化処理でExcel VBA AddinがOfficeアドインフォルダにコピーされます。  
-     以後、VS Codeが起動されるたびにExcel VBA AddiがOfficeアドインフォルダにコピーされます。
+   - Excel VBA Extensionの有効化処理でExcel VBA AddinがOfficeアドインフォルダにコピーされます。以後、VS Codeが起動されるたびにExcel VBA AddinがOfficeアドインフォルダにコピーされます。
+
+![image01](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image01.png?raw=true)
 
 ### ステップ 2：Excel の設定
 
@@ -111,6 +116,10 @@ Excel VBA ExtensionからExcelにアクセスできるようにします。
 4. [マクロ設定]で[VBA プロジェクト オブジェクト モデルへのアクセスを信頼する]をチェック
 5. [OK] をクリック
 
+![image02](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image02.png?raw=true)
+
+![image03](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image03.png?raw=true)
+
 ### ステップ 3：開発タブの表示
 
 Excel VBA Addinを有効化するためにExcel の開発タブを表示します。
@@ -120,6 +129,8 @@ Excel VBA Addinを有効化するためにExcel の開発タブを表示します。
 3. 右側の [メインタブ] リストで [開発] にチェックを入れる
 4. [OK] をクリック
 
+![image04](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image04.png?raw=true)
+
 ### ステップ 4：Excel VBA Addin の有効化
 
 続いて Excel VBA Addin を有効にします。
@@ -128,27 +139,10 @@ Excel VBA Addinを有効化するためにExcel の開発タブを表示します。
 2. [参照] をクリックして `Excel-Vba-Addin` を選択
 3. [OK] をクリック
 
+![image05](https://github.com/taizod1024/vscode-excel-vba-extension/blob/main/qiita/images/image05.png?raw=true)
+
 以上でインストールとセットアップは完了です。
 
 ## 使用例
 
-### 例 1：新規マクロファイルで開発を開始
-
-1. Ctrl+Shift+P でコマンドパレットを開く
-2. 「Excel: New Excel Book with CustomUI as Macro」を実行
-3. ファイル名を入力
-4. Excel ファイルと VBA フォルダが自動生成される
-
-### 例 2：既存ファイルから VBA を抽出して Git 管理
-
-1. コマンドパレット → 「Excel: Load VBA from Excel Book」
-2. Excel ファイルを選択
-3. VBA ファイルが抽出される
-4. git add・git commit で管理開始
-
-### 例 3：Sub プロシージャを実行
-
-1. VS Code で VBA ファイルを開く
-2. 実行対象の Sub の行にカーソルを置く
-3. コマンドパレット → 「Excel: Run VBA Sub at Cursor」
-4. Excel が実行する
+※※※執筆中※※※
